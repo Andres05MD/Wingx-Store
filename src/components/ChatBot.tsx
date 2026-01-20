@@ -139,9 +139,7 @@ export default function ChatBot() {
     };
 
     const handleSuggestionClick = (text: string) => {
-        setValue('message', text);
-        // Opcional: Auto-submit
-        // handleSubmit(onSubmit)();
+        setValue('message', text, { shouldValidate: true });
     };
 
     return (
