@@ -94,7 +94,7 @@ export default function LoginPage() {
                     <Link href="/" className="inline-flex items-center gap-2 text-sm font-medium opacity-60 hover:opacity-100 transition-opacity mb-8">
                         <ArrowLeft size={16} /> Volver a la tienda
                     </Link>
-                    <h1 className="text-4xl font-bold font-heading mb-2 tracking-tight">WINGX STORE</h1>
+                    <h1 className="text-4xl font-bold font-heading mb-2 tracking-tight">WINGX</h1>
                     <p className="opacity-60 max-w-sm">La moda que define tu estilo. Únete a nuestra comunidad y disfruta de beneficios exclusivos.</p>
                 </div>
 
