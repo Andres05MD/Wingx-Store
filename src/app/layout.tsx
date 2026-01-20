@@ -17,6 +17,8 @@ import WishlistDrawer from "@/components/WishlistDrawer";
 import { AuthProvider } from "@/context/AuthContext";
 import { ExchangeRateProvider } from "@/context/ExchangeRateContext";
 
+import { ChatProvider } from "@/context/ChatContext";
+
 const outfit = Outfit({
   subsets: ["latin"],
   variable: "--font-heading",
@@ -49,31 +51,33 @@ export default function RootLayout({
       <body className={`${jakarta.variable} ${outfit.variable} antialiased min-h-screen flex flex-col bg-white text-black dark:bg-black dark:text-white transition-colors duration-300 font-sans`}>
         <AuthProvider>
           <ExchangeRateProvider>
-            <CartProvider>
-              <WishlistProvider>
-                <SmoothScroll />
-                <ThemeProvider
-                  attribute="class"
-                  defaultTheme="dark"
-                  enableSystem
-                  disableTransitionOnChange
-                >
-                  <ParticlesBackground />
-                  <Header />
+            <ChatProvider>
+              <CartProvider>
+                <WishlistProvider>
+                  <SmoothScroll />
+                  <ThemeProvider
+                    attribute="class"
+                    defaultTheme="dark"
+                    enableSystem
+                    disableTransitionOnChange
+                  >
+                    <ParticlesBackground />
+                    <Header />
 
-                  <main className="flex-grow w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-6">
-                    {children}
-                  </main>
+                    <main className="flex-grow w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-6">
+                      {children}
+                    </main>
 
-                  <CartDrawer />
-                  <WishlistDrawer />
-                  <Footer />
-                  <MobileBottomNav />
-                  <ChatBot />
-                  <Toaster position="top-center" richColors />
-                </ThemeProvider>
-              </WishlistProvider>
-            </CartProvider>
+                    <CartDrawer />
+                    <WishlistDrawer />
+                    <Footer />
+                    <MobileBottomNav />
+                    <ChatBot />
+                    <Toaster position="top-center" richColors />
+                  </ThemeProvider>
+                </WishlistProvider>
+              </CartProvider>
+            </ChatProvider>
           </ExchangeRateProvider>
         </AuthProvider>
       </body>

@@ -177,20 +177,7 @@ export default function ProductView({ product }: ProductViewProps) {
                 </div>
             </div>
 
-            {/* Mobile Sticky Action Bar */}
-            <div className="md:hidden fixed bottom-[64px] left-0 right-0 p-3 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl border-t border-neutral-200 dark:border-white/10 z-40 flex items-center gap-3">
-                <div className="flex flex-col">
-                    <span className="text-[10px] text-neutral-500 dark:text-neutral-400 uppercase font-bold tracking-wider">Precio</span>
-                    <span className="text-lg font-bold text-black dark:text-white leading-none">{priceFormatted}</span>
-                </div>
-                <button
-                    onClick={handleAddToCart}
-                    className="flex-1 bg-black dark:bg-white text-white dark:text-black h-12 rounded-full font-bold text-sm shadow-xl flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all"
-                >
-                    <ShoppingCart size={18} />
-                    <span>Agregar al Carrito</span>
-                </button>
-            </div>
+
 
             <RecentlyViewed />
             <SizeGuideModal isOpen={isSizeGuideOpen} onClose={() => setIsSizeGuideOpen(false)} />

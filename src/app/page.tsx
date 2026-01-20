@@ -123,11 +123,11 @@ export default async function Home({
                     {/* Product Grid */}
                     {currentProducts.length > 0 ? (
                         <>
-                            <h2 id="product-grid" className="text-2xl font-bold tracking-tight mb-6 flex items-center gap-2">
-                                <span className="w-1 h-8 rounded-full bg-purple-600 inline-block"></span>
+                            <h2 id="product-grid" className="text-xl md:text-2xl font-bold tracking-tight mb-4 md:mb-6 flex items-center gap-2">
+                                <span className="w-1 h-6 md:h-8 rounded-full bg-purple-600 inline-block"></span>
                                 {searchTerm ? 'Resultados de búsqueda' : (categoryFilter !== 'Todos' ? categoryFilter : 'Prendas Destacadas')}
                             </h2>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            <div className="grid grid-cols-2 gap-3 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                                 {currentProducts.map((product) => (
                                     <ProductCard key={product.id} product={product} />
                                 ))}

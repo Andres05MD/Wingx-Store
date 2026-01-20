@@ -2,16 +2,18 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, LayoutGrid, ShoppingCart, Heart } from 'lucide-react';
+import { Home, LayoutGrid, ShoppingCart, Heart, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
+import { useChat } from '@/context/ChatContext';
 import { useEffect, useState } from 'react';
 
 export default function MobileBottomNav() {
     const pathname = usePathname();
     const { setIsCartOpen, totalItems } = useCart();
     const { setIsWishlistOpen, wishlist } = useWishlist();
+    const { toggleChat } = useChat();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -28,18 +30,6 @@ export default function MobileBottomNav() {
 
     const navItems = [
         {
-            name: 'Inicio',
-            href: '/',
-            icon: Home,
-            type: 'link'
-        },
-        {
-            name: 'Catálogo',
-            href: '/catalogo',
-            icon: LayoutGrid,
-            type: 'link'
-        },
-        {
             name: 'Deseos',
             action: () => setIsWishlistOpen(true),
             icon: Heart,
@@ -53,13 +43,31 @@ export default function MobileBottomNav() {
             type: 'button',
             count: totalItems
         },
+        {
+            name: 'Inicio',
+            href: '/',
+            icon: Home,
+            type: 'link'
+        },
+        {
+            name: 'Catálogo',
+            href: '/catalogo',
+            icon: LayoutGrid,
+            type: 'link'
+        },
+        {
+            name: 'Ayuda',
+            action: toggleChat,
+            icon: MessageCircle,
+            type: 'button'
+        },
     ];
 
     if (!mounted) return null;
 
     return (
         <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl border-t border-neutral-100 dark:border-white/10 safe-area-bottom">
-            <div className="grid grid-cols-4 h-16 mx-auto px-2">
+            <div className="grid grid-cols-5 h-16 mx-auto px-2">
                 {navItems.map((item) => {
                     const Icon = item.icon;
                     const active = item.type === 'link' ? isActive(item.href) : false;

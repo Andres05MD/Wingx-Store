@@ -67,8 +67,10 @@ const FormattedMessage = ({ content }: { content: string }) => {
     );
 };
 
+import { useChat } from "@/context/ChatContext";
+
 export default function ChatBot() {
-    const [isOpen, setIsOpen] = useState(false);
+    const { isChatOpen: isOpen, setIsChatOpen: setIsOpen } = useChat();
     const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -261,7 +263,7 @@ export default function ChatBot() {
                 {!isOpen && (
                     <motion.button
                         onClick={() => setIsOpen(true)}
-                        className="fixed bottom-24 md:bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-black dark:bg-white text-white dark:text-black rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.25)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] transition-shadow border-2 border-white dark:border-black"
+                        className="hidden md:flex fixed bottom-6 right-6 z-50 items-center justify-center w-14 h-14 bg-black dark:bg-white text-white dark:text-black rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.25)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] transition-shadow border-2 border-white dark:border-black"
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0, opacity: 0 }}

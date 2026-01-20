@@ -20,6 +20,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
     return (
         <motion.div
+            className="h-full"
             whileHover={{ y: -8 }}
             transition={{ duration: 0.3 }}
         >
