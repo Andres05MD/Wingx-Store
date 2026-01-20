@@ -1,0 +1,18 @@
+export default function Loading() {
+    return (
+        <div className="min-h-screen flex items-center justify-center">
+            <div className="flex flex-col items-center gap-4">
+                {/* Spinner */}
+                <div className="relative w-16 h-16">
+                    <div className="absolute inset-0 border-4 border-neutral-200 dark:border-neutral-800 rounded-full"></div>
+                    <div className="absolute inset-0 border-4 border-transparent border-t-black dark:border-t-white rounded-full animate-spin"></div>
+                </div>
+
+                {/* Loading text */}
+                <p className="text-neutral-600 dark:text-neutral-400 text-sm font-medium">
+                    Cargando...
+                </p>
+            </div>
+        </div>
+    );
+}
