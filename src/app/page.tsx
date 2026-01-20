@@ -154,11 +154,7 @@ export default async function Home({
                 </main>
             </div>
 
-            {!searchTerm && (
-                <div className="mt-8 md:mt-20 -mx-4 sm:-mx-6 lg:-mx-8">
-                    <InfiniteMarquee />
-                </div>
-            )}
+
         </div>
     );
 }

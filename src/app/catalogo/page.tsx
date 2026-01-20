@@ -98,14 +98,7 @@ export default async function CatalogPage({
 
     return (
         <div className="space-y-8 min-h-screen container mx-auto px-4 py-8">
-            <div className="-mx-4">
-                <InfiniteMarquee items={[
-                    "SE REALIZAN ENVÍOS NACIONALES", "•",
-                    "ENVÍOS A TODO EL PAÍS", "•",
-                    "ENTREGAS SEGURAS", "•",
-                    "SE REALIZAN ENVÍOS NACIONALES", "•"
-                ]} />
-            </div>
+
             <CatalogHeader />
 
             <div className="flex flex-col md:flex-row gap-8">
@@ -123,6 +116,15 @@ export default async function CatalogPage({
                         currentPage={currentPage}
                     />
                 </main>
+            </div>
+
+            <div className="-mx-4 mt-8 md:mt-12">
+                <InfiniteMarquee items={[
+                    "SE REALIZAN ENVÍOS NACIONALES", "•",
+                    "ENVÍOS A TODO EL PAÍS", "•",
+                    "ENTREGAS SEGURAS", "•",
+                    "SE REALIZAN ENVÍOS NACIONALES", "•"
+                ]} />
             </div>
         </div>
     );
