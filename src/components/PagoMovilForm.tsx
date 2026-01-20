@@ -117,8 +117,20 @@ export default function PagoMovilForm({ onSubmit, onCancel, totalAmount, isLoadi
                                 Ref: ${totalAmount.toFixed(2)} (Tasa BCV: {rateLoading ? '...' : rate?.toFixed(2)})
                             </p>
                         </div>
-                        <div className="shrink-0 p-2 bg-white/10 dark:bg-black/5 rounded-xl backdrop-blur-md">
-                            <Wallet className="w-5 h-5 text-white dark:text-black" />
+                        <div className="shrink-0 flex gap-2">
+                            <button
+                                onClick={() => {
+                                    const text = `Pago Móvil\nBanco: ${storePagoMovil.banco} (${bankCode})\nTeléfono: ${storePagoMovil.telefono}\nCédula: ${storePagoMovil.cedula}\nMonto: ${formatBs(totalAmount)}`;
+                                    handleCopy(text);
+                                }}
+                                className="p-2 bg-white/10 dark:bg-black/5 rounded-xl backdrop-blur-md hover:bg-white/20 dark:hover:bg-black/10 transition-colors"
+                                title="Copiar todos los datos"
+                            >
+                                <Copy size={20} className="text-white dark:text-black" />
+                            </button>
+                            <div className="p-2 bg-white/10 dark:bg-black/5 rounded-xl backdrop-blur-md">
+                                <Wallet className="w-5 h-5 text-white dark:text-black" />
+                            </div>
                         </div>
                     </div>
 
