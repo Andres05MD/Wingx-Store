@@ -258,16 +258,22 @@ export default function ChatBot() {
                 )}
             </AnimatePresence>
 
-            <motion.button
-                onClick={() => setIsOpen(!isOpen)}
-                className="fixed bottom-24 md:bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-black dark:bg-white text-white dark:text-black rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.25)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] transition-shadow border-2 border-white dark:border-black"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-            >
-                {isOpen ? <X size={24} /> : <MessageCircle size={28} />}
-            </motion.button>
+            {/* Floating Button - Hidden when chat is open */}
+            <AnimatePresence>
+                {!isOpen && (
+                    <motion.button
+                        onClick={() => setIsOpen(true)}
+                        className="fixed bottom-24 md:bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-black dark:bg-white text-white dark:text-black rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.25)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] transition-shadow border-2 border-white dark:border-black"
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0, opacity: 0 }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                    >
+                        <MessageCircle size={28} />
+                    </motion.button>
+                )}
+            </AnimatePresence>
         </>
     );
 }
