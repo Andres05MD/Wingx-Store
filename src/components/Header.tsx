@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
-import { useTheme } from 'next-themes';
 import { Search } from 'lucide-react';
 import { ModeToggle } from '@/components/ui/ModeToggle';
 import imagekitLoader from '@/lib/imagekitLoader';
@@ -19,11 +18,6 @@ export default function Header() {
     const [searchResults, setSearchResults] = useState<{ id: string, name: string, category: string, imageUrl: string }[]>([]);
     const router = useRouter();
     const pathname = usePathname();
-    const { theme, systemTheme } = useTheme();
-
-    // Determine if dark mode is active
-    const currentTheme = theme === 'system' ? systemTheme : theme;
-    const isDarkMode = currentTheme === 'dark';
 
     // Logo URLs
     const lightModeLogo = 'https://ik.imagekit.io/xwym4oquc/resources/Isotipo.png';
@@ -104,13 +98,23 @@ export default function Header() {
             <div className="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-2 flex-shrink-0">
                     <Link href="/" className="flex items-center gap-3 group">
+                        {/* Light mode logo - visible only in light mode */}
                         <Image
                             loader={imagekitLoader}
-                            src={isDarkMode ? darkModeLogo : lightModeLogo}
+                            src={lightModeLogo}
                             alt="Wingx Logo"
                             width={48}
                             height={48}
-                            className="w-12 h-12 object-contain group-hover:scale-105 transition-transform duration-300"
+                            className="w-12 h-12 object-contain group-hover:scale-105 transition-transform duration-300 dark:hidden"
+                        />
+                        {/* Dark mode logo - visible only in dark mode */}
+                        <Image
+                            loader={imagekitLoader}
+                            src={darkModeLogo}
+                            alt="Wingx Logo"
+                            width={48}
+                            height={48}
+                            className="w-12 h-12 object-contain group-hover:scale-105 transition-transform duration-300 hidden dark:block"
                         />
                         <span className="text-xl font-bold tracking-tight text-black dark:text-white group-hover:opacity-80 transition-opacity">
                             Wingx
