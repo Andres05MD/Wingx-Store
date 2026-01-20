@@ -101,63 +101,63 @@ export default function PagoMovilForm({ onSubmit, onCancel, totalAmount, isLoadi
     return (
         <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-4 duration-300">
             {/* Header / Info de Pago */}
-            <div className="mb-6 p-5 bg-gradient-to-br from-neutral-900 to-neutral-800 dark:from-white dark:to-neutral-100 rounded-2xl text-white dark:text-neutral-900 shadow-xl shadow-neutral-500/10 relative overflow-hidden group">
+            <div className="mb-4 p-4 bg-gradient-to-br from-neutral-900 to-neutral-800 dark:from-white dark:to-neutral-100 rounded-2xl text-white dark:text-neutral-900 shadow-xl shadow-neutral-500/10 relative overflow-hidden group">
                 {/* Background Pattern */}
                 <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform duration-700">
-                    <Smartphone size={120} />
+                    <Smartphone size={100} />
                 </div>
 
                 <div className="relative z-10">
-                    <div className="flex justify-between items-start mb-4">
+                    <div className="flex justify-between items-start mb-3">
                         <div>
-                            <p className="text-white/60 dark:text-black/60 text-xs font-medium uppercase tracking-wider mb-1">Monto a Pagar</p>
-                            <h3 className="text-3xl font-bold font-heading tabular-nums tracking-tight">
+                            <p className="text-white/60 dark:text-black/60 text-[10px] font-medium uppercase tracking-wider mb-0.5">Monto a Pagar</p>
+                            <h3 className="text-2xl sm:text-3xl font-bold font-heading tabular-nums tracking-tight">
                                 {formatBs(totalAmount)}
                             </h3>
-                            <p className="text-sm text-white/50 dark:text-black/50 font-medium mt-0.5">
+                            <p className="text-xs text-white/50 dark:text-black/50 font-medium mt-0.5">
                                 Ref: ${totalAmount.toFixed(2)} (Tasa BCV: {rateLoading ? '...' : rate?.toFixed(2)})
                             </p>
                         </div>
                         <div className="p-2 bg-white/10 dark:bg-black/5 rounded-xl backdrop-blur-md">
-                            <Wallet className="w-6 h-6 text-white dark:text-black" />
+                            <Wallet className="w-5 h-5 text-white dark:text-black" />
                         </div>
                     </div>
 
-                    <div className="space-y-3 pt-3 border-t border-white/10 dark:border-black/5">
-                        <div className="flex justify-between items-center group/item">
-                            <span className="text-sm text-white/70 dark:text-black/70">Banco:</span>
+                    <div className="space-y-2 pt-3 border-t border-white/10 dark:border-black/5">
+                        <div className="flex justify-between items-center">
+                            <span className="text-xs text-white/70 dark:text-black/70">Banco:</span>
                             <div className="flex items-center gap-2">
-                                <span className="font-semibold text-sm">{storePagoMovil.banco} ({bankCode})</span>
+                                <span className="font-semibold text-xs sm:text-sm">{storePagoMovil.banco} ({bankCode})</span>
                                 <button
                                     onClick={() => handleCopy(bankCode)}
                                     type="button"
-                                    className="p-1.5 hover:bg-white/10 dark:hover:bg-black/5 rounded-full transition-colors opacity-0 group-hover/item:opacity-100"
+                                    className="p-1 hover:bg-white/10 dark:hover:bg-black/5 rounded-full transition-colors"
                                 >
                                     {copied ? <CheckCircle2 size={12} className="text-green-400" /> : <Copy size={12} />}
                                 </button>
                             </div>
                         </div>
-                        <div className="flex justify-between items-center group/item">
-                            <span className="text-sm text-white/70 dark:text-black/70">Teléfono:</span>
+                        <div className="flex justify-between items-center">
+                            <span className="text-xs text-white/70 dark:text-black/70">Teléfono:</span>
                             <div className="flex items-center gap-2">
-                                <span className="font-semibold text-sm tabular-nums">{formattedPhone}</span>
+                                <span className="font-semibold text-xs sm:text-sm tabular-nums">{formattedPhone}</span>
                                 <button
                                     onClick={() => handleCopy(storePagoMovil.telefono)}
                                     type="button"
-                                    className="p-1.5 hover:bg-white/10 dark:hover:bg-black/5 rounded-full transition-colors opacity-0 group-hover/item:opacity-100"
+                                    className="p-1 hover:bg-white/10 dark:hover:bg-black/5 rounded-full transition-colors"
                                 >
                                     <Copy size={12} />
                                 </button>
                             </div>
                         </div>
-                        <div className="flex justify-between items-center group/item">
-                            <span className="text-sm text-white/70 dark:text-black/70">Cédula:</span>
+                        <div className="flex justify-between items-center">
+                            <span className="text-xs text-white/70 dark:text-black/70">Cédula:</span>
                             <div className="flex items-center gap-2">
-                                <span className="font-semibold text-sm tabular-nums">{storePagoMovil.cedula}</span>
+                                <span className="font-semibold text-xs sm:text-sm tabular-nums">{storePagoMovil.cedula}</span>
                                 <button
                                     onClick={() => handleCopy(storePagoMovil.cedula)}
                                     type="button"
-                                    className="p-1.5 hover:bg-white/10 dark:hover:bg-black/5 rounded-full transition-colors opacity-0 group-hover/item:opacity-100"
+                                    className="p-1 hover:bg-white/10 dark:hover:bg-black/5 rounded-full transition-colors"
                                 >
                                     <Copy size={12} />
                                 </button>
