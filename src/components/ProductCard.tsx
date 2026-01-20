@@ -58,11 +58,11 @@ export default function ProductCard({ product }: { product: Product }) {
                         </p>
                         <div className="mt-auto flex items-end justify-between gap-1 sm:gap-2">
                             <span className="text-sm sm:text-lg font-bold text-black dark:text-white truncate">{priceFormatted}</span>
-                            <div className="shrink-0 scale-90 sm:scale-100 origin-bottom-right">
-                                <GlowButton className="!px-2 !py-1 sm:!px-4 sm:!py-2">
-                                    <span className="hidden sm:inline">Ver detalles</span>
-                                    <ArrowRight size={14} className="sm:hidden" />
-                                </GlowButton>
+                            <div className="shrink-0">
+                                <div className="w-8 h-8 sm:w-auto sm:px-4 sm:py-2 rounded-full sm:rounded-xl bg-black dark:bg-white text-white dark:text-black flex items-center justify-center shadow-lg hover:scale-105 transition-transform">
+                                    <span className="hidden sm:inline text-sm font-medium mr-1">Comprar</span>
+                                    <ArrowRight size={16} className="sm:w-4 sm:h-4" />
+                                </div>
                             </div>
                         </div>
                     </div>

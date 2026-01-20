@@ -111,9 +111,9 @@ export default function MobileBottomNav() {
 
                             {/* Label */}
                             <span
-                                className={`text-[10px] mt-1 transition-all duration-300 ${active
-                                    ? 'text-black dark:text-white font-bold translate-y-0'
-                                    : 'text-neutral-400 dark:text-neutral-500 translate-y-1 opacity-0 group-hover:opacity-100 group-hover:translate-y-0'
+                                className={`text-[10px] font-medium mt-0.5 transition-colors duration-300 ${active
+                                    ? 'text-black dark:text-white'
+                                    : 'text-neutral-500 dark:text-neutral-500 group-hover:text-neutral-700 dark:group-hover:text-neutral-300'
                                     }`}
                             >
                                 {item.name}
@@ -126,7 +126,7 @@ export default function MobileBottomNav() {
                             <Link
                                 key={item.name}
                                 href={item.href}
-                                className="relative flex flex-col items-center justify-center gap-0.5 group active:scale-95 transition-transform"
+                                className="relative flex flex-col items-center justify-center py-1 group active:scale-95 transition-transform w-full"
                             >
                                 {content}
                             </Link>
@@ -137,7 +137,7 @@ export default function MobileBottomNav() {
                         <button
                             key={item.name}
                             onClick={item.action}
-                            className="relative flex flex-col items-center justify-center gap-0.5 group active:scale-95 transition-transform"
+                            className="relative flex flex-col items-center justify-center py-1 group active:scale-95 transition-transform w-full"
                         >
                             {content}
                         </button>
