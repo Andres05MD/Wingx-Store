@@ -7,7 +7,7 @@ import imagekitLoader from '@/lib/imagekitLoader';
 import { motion } from 'framer-motion';
 import GlowButton from './GlowButton';
 import { useWishlist } from '@/context/WishlistContext';
-import { Heart } from 'lucide-react';
+import { Heart, ArrowRight } from 'lucide-react';
 
 export default function ProductCard({ product }: { product: Product }) {
     const { toggleWishlist, isInWishlist } = useWishlist();
@@ -49,18 +49,21 @@ export default function ProductCard({ product }: { product: Product }) {
                         )}
                         <div className="absolute inset-0 bg-black/5 dark:bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                     </div>
-                    <div className="p-4 flex flex-col flex-grow">
-                        <h3 className="text-md font-medium text-black dark:text-white line-clamp-2 leading-tight mb-2">
+                    <div className="p-3 sm:p-4 flex flex-col flex-grow">
+                        <h3 className="text-sm sm:text-md font-medium text-black dark:text-white line-clamp-2 leading-tight mb-1 sm:mb-2">
                             {product.name}
                         </h3>
-                        <p className="text-neutral-500 dark:text-neutral-400 text-xs uppercase tracking-wider mb-2">
+                        <p className="text-neutral-500 dark:text-neutral-400 text-[10px] sm:text-xs uppercase tracking-wider mb-2 sm:mb-3">
                             {product.category || 'Casual'}
                         </p>
-                        <div className="mt-auto flex items-center justify-between">
-                            <span className="text-lg font-bold text-black dark:text-white">{priceFormatted}</span>
-                            <GlowButton>
-                                Ver detalles
-                            </GlowButton>
+                        <div className="mt-auto flex items-end justify-between gap-2">
+                            <span className="text-base sm:text-lg font-bold text-black dark:text-white truncate">{priceFormatted}</span>
+                            <div className="shrink-0">
+                                <GlowButton className="!px-3 !py-1.5 sm:!px-4 sm:!py-2">
+                                    <span className="hidden sm:inline">Ver detalles</span>
+                                    <ArrowRight size={16} className="sm:hidden" />
+                                </GlowButton>
+                            </div>
                         </div>
                     </div>
                 </div>
