@@ -174,9 +174,6 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
             clearCart();
             toast.success("¡Pago reportado exitosamente!");
 
-            // Notificar al admin
-            notifyAdminNewOrder(orderId, data.name, totalPrice, 'pago-movil');
-
             onClose();
             router.push(`/gracias?orderId=${orderId}`);
         } catch (error) {
@@ -236,11 +233,6 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
             if (data.notes) message += `📝 Nota: ${data.notes}%0A`;
 
             window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
-
-            // Notificar al admin (en una segunda pestaña)
-            setTimeout(() => {
-                notifyAdminNewOrder(orderId, data.name, totalPrice, 'whatsapp');
-            }, 500);
 
             onClose();
         } catch (error) {
