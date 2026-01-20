@@ -49,19 +49,19 @@ export default function ProductCard({ product }: { product: Product }) {
                         )}
                         <div className="absolute inset-0 bg-black/5 dark:bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                     </div>
-                    <div className="p-3 sm:p-4 flex flex-col flex-grow">
-                        <h3 className="text-sm sm:text-md font-medium text-black dark:text-white line-clamp-2 leading-tight mb-1 sm:mb-2">
+                    <div className="p-2 sm:p-4 flex flex-col flex-grow">
+                        <h3 className="text-xs sm:text-base font-medium text-black dark:text-white line-clamp-2 leading-tight mb-1">
                             {product.name}
                         </h3>
-                        <p className="text-neutral-500 dark:text-neutral-400 text-[10px] sm:text-xs uppercase tracking-wider mb-2 sm:mb-3">
+                        <p className="text-neutral-500 dark:text-neutral-400 text-[10px] sm:text-xs uppercase tracking-wider mb-2">
                             {product.category || 'Casual'}
                         </p>
-                        <div className="mt-auto flex items-end justify-between gap-2">
-                            <span className="text-base sm:text-lg font-bold text-black dark:text-white truncate">{priceFormatted}</span>
-                            <div className="shrink-0">
-                                <GlowButton className="!px-3 !py-1.5 sm:!px-4 sm:!py-2">
+                        <div className="mt-auto flex items-end justify-between gap-1 sm:gap-2">
+                            <span className="text-sm sm:text-lg font-bold text-black dark:text-white truncate">{priceFormatted}</span>
+                            <div className="shrink-0 scale-90 sm:scale-100 origin-bottom-right">
+                                <GlowButton className="!px-2 !py-1 sm:!px-4 sm:!py-2">
                                     <span className="hidden sm:inline">Ver detalles</span>
-                                    <ArrowRight size={16} className="sm:hidden" />
+                                    <ArrowRight size={14} className="sm:hidden" />
                                 </GlowButton>
                             </div>
                         </div>
@@ -74,11 +74,10 @@ export default function ProductCard({ product }: { product: Product }) {
                     e.stopPropagation();
                     toggleWishlist(product);
                 }}
-                className="absolute top-2 right-2 z-10 p-2 rounded-full bg-white/80 dark:bg-black/50 backdrop-blur-sm text-neutral-500 dark:text-neutral-400 hover:text-red-500 hover:scale-110 transition-all shadow-sm"
+                className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-10 p-1.5 sm:p-2 rounded-full bg-white/80 dark:bg-black/50 backdrop-blur-sm text-neutral-500 dark:text-neutral-400 hover:text-red-500 hover:scale-110 transition-all shadow-sm"
             >
                 <Heart
-                    size={20}
-                    className={`transition-colors ${isInWishlist(product.id) ? 'fill-red-500 text-red-500' : ''}`}
+                    className={`w-4 h-4 sm:w-5 sm:h-5 transition-colors ${isInWishlist(product.id) ? 'fill-red-500 text-red-500' : ''}`}
                 />
             </button>
         </motion.div>

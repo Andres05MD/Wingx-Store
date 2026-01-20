@@ -208,10 +208,7 @@ export default function Header() {
                     <ModeToggle />
                 </nav>
 
-                {/* Mobile Controls - Theme & Cart */}
                 <div className="md:hidden flex items-center gap-2">
-                    <WishlistIcon />
-                    <CartIcon />
                     <UserMenu />
                     <ModeToggle />
                 </div>

@@ -2,13 +2,24 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, ShoppingBag, Search } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Home, LayoutGrid, ShoppingCart, Heart } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useCart } from '@/context/CartContext';
+import { useWishlist } from '@/context/WishlistContext';
+import { useEffect, useState } from 'react';
 
 export default function MobileBottomNav() {
     const pathname = usePathname();
+    const { setIsCartOpen, totalItems } = useCart();
+    const { setIsWishlistOpen, wishlist } = useWishlist();
+    const [mounted, setMounted] = useState(false);
 
-    const isActive = (path: string) => {
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const isActive = (path?: string) => {
+        if (!path) return false;
         if (path === '/') {
             return pathname === '/';
         }
@@ -20,63 +31,116 @@ export default function MobileBottomNav() {
             name: 'Inicio',
             href: '/',
             icon: Home,
+            type: 'link'
         },
         {
             name: 'Catálogo',
             href: '/catalogo',
-            icon: ShoppingBag,
+            icon: LayoutGrid,
+            type: 'link'
+        },
+        {
+            name: 'Deseos',
+            action: () => setIsWishlistOpen(true),
+            icon: Heart,
+            type: 'button',
+            count: wishlist.length
+        },
+        {
+            name: 'Carrito',
+            action: () => setIsCartOpen(true),
+            icon: ShoppingCart,
+            type: 'button',
+            count: totalItems
         },
     ];
 
+    if (!mounted) return null;
+
     return (
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-black/90 backdrop-blur-lg border-t border-black/10 dark:border-white/10 safe-area-bottom">
-            <div className="grid grid-cols-2 h-16 max-w-md mx-auto px-4">
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl border-t border-neutral-100 dark:border-white/10 safe-area-bottom">
+            <div className="grid grid-cols-4 h-16 mx-auto px-2">
                 {navItems.map((item) => {
                     const Icon = item.icon;
-                    const active = isActive(item.href);
+                    const active = item.type === 'link' ? isActive(item.href) : false;
 
-                    return (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className="relative flex flex-col items-center justify-center gap-1 group"
-                        >
+                    const content = (
+                        <>
                             {/* Active indicator */}
                             {active && (
                                 <motion.span
                                     layoutId="activeTab"
-                                    className="absolute top-0 left-0 right-0 h-0.5 bg-black dark:bg-white rounded-full"
+                                    className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-black dark:bg-white rounded-b-full"
                                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                 />
                             )}
 
-                            {/* Icon */}
-                            <motion.div
-                                animate={{
-                                    scale: active ? 1.1 : 1,
-                                    y: active ? -2 : 0
-                                }}
-                                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                            >
-                                <Icon
-                                    className={`w-5 h-5 transition-colors ${active
-                                            ? 'text-black dark:text-white'
-                                            : 'text-neutral-500 dark:text-neutral-400 group-hover:text-black dark:group-hover:text-white'
-                                        }`}
-                                    strokeWidth={active ? 2.5 : 2}
-                                />
-                            </motion.div>
+                            {/* Icon Wrapper */}
+                            <div className="relative">
+                                <motion.div
+                                    animate={{
+                                        scale: active ? 1.2 : 1,
+                                        y: active ? -2 : 0
+                                    }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                                >
+                                    <Icon
+                                        className={`w-6 h-6 transition-colors duration-300 ${active
+                                            ? 'text-black dark:text-white fill-current' // Optional: fill icon when active if supported/desired
+                                            : 'text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300'
+                                            }`}
+                                        strokeWidth={active ? 2.5 : 2}
+                                        fill={active && item.name === 'Inicio' ? 'currentColor' : 'none'}
+                                    />
+                                </motion.div>
+
+                                {/* Badge */}
+                                <AnimatePresence>
+                                    {item.count && item.count > 0 ? (
+                                        <motion.div
+                                            initial={{ scale: 0 }}
+                                            animate={{ scale: 1 }}
+                                            exit={{ scale: 0 }}
+                                            className="absolute -top-2 -right-2 bg-black dark:bg-white text-white dark:text-black text-[10px] font-bold h-4 w-4 flex items-center justify-center rounded-full border border-white dark:border-neutral-900"
+                                        >
+                                            {item.count > 9 ? '9+' : item.count}
+                                        </motion.div>
+                                    ) : null}
+                                </AnimatePresence>
+                            </div>
 
                             {/* Label */}
                             <span
-                                className={`text-xs transition-colors ${active
-                                        ? 'text-black dark:text-white font-semibold'
-                                        : 'text-neutral-500 dark:text-neutral-400 group-hover:text-black dark:group-hover:text-white'
+                                className={`text-[10px] mt-1 transition-all duration-300 ${active
+                                    ? 'text-black dark:text-white font-bold translate-y-0'
+                                    : 'text-neutral-400 dark:text-neutral-500 translate-y-1 opacity-0 group-hover:opacity-100 group-hover:translate-y-0'
                                     }`}
                             >
                                 {item.name}
                             </span>
-                        </Link>
+                        </>
+                    );
+
+                    if (item.type === 'link' && item.href) {
+                        return (
+                            <Link
+                                key={item.name}
+                                href={item.href}
+                                className="relative flex flex-col items-center justify-center gap-0.5 group active:scale-95 transition-transform"
+                            >
+                                {content}
+                            </Link>
+                        );
+                    }
+
+                    return (
+                        <button
+                            key={item.name}
+                            onClick={item.action}
+                            className="relative flex flex-col items-center justify-center gap-0.5 group active:scale-95 transition-transform"
+                        >
+                            {content}
+                        </button>
                     );
                 })}
             </div>
