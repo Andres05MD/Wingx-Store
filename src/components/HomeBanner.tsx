@@ -33,7 +33,7 @@ export default function HomeBanner({ title, subtitle, showResetLink }: HomeBanne
         setParticles(newParticles);
     }, []);
     return (
-        <section className="relative w-full min-h-[500px] md:min-h-[600px] flex items-center justify-center overflow-hidden rounded-[2rem] md:rounded-[2.5rem] bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-xl">
+        <section className="relative w-full min-h-[400px] md:min-h-[600px] flex items-center justify-center overflow-hidden rounded-[2rem] md:rounded-[2.5rem] bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-xl">
 
             {/* Enhanced Animated Background */}
             <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
@@ -106,7 +106,7 @@ export default function HomeBanner({ title, subtitle, showResetLink }: HomeBanne
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="max-w-4xl mx-auto p-6 md:p-12 relative z-20"
+                    className="max-w-4xl mx-auto p-4 md:p-12 relative z-20"
                 >
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
@@ -114,7 +114,7 @@ export default function HomeBanner({ title, subtitle, showResetLink }: HomeBanne
                         transition={{ delay: 0.2, duration: 0.6 }}
                     >
 
-                        <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight mb-6 text-slate-900 dark:text-white leading-tight">
+                        <h1 className="text-3xl md:text-7xl font-extrabold tracking-tight mb-4 md:mb-6 text-slate-900 dark:text-white leading-tight">
                             {title}
                         </h1>
                     </motion.div>
@@ -123,7 +123,7 @@ export default function HomeBanner({ title, subtitle, showResetLink }: HomeBanne
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.4, duration: 0.6 }}
-                        className="text-xl text-slate-600 dark:text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed"
+                        className="text-base md:text-xl text-slate-600 dark:text-slate-300 mb-6 md:mb-10 max-w-2xl mx-auto leading-relaxed"
                     >
                         {subtitle}
                     </motion.p>
