@@ -64,7 +64,7 @@ export default function RootLayout({
                     <ParticlesBackground />
                     <Header />
 
-                    <main className="flex-grow w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-6">
+                    <main className="flex-grow w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-6 pb-24 md:pb-6">
                       {children}
                     </main>
 

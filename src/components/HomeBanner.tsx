@@ -91,8 +91,7 @@ export default function HomeBanner({ title, subtitle, showResetLink }: HomeBanne
                     />
                 ))}
 
-                {/* Enhanced Grid Pattern */}
-                <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-[0.05] dark:opacity-[0.08]" style={{ backgroundSize: '40px 40px' }}></div>
+
 
                 {/* Gradient Overlay for depth */}
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-neutral-50/50 dark:to-black/50"></div>

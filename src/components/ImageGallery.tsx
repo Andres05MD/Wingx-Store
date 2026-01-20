@@ -30,7 +30,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
     return (
         <>
             {/* Mobile Carousel (Hidden on Desktop) */}
-            <div className="md:hidden relative w-full">
+            <div className="md:hidden relative w-full max-w-[300px] mx-auto">
                 <div
                     ref={scrollRef}
                     onScroll={handleScroll}
