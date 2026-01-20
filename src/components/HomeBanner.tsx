@@ -33,7 +33,7 @@ export default function HomeBanner({ title, subtitle, showResetLink }: HomeBanne
         setParticles(newParticles);
     }, []);
     return (
-        <section className="relative w-full min-h-[500px] md:min-h-[600px] flex items-center justify-center overflow-hidden rounded-[2rem] md:rounded-[2.5rem] bg-gradient-to-br from-neutral-50 via-white to-neutral-100 dark:from-neutral-950 dark:via-black dark:to-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-xl">
+        <section className="relative w-full min-h-[500px] md:min-h-[600px] flex items-center justify-center overflow-hidden rounded-[2rem] md:rounded-[2.5rem] bg-white dark:bg-black border border-neutral-200 dark:border-neutral-800 shadow-xl">
 
             {/* Enhanced Animated Background */}
             <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">

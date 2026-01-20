@@ -34,7 +34,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
                 <div
                     ref={scrollRef}
                     onScroll={handleScroll}
-                    className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide aspect-[3/4] rounded-2xl bg-neutral-100 dark:bg-neutral-800"
+                    className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide aspect-square rounded-2xl bg-neutral-100 dark:bg-neutral-800"
                 >
                     {images.map((img, idx) => (
                         <div key={idx} className="w-full flex-shrink-0 snap-center relative h-full">
@@ -58,8 +58,8 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
                             <div
                                 key={idx}
                                 className={`h-2 rounded-full transition-all duration-300 shadow-sm ${currentSlide === idx
-                                        ? 'w-6 bg-white'
-                                        : 'w-2 bg-white/50 backdrop-blur-sm'
+                                    ? 'w-6 bg-white'
+                                    : 'w-2 bg-white/50 backdrop-blur-sm'
                                     }`}
                             />
                         ))}
