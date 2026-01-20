@@ -37,35 +37,6 @@ export default function HomeBanner({ title, subtitle, showResetLink }: HomeBanne
 
             {/* Enhanced Animated Background */}
             <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
-                {/* Gradient Orbs */}
-                <motion.div
-                    animate={{
-                        rotate: 360,
-                        scale: [1, 1.2, 1],
-                        opacity: [0.3, 0.5, 0.3]
-                    }}
-                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                    className="absolute -top-[20%] -left-[10%] w-[700px] h-[700px] bg-gradient-to-br from-neutral-300 to-neutral-400 dark:from-neutral-700 dark:to-neutral-600 rounded-full blur-[120px] opacity-40"
-                />
-                <motion.div
-                    animate={{
-                        rotate: -360,
-                        scale: [1, 1.3, 1],
-                        opacity: [0.4, 0.6, 0.4]
-                    }}
-                    transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                    className="absolute top-[10%] -right-[15%] w-[600px] h-[600px] bg-gradient-to-tl from-slate-300 to-neutral-200 dark:from-slate-800 dark:to-neutral-700 rounded-full blur-[130px] opacity-30"
-                />
-                <motion.div
-                    animate={{
-                        x: [-70, 70, -70],
-                        y: [-70, 70, -70],
-                        scale: [1, 1.15, 1],
-                        opacity: [0.2, 0.4, 0.2]
-                    }}
-                    transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute -bottom-[25%] left-[15%] w-[650px] h-[650px] bg-gradient-to-tr from-gray-200 to-neutral-300 dark:from-gray-800 dark:to-neutral-600 rounded-full blur-[110px] opacity-35"
-                />
 
                 {/* Floating Particles */}
                 {/* Floating Particles */}
@@ -93,11 +64,7 @@ export default function HomeBanner({ title, subtitle, showResetLink }: HomeBanne
 
 
 
-                {/* Gradient Overlay for depth */}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-neutral-50/50 dark:to-black/50"></div>
 
-                {/* Noise texture for premium feel */}
-                <div className="absolute inset-0 bg-noise opacity-[0.02] dark:opacity-[0.03]"></div>
             </div>
 
             {/* Content Container */}
@@ -114,7 +81,7 @@ export default function HomeBanner({ title, subtitle, showResetLink }: HomeBanne
                         transition={{ delay: 0.2, duration: 0.6 }}
                     >
 
-                        <h1 className="text-3xl md:text-7xl font-extrabold tracking-tight mb-4 md:mb-6 text-slate-900 dark:text-white leading-tight">
+                        <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight mb-4 md:mb-6 text-slate-900 dark:text-white leading-tight">
                             {title}
                         </h1>
                     </motion.div>

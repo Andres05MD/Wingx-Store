@@ -155,7 +155,7 @@ export default async function Home({
             </div>
 
             {!searchTerm && (
-                <div className="mt-20 -mx-4 sm:-mx-6 lg:-mx-8">
+                <div className="mt-8 md:mt-20 -mx-4 sm:-mx-6 lg:-mx-8">
                     <InfiniteMarquee />
                 </div>
             )}
