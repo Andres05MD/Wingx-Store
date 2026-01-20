@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
+import { useTheme } from 'next-themes';
 import { Search } from 'lucide-react';
 import { ModeToggle } from '@/components/ui/ModeToggle';
 import imagekitLoader from '@/lib/imagekitLoader';
@@ -18,6 +19,15 @@ export default function Header() {
     const [searchResults, setSearchResults] = useState<{ id: string, name: string, category: string, imageUrl: string }[]>([]);
     const router = useRouter();
     const pathname = usePathname();
+    const { theme, systemTheme } = useTheme();
+
+    // Determine if dark mode is active
+    const currentTheme = theme === 'system' ? systemTheme : theme;
+    const isDarkMode = currentTheme === 'dark';
+
+    // Logo URLs
+    const lightModeLogo = 'https://ik.imagekit.io/xwym4oquc/resources/Isotipo.png';
+    const darkModeLogo = 'https://ik.imagekit.io/xwym4oquc/resources/Isotipo(Invert).png';
 
     // Fetch basic product info for search index on mount
     useEffect(() => {
@@ -96,7 +106,7 @@ export default function Header() {
                     <Link href="/" className="flex items-center gap-3 group">
                         <Image
                             loader={imagekitLoader}
-                            src="https://ik.imagekit.io/xwym4oquc/resources/Isotipo.png"
+                            src={isDarkMode ? darkModeLogo : lightModeLogo}
                             alt="Wingx Logo"
                             width={48}
                             height={48}
