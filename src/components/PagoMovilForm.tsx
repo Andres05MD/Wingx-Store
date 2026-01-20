@@ -97,67 +97,69 @@ export default function PagoMovilForm({ onSubmit, onCancel, totalAmount, isLoadi
     // Formatear teléfono para mostrar (ej: 0412 123 4567)
     const formattedPhone = storePagoMovil.telefono.replace(/(\d{4})(\d{3})(\d{4})/, '$1 $2 $3');
 
-
     return (
-        <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-4 duration-300">
+        <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-4 duration-300 overflow-y-auto">
             {/* Header / Info de Pago */}
-            <div className="mb-4 p-4 bg-gradient-to-br from-neutral-900 to-neutral-800 dark:from-white dark:to-neutral-100 rounded-2xl text-white dark:text-neutral-900 shadow-xl shadow-neutral-500/10 relative overflow-hidden group">
+            <div className="shrink-0 mb-4 p-4 bg-gradient-to-br from-neutral-900 to-neutral-800 dark:from-white dark:to-neutral-100 rounded-2xl text-white dark:text-neutral-900 shadow-xl shadow-neutral-500/10 relative overflow-hidden group">
                 {/* Background Pattern */}
-                <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform duration-700">
+                <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform duration-700 pointer-events-none">
                     <Smartphone size={100} />
                 </div>
 
-                <div className="relative z-10">
-                    <div className="flex justify-between items-start mb-3">
-                        <div>
+                <div className="relative z-10 flex flex-col gap-3">
+                    <div className="flex justify-between items-start">
+                        <div className="flex-1 min-w-0 pr-2">
                             <p className="text-white/60 dark:text-black/60 text-[10px] font-medium uppercase tracking-wider mb-0.5">Monto a Pagar</p>
-                            <h3 className="text-2xl sm:text-3xl font-bold font-heading tabular-nums tracking-tight">
+                            <h3 className="text-2xl sm:text-3xl font-bold font-heading tabular-nums tracking-tight break-words">
                                 {formatBs(totalAmount)}
                             </h3>
                             <p className="text-xs text-white/50 dark:text-black/50 font-medium mt-0.5">
                                 Ref: ${totalAmount.toFixed(2)} (Tasa BCV: {rateLoading ? '...' : rate?.toFixed(2)})
                             </p>
                         </div>
-                        <div className="p-2 bg-white/10 dark:bg-black/5 rounded-xl backdrop-blur-md">
+                        <div className="shrink-0 p-2 bg-white/10 dark:bg-black/5 rounded-xl backdrop-blur-md">
                             <Wallet className="w-5 h-5 text-white dark:text-black" />
                         </div>
                     </div>
 
                     <div className="space-y-2 pt-3 border-t border-white/10 dark:border-black/5">
-                        <div className="flex justify-between items-center">
-                            <span className="text-xs text-white/70 dark:text-black/70">Banco:</span>
-                            <div className="flex items-center gap-2">
-                                <span className="font-semibold text-xs sm:text-sm">{storePagoMovil.banco} ({bankCode})</span>
+                        <div className="flex justify-between items-center gap-2">
+                            <span className="text-xs text-white/70 dark:text-black/70 shrink-0">Banco:</span>
+                            <div className="flex items-center gap-2 min-w-0 flex-1 justify-end">
+                                <span className="font-semibold text-xs sm:text-sm truncate">{storePagoMovil.banco} ({bankCode})</span>
                                 <button
                                     onClick={() => handleCopy(bankCode)}
                                     type="button"
-                                    className="p-1 hover:bg-white/10 dark:hover:bg-black/5 rounded-full transition-colors"
+                                    className="shrink-0 p-1 bg-white/10 dark:bg-black/5 rounded-full hover:bg-white/20 dark:hover:bg-black/10 transition-colors"
+                                    title="Copiar Banco"
                                 >
                                     {copied ? <CheckCircle2 size={12} className="text-green-400" /> : <Copy size={12} />}
                                 </button>
                             </div>
                         </div>
-                        <div className="flex justify-between items-center">
-                            <span className="text-xs text-white/70 dark:text-black/70">Teléfono:</span>
-                            <div className="flex items-center gap-2">
-                                <span className="font-semibold text-xs sm:text-sm tabular-nums">{formattedPhone}</span>
+                        <div className="flex justify-between items-center gap-2">
+                            <span className="text-xs text-white/70 dark:text-black/70 shrink-0">Teléfono:</span>
+                            <div className="flex items-center gap-2 min-w-0 flex-1 justify-end">
+                                <span className="font-semibold text-xs sm:text-sm tabular-nums truncate">{formattedPhone}</span>
                                 <button
                                     onClick={() => handleCopy(storePagoMovil.telefono)}
                                     type="button"
-                                    className="p-1 hover:bg-white/10 dark:hover:bg-black/5 rounded-full transition-colors"
+                                    className="shrink-0 p-1 bg-white/10 dark:bg-black/5 rounded-full hover:bg-white/20 dark:hover:bg-black/10 transition-colors"
+                                    title="Copiar Teléfono"
                                 >
                                     <Copy size={12} />
                                 </button>
                             </div>
                         </div>
-                        <div className="flex justify-between items-center">
-                            <span className="text-xs text-white/70 dark:text-black/70">Cédula:</span>
-                            <div className="flex items-center gap-2">
-                                <span className="font-semibold text-xs sm:text-sm tabular-nums">{storePagoMovil.cedula}</span>
+                        <div className="flex justify-between items-center gap-2">
+                            <span className="text-xs text-white/70 dark:text-black/70 shrink-0">Cédula:</span>
+                            <div className="flex items-center gap-2 min-w-0 flex-1 justify-end">
+                                <span className="font-semibold text-xs sm:text-sm tabular-nums truncate">{storePagoMovil.cedula}</span>
                                 <button
                                     onClick={() => handleCopy(storePagoMovil.cedula)}
                                     type="button"
-                                    className="p-1 hover:bg-white/10 dark:hover:bg-black/5 rounded-full transition-colors"
+                                    className="shrink-0 p-1 bg-white/10 dark:bg-black/5 rounded-full hover:bg-white/20 dark:hover:bg-black/10 transition-colors"
+                                    title="Copiar Cédula"
                                 >
                                     <Copy size={12} />
                                 </button>
