@@ -57,8 +57,7 @@ export default function RootLayout({
                   <SmoothScroll />
                   <ThemeProvider
                     attribute="class"
-                    defaultTheme="dark"
-                    enableSystem
+                    defaultTheme="light"
                     disableTransitionOnChange
                   >
                     <ParticlesBackground />
