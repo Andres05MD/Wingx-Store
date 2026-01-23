@@ -40,8 +40,16 @@ export default function CartDrawer() {
     useEffect(() => {
         if (!isCartOpen) return;
 
-        // Reset flag and visibility style
+        // Reset flag and visibility style immediately upon opening
         isBrowserNavigation.current = false;
+        if (drawerRef.current) {
+            drawerRef.current.style.display = '';
+            drawerRef.current.style.opacity = '';
+        }
+        if (backdropRef.current) {
+            backdropRef.current.style.display = '';
+            backdropRef.current.style.opacity = '';
+        }
 
         // Add state to history when drawer opens
         window.history.pushState({ cartOpen: true }, '');
@@ -50,10 +58,9 @@ export default function CartDrawer() {
             // Mark as browser navigation
             isBrowserNavigation.current = true;
 
-            // IMMEDIATE FIX for iOS flicker: Hide elements directly via DOM
-            // This prevents React from rendering a 'ghost' frame during the transition
-            if (drawerRef.current) drawerRef.current.style.opacity = '0';
-            if (backdropRef.current) backdropRef.current.style.opacity = '0';
+            // AGGRESSIVE FIX for iOS flicker: Remove from flow immediately
+            if (drawerRef.current) drawerRef.current.style.display = 'none';
+            if (backdropRef.current) backdropRef.current.style.display = 'none';
 
             // Close drawer when user navigates back
             setIsCartOpen(false);

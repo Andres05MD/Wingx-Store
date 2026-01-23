@@ -34,8 +34,16 @@ export default function WishlistDrawer() {
     useEffect(() => {
         if (!isWishlistOpen) return;
 
-        // Reset flag
+        // Reset flag and visibility style immediately upon opening
         isBrowserNavigation.current = false;
+        if (drawerRef.current) {
+            drawerRef.current.style.display = '';
+            drawerRef.current.style.opacity = '';
+        }
+        if (backdropRef.current) {
+            backdropRef.current.style.display = '';
+            backdropRef.current.style.opacity = '';
+        }
 
         // Add state to history when drawer opens
         window.history.pushState({ wishlistOpen: true }, '');
@@ -44,9 +52,9 @@ export default function WishlistDrawer() {
             // Mark as browser navigation
             isBrowserNavigation.current = true;
 
-            // IMMEDIATE FIX for iOS flicker: Hide elements directly via DOM
-            if (drawerRef.current) drawerRef.current.style.opacity = '0';
-            if (backdropRef.current) backdropRef.current.style.opacity = '0';
+            // AGGRESSIVE FIX for iOS flicker: Remove from flow immediately
+            if (drawerRef.current) drawerRef.current.style.display = 'none';
+            if (backdropRef.current) backdropRef.current.style.display = 'none';
 
             // Close drawer when user navigates back
             setIsWishlistOpen(false);
