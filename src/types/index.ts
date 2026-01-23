@@ -9,6 +9,7 @@ export interface Product {
     categories?: string[];
     sizes?: string[]; // e.g. ["S", "M", "L"]
     colors?: string[]; // e.g. ["Negro", "Blanco", "Azul"]
+    customColorMap?: Record<string, string>; // Custom colors: { colorName: hexValue }
     gender?: 'Hombre' | 'Mujer' | 'Unisex';
     featured?: boolean;
 }

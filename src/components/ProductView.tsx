@@ -208,8 +208,11 @@ export default function ProductView({ product }: ProductViewProps) {
                                 </div>
                                 <div className="flex flex-wrap gap-3">
                                     {product.colors.map((color) => {
-                                        const colorValue = COLOR_MAP[color] || '#888888';
-                                        const isLightColor = ['Blanco', 'Crema', 'Beige', 'Amarillo', 'Gris Claro', 'Lavanda', 'Menta'].includes(color);
+                                        // Combine predefined colors with custom colors from the product
+                                        const combinedColorMap = { ...COLOR_MAP, ...(product.customColorMap || {}) };
+                                        const colorValue = combinedColorMap[color] || '#888888';
+                                        const isLightColor = ['Blanco', 'Crema', 'Beige', 'Amarillo', 'Gris Claro', 'Lavanda', 'Menta'].includes(color)
+                                            || (colorValue.toLowerCase() === '#ffffff' || colorValue.toLowerCase() === '#fffdd0');
 
                                         return (
                                             <motion.button
