@@ -18,6 +18,7 @@ export default function WishlistDrawer() {
 
     const { addToCart } = useCart();
     const drawerRef = useRef<HTMLDivElement>(null);
+    const isBrowserNavigation = useRef(false);
 
     // Format currency
     const formatPrice = (price: number) => {
@@ -32,10 +33,15 @@ export default function WishlistDrawer() {
     useEffect(() => {
         if (!isWishlistOpen) return;
 
+        // Reset flag
+        isBrowserNavigation.current = false;
+
         // Add state to history when drawer opens
         window.history.pushState({ wishlistOpen: true }, '');
 
         const handlePopState = () => {
+            // Mark as browser navigation to disable exit animation
+            isBrowserNavigation.current = true;
             // Close drawer when user navigates back
             setIsWishlistOpen(false);
         };
@@ -90,7 +96,7 @@ export default function WishlistDrawer() {
                         ref={drawerRef}
                         initial={{ x: '100%' }}
                         animate={{ x: 0 }}
-                        exit={{ x: '100%' }}
+                        exit={isBrowserNavigation.current ? { x: '100%', transition: { duration: 0 } } : { x: '100%' }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                         className="fixed top-0 right-0 h-full w-full sm:w-[450px] bg-white dark:bg-neutral-900 shadow-2xl z-[60] flex flex-col border-l border-neutral-200 dark:border-neutral-800"
                     >
