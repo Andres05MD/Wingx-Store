@@ -18,6 +18,7 @@ export default function WishlistDrawer() {
 
     const { addToCart } = useCart();
     const drawerRef = useRef<HTMLDivElement>(null);
+    const backdropRef = useRef<HTMLDivElement>(null);
     const isBrowserNavigation = useRef(false);
 
     // Format currency
@@ -40,8 +41,13 @@ export default function WishlistDrawer() {
         window.history.pushState({ wishlistOpen: true }, '');
 
         const handlePopState = () => {
-            // Mark as browser navigation to disable exit animation
+            // Mark as browser navigation
             isBrowserNavigation.current = true;
+
+            // IMMEDIATE FIX for iOS flicker: Hide elements directly via DOM
+            if (drawerRef.current) drawerRef.current.style.opacity = '0';
+            if (backdropRef.current) backdropRef.current.style.opacity = '0';
+
             // Close drawer when user navigates back
             setIsWishlistOpen(false);
         };
@@ -84,6 +90,7 @@ export default function WishlistDrawer() {
                 <>
                     {/* Backdrop */}
                     <motion.div
+                        ref={backdropRef}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -96,7 +103,7 @@ export default function WishlistDrawer() {
                         ref={drawerRef}
                         initial={{ x: '100%' }}
                         animate={{ x: 0 }}
-                        exit={isBrowserNavigation.current ? { x: '100%', transition: { duration: 0 } } : { x: '100%' }}
+                        exit={isBrowserNavigation.current ? { opacity: 0, transition: { duration: 0 } } : { x: '100%' }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                         className="fixed top-0 right-0 h-full w-full sm:w-[450px] bg-white dark:bg-neutral-900 shadow-2xl z-[60] flex flex-col border-l border-neutral-200 dark:border-neutral-800"
                     >
