@@ -34,11 +34,31 @@ export default function CartDrawer() {
         }).format(price);
     };
 
+    // Handle mobile back gesture
+    useEffect(() => {
+        if (!isCartOpen) return;
+
+        // Add state to history when drawer opens
+        window.history.pushState({ cartOpen: true }, '');
+
+        const handlePopState = (event: PopStateEvent) => {
+            // Close drawer when user navigates back
+            setIsCartOpen(false);
+        };
+
+        window.addEventListener('popstate', handlePopState);
+
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+        };
+    }, [isCartOpen, setIsCartOpen]);
+
     // Close on click outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) {
-                setIsCartOpen(false);
+                // Go back in history to remove the pushed state
+                window.history.back();
             }
         };
 
@@ -56,10 +76,15 @@ export default function CartDrawer() {
         };
     }, [isCartOpen, setIsCartOpen, isCheckoutOpen]);
 
+    // Handler to close drawer via X button (needs to go back in history)
+    const handleClose = () => {
+        window.history.back();
+    };
+
     const handleCheckout = () => {
         setIsCheckoutOpen(true);
-        setIsCartOpen(false); // Close drawer to show modal clearly, or keep it? 
-        // Better UX: Close drawer, open modal.
+        // Go back in history to remove the cart drawer state, then close
+        window.history.back();
     };
 
     return (
@@ -94,7 +119,7 @@ export default function CartDrawer() {
                                     <h2 className="text-xl font-bold font-heading">Tu Carrito ({totalItems})</h2>
                                 </div>
                                 <button
-                                    onClick={() => setIsCartOpen(false)}
+                                    onClick={handleClose}
                                     className="p-2 hover:bg-neutral-100 dark:hover:bg-white/5 rounded-full transition-colors"
                                 >
                                     <X size={24} className="text-neutral-500" />
@@ -113,7 +138,7 @@ export default function CartDrawer() {
                                             <p className="text-neutral-500 text-sm mt-1">¡Explora nuestro catálogo y añade algo increíble!</p>
                                         </div>
                                         <button
-                                            onClick={() => setIsCartOpen(false)}
+                                            onClick={handleClose}
                                             className="text-sm font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400"
                                         >
                                             Seguir comprando

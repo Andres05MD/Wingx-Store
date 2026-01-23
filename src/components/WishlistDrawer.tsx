@@ -28,11 +28,31 @@ export default function WishlistDrawer() {
         }).format(price);
     };
 
+    // Handle mobile back gesture
+    useEffect(() => {
+        if (!isWishlistOpen) return;
+
+        // Add state to history when drawer opens
+        window.history.pushState({ wishlistOpen: true }, '');
+
+        const handlePopState = () => {
+            // Close drawer when user navigates back
+            setIsWishlistOpen(false);
+        };
+
+        window.addEventListener('popstate', handlePopState);
+
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+        };
+    }, [isWishlistOpen, setIsWishlistOpen]);
+
     // Close on click outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) {
-                setIsWishlistOpen(false);
+                // Go back in history to remove the pushed state
+                window.history.back();
             }
         };
 
@@ -46,6 +66,11 @@ export default function WishlistDrawer() {
             document.body.style.overflow = 'unset';
         };
     }, [isWishlistOpen, setIsWishlistOpen]);
+
+    // Handler to close drawer via X button (needs to go back in history)
+    const handleClose = () => {
+        window.history.back();
+    };
 
     return (
         <AnimatePresence>
@@ -78,7 +103,7 @@ export default function WishlistDrawer() {
                                 <h2 className="text-xl font-bold font-heading">Lista de Deseos ({wishlist.length})</h2>
                             </div>
                             <button
-                                onClick={() => setIsWishlistOpen(false)}
+                                onClick={handleClose}
                                 className="p-2 hover:bg-neutral-100 dark:hover:bg-white/5 rounded-full transition-colors"
                             >
                                 <X size={24} className="text-neutral-500" />
@@ -97,7 +122,7 @@ export default function WishlistDrawer() {
                                         <p className="text-neutral-500 text-sm mt-1">Guarda lo que te gusta para no perderlo de vista.</p>
                                     </div>
                                     <button
-                                        onClick={() => setIsWishlistOpen(false)}
+                                        onClick={handleClose}
                                         className="text-sm font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400"
                                     >
                                         Explorar productos
