@@ -39,6 +39,7 @@ export interface OrderItem {
     price: number;
     quantity: number;
     selectedSize?: string;
+    selectedColor?: string;
     imageUrl?: string;
 }
 

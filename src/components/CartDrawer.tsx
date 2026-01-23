@@ -154,6 +154,11 @@ export default function CartDrawer() {
                                                             Talla: <span className="font-medium text-neutral-900 dark:text-neutral-200">{item.selectedSize}</span>
                                                         </p>
                                                     )}
+                                                    {item.selectedColor && (
+                                                        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
+                                                            Color: <span className="font-medium text-neutral-900 dark:text-neutral-200">{item.selectedColor}</span>
+                                                        </p>
+                                                    )}
                                                 </div>
 
                                                 <div className="flex items-center justify-between mt-3">

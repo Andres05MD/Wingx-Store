@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 
 interface CartContextType {
     items: CartItem[];
-    addToCart: (product: Product, selectedSize?: string) => void;
+    addToCart: (product: Product, selectedSize?: string, selectedColor?: string) => void;
     removeFromCart: (cartItemId: string) => void;
     updateQuantity: (cartItemId: string, change: number) => void;
     clearCart: () => void;
@@ -51,12 +51,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         }
     }, [items, isLoaded]);
 
-    const addToCart = (product: Product, selectedSize?: string) => {
+    const addToCart = (product: Product, selectedSize?: string, selectedColor?: string) => {
         // Validation: if product needs size, ensure it's selected.
         // However, this validation is better handled in the UI. 
         // Here we assume valid input or optional size.
 
-        const cartItemId = `${product.id}-${selectedSize || 'nosize'}`;
+        const cartItemId = `${product.id}-${selectedSize || 'nosize'}-${selectedColor || 'nocolor'}`;
         const existingItem = items.find((item) => item.cartItemId === cartItemId);
 
         if (existingItem) {
@@ -75,6 +75,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
                     ...product,
                     cartItemId,
                     selectedSize,
+                    selectedColor,
                     quantity: 1,
                 },
             ]);

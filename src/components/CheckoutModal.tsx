@@ -149,6 +149,7 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                 price: item.price,
                 quantity: item.quantity,
                 selectedSize: item.selectedSize,
+                selectedColor: item.selectedColor,
                 imageUrl: item.imageUrl,
             }));
 
@@ -227,7 +228,11 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
 
             message += `%0A*Pedido:*%0A`;
             items.forEach(item => {
-                message += `▪️ ${item.quantity}x ${item.name} ($${item.price})%0A`;
+                let itemDetails = `▪️ ${item.quantity}x ${item.name}`;
+                if (item.selectedSize) itemDetails += ` (${item.selectedSize})`;
+                if (item.selectedColor) itemDetails += ` - ${item.selectedColor}`;
+                itemDetails += ` — $${item.price}`;
+                message += `${itemDetails}%0A`;
             });
             message += `💰 *Total: $${totalPrice.toLocaleString('es-CO')}*%0A`;
             if (data.notes) message += `📝 Nota: ${data.notes}%0A`;

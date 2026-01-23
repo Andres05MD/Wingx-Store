@@ -8,6 +8,7 @@ export interface Product {
     category?: string;
     categories?: string[];
     sizes?: string[]; // e.g. ["S", "M", "L"]
+    colors?: string[]; // e.g. ["Negro", "Blanco", "Azul"]
     gender?: 'Hombre' | 'Mujer' | 'Unisex';
     featured?: boolean;
 }
@@ -15,5 +16,6 @@ export interface Product {
 export interface CartItem extends Product {
     cartItemId: string; // Unique ID for the cart line (product ID + variant args)
     selectedSize?: string;
+    selectedColor?: string;
     quantity: number;
 }

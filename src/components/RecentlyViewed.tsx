@@ -6,20 +6,31 @@ import ProductCard from './ProductCard';
 import ScrollReveal from './ScrollReveal';
 import { motion } from 'framer-motion';
 
-export default function RecentlyViewed() {
+interface RecentlyViewedProps {
+    excludeProductId?: string;
+}
+
+export default function RecentlyViewed({ excludeProductId }: RecentlyViewedProps) {
     const [recentProducts, setRecentProducts] = useState<Product[]>([]);
 
     useEffect(() => {
         const stored = localStorage.getItem('wingx_recently_viewed');
         if (stored) {
             try {
+                let products: Product[] = JSON.parse(stored);
+
+                // Filter out the current product if excludeProductId is provided
+                if (excludeProductId) {
+                    products = products.filter(p => p.id !== excludeProductId);
+                }
+
                 // Get last 4 visited products
-                setRecentProducts(JSON.parse(stored).slice(0, 4));
+                setRecentProducts(products.slice(0, 4));
             } catch (e) {
                 console.error('Error loading recently viewed', e);
             }
         }
-    }, []);
+    }, [excludeProductId]);
 
     if (recentProducts.length === 0) return null;
 

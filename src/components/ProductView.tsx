@@ -21,8 +21,38 @@ interface ProductViewProps {
     product: Product;
 }
 
+// Map of color names to CSS color values
+const COLOR_MAP: Record<string, string> = {
+    'Negro': '#000000',
+    'Blanco': '#FFFFFF',
+    'Rojo': '#EF4444',
+    'Azul': '#3B82F6',
+    'Azul Marino': '#1E3A5F',
+    'Azul Cielo': '#87CEEB',
+    'Verde': '#22C55E',
+    'Verde Oliva': '#556B2F',
+    'Amarillo': '#EAB308',
+    'Naranja': '#F97316',
+    'Rosa': '#EC4899',
+    'Morado': '#A855F7',
+    'Gris': '#6B7280',
+    'Gris Claro': '#D1D5DB',
+    'Marrón': '#92400E',
+    'Beige': '#D4B896',
+    'Crema': '#FFFDD0',
+    'Coral': '#FF7F50',
+    'Turquesa': '#40E0D0',
+    'Lavanda': '#E6E6FA',
+    'Borgoña': '#800020',
+    'Terracota': '#E2725B',
+    'Menta': '#98FF98',
+    'Vino': '#722F37',
+    'Caqui': '#C3B091'
+};
+
 export default function ProductView({ product }: ProductViewProps) {
     const [selectedSize, setSelectedSize] = useState<string>('');
+    const [selectedColor, setSelectedColor] = useState<string>('');
     const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
     const { toggleWishlist, isInWishlist } = useWishlist();
 
@@ -55,7 +85,20 @@ export default function ProductView({ product }: ProductViewProps) {
             return;
         }
 
-        addToCart(product, selectedSize);
+        if (!selectedColor && product.colors && product.colors.length > 0) {
+            Swal.fire({
+                title: 'Color requerido',
+                text: 'Por favor selecciona un color para continuar.',
+                icon: 'warning',
+                background: '#0f172a',
+                color: '#f8fafc',
+                confirmButtonColor: '#3b82f6',
+                confirmButtonText: 'Entendido'
+            });
+            return;
+        }
+
+        addToCart(product, selectedSize, selectedColor);
     };
 
     // Breadcrumbs data
@@ -149,6 +192,56 @@ export default function ProductView({ product }: ProductViewProps) {
                         </ScrollReveal>
                     )}
 
+                    {/* Colors Selector */}
+                    {product.colors && product.colors.length > 0 && (
+                        <ScrollReveal delay={0.35} direction="right">
+                            <div>
+                                <div className="flex items-center justify-between mb-3">
+                                    <span className="block text-sm font-medium text-neutral-700 dark:text-white">
+                                        Selecciona el color
+                                        {selectedColor && (
+                                            <span className="ml-2 text-blue-600 dark:text-blue-400 font-semibold">
+                                                — {selectedColor}
+                                            </span>
+                                        )}
+                                    </span>
+                                </div>
+                                <div className="flex flex-wrap gap-3">
+                                    {product.colors.map((color) => {
+                                        const colorValue = COLOR_MAP[color] || '#888888';
+                                        const isLightColor = ['Blanco', 'Crema', 'Beige', 'Amarillo', 'Gris Claro', 'Lavanda', 'Menta'].includes(color);
+
+                                        return (
+                                            <motion.button
+                                                key={color}
+                                                whileHover={{ scale: 1.1 }}
+                                                whileTap={{ scale: 0.95 }}
+                                                onClick={() => setSelectedColor(color)}
+                                                title={color}
+                                                className={`relative w-10 h-10 rounded-full transition-all duration-200 flex items-center justify-center
+                                                    ${selectedColor === color
+                                                        ? 'ring-2 ring-offset-2 ring-blue-500 dark:ring-offset-slate-900'
+                                                        : 'hover:ring-2 hover:ring-offset-2 hover:ring-black/20 dark:hover:ring-white/20 dark:hover:ring-offset-slate-900'
+                                                    }
+                                                    ${isLightColor ? 'border border-black/20 dark:border-white/20' : ''}
+                                                `}
+                                                style={{ backgroundColor: colorValue }}
+                                            >
+                                                {selectedColor === color && (
+                                                    <motion.div
+                                                        initial={{ scale: 0 }}
+                                                        animate={{ scale: 1 }}
+                                                        className={`w-4 h-4 rounded-full ${isLightColor ? 'bg-black/60' : 'bg-white/80'}`}
+                                                    />
+                                                )}
+                                            </motion.button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </ScrollReveal>
+                    )}
+
                     {/* Buy Button */}
                     <ScrollReveal delay={0.4} direction="up">
                         <div className="mt-8">
@@ -179,7 +272,7 @@ export default function ProductView({ product }: ProductViewProps) {
 
 
 
-            <RecentlyViewed />
+            <RecentlyViewed excludeProductId={product.id} />
             <SizeGuideModal isOpen={isSizeGuideOpen} onClose={() => setIsSizeGuideOpen(false)} />
         </div>
     );
