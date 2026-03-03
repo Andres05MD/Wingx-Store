@@ -20,7 +20,7 @@ const PRODUCT_CATEGORIES: Record<string, string[]> = {
 };
 
 interface CatalogSidebarProps {
-    categories?: string[]; // Optional, we use the constant primarily now
+    categories?: string[];
 }
 
 export default function CatalogSidebar({ categories }: CatalogSidebarProps) {
@@ -29,7 +29,6 @@ export default function CatalogSidebar({ categories }: CatalogSidebarProps) {
     const { replace } = useRouter();
     const [isOpen, setIsOpen] = useState(false);
 
-    // State for expanded categories in sidebar
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
 
     const currentCategory = searchParams.get('category') || 'Todos';
@@ -52,7 +51,7 @@ export default function CatalogSidebar({ categories }: CatalogSidebarProps) {
 
     const handleCategoryChange = (category: string) => {
         const params = new URLSearchParams(searchParams);
-        params.set('page', '1'); // Reset to page 1
+        params.set('page', '1');
 
         if (category === 'Todos') {
             params.delete('category');
@@ -60,7 +59,7 @@ export default function CatalogSidebar({ categories }: CatalogSidebarProps) {
             params.set('category', category);
         }
         replace(`${pathname}?${params.toString()}`, { scroll: false });
-        if (window.innerWidth < 768) setIsOpen(false); // Close mobile menu on selection
+        if (window.innerWidth < 768) setIsOpen(false);
     };
 
     const toggleSidebar = () => setIsOpen(!isOpen);
@@ -79,117 +78,168 @@ export default function CatalogSidebar({ categories }: CatalogSidebarProps) {
             <div className="md:hidden pb-4">
                 <button
                     onClick={toggleSidebar}
-                    className="w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-black dark:bg-white text-white dark:text-black font-medium"
+                    className="w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-black dark:bg-white text-white dark:text-black font-medium text-sm cursor-pointer active:scale-[0.98] transition-transform"
                 >
-                    <PiFunnelBold className="w-5 h-5" />
+                    <PiFunnelBold className="w-4 h-4" />
                     Filtrar por Categoría
                 </button>
             </div>
 
-            {/* Sidebar Content */}
-            <div className={`
-                fixed inset-0 z-50 bg-white dark:bg-neutral-900 p-6 md:p-0 md:static md:bg-transparent md:dark:bg-transparent md:block
-                ${isOpen ? 'block' : 'hidden'}
-                overflow-y-auto md:overflow-visible
-            `}>
-                <div className="flex items-center justify-between md:hidden mb-6">
-                    <h2 className="text-xl font-bold">Filtros</h2>
-                    <button onClick={toggleSidebar} className="p-2">
-                        <PiXBold className="w-6 h-6" />
-                    </button>
-                </div>
+            {/* Mobile Backdrop */}
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
+                        onClick={toggleSidebar}
+                    />
+                )}
+            </AnimatePresence>
 
-                <div className="md:sticky md:top-24 flex flex-col gap-4">
-
-                    {/* Categories Area */}
-                    <div className="w-full pr-4">
-                        <div className="hidden md:flex items-center gap-2 mb-4 text-primary">
-                            <PiFunnelBold className="w-5 h-5" />
-                            <h2 className="text-lg font-bold">Categorías</h2>
-                        </div>
-
-                        <div className="flex flex-col space-y-1 bg-neutral-50 dark:bg-neutral-900/50 p-4 rounded-xl border border-neutral-100 dark:border-white/5">
-                            {/* All Products Option */}
-                            <button
-                                onClick={() => handleCategoryChange('Todos')}
-                                className={`text-left px-4 py-2 rounded-lg text-sm font-bold transition-all ${currentCategory === 'Todos' ? 'bg-black text-white dark:bg-white dark:text-black shadow-lg shadow-black/10 dark:shadow-white/10' : 'hover:bg-white dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400'
-                                    }`}
-                            >
-                                Todos los Productos
+            {/* Sidebar Content — Slide-in drawer on mobile */}
+            <AnimatePresence>
+                {(isOpen || typeof window === 'undefined') && (
+                    <motion.div
+                        initial={{ x: '-100%' }}
+                        animate={{ x: 0 }}
+                        exit={{ x: '-100%' }}
+                        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                        className="fixed inset-y-0 left-0 z-50 w-[280px] bg-white dark:bg-neutral-950 p-6 shadow-2xl md:hidden overflow-y-auto"
+                    >
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-lg font-bold font-heading tracking-tight">Categorías</h2>
+                            <button onClick={toggleSidebar} className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-900 rounded-lg transition-colors cursor-pointer">
+                                <PiXBold className="w-5 h-5" />
                             </button>
-
-                            <div className="h-px bg-neutral-200 dark:bg-neutral-800 my-2 mx-2" />
-
-                            {Object.entries(PRODUCT_CATEGORIES).map(([mainCat, subCats]) => {
-                                const isExpanded = expandedCategories.includes(mainCat);
-                                const isActiveMain = currentCategory === mainCat;
-
-                                return (
-                                    <div key={mainCat} className="space-y-1">
-                                        <div className="flex items-center justify-between group">
-                                            <button
-                                                onClick={() => handleCategoryChange(mainCat)}
-                                                className={`flex-1 text-left px-4 py-2 rounded-lg text-sm font-semibold transition-all ${isActiveMain
-                                                    ? 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/10'
-                                                    : 'text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800'
-                                                    }`}
-                                            >
-                                                {mainCat}
-                                            </button>
-                                            <button
-                                                onClick={(e) => { e.stopPropagation(); toggleExpand(mainCat); }}
-                                                className="p-2 text-neutral-400 hover:text-black dark:hover:text-white"
-                                            >
-                                                {isExpanded ? <PiCaretDownBold /> : <PiCaretRightBold />}
-                                            </button>
-                                        </div>
-
-                                        <AnimatePresence>
-                                            {isExpanded && (
-                                                <motion.div
-                                                    initial={{ height: 0, opacity: 0 }}
-                                                    animate={{ height: 'auto', opacity: 1 }}
-                                                    exit={{ height: 0, opacity: 0 }}
-                                                    className="overflow-hidden ml-4 pl-2 border-l border-neutral-200 dark:border-neutral-800 space-y-1"
-                                                >
-                                                    {subCats.map(sub => {
-                                                        const isActiveSub = currentCategory === sub;
-                                                        return (
-                                                            <button
-                                                                key={sub}
-                                                                onClick={() => handleCategoryChange(sub)}
-                                                                className={`block w-full text-left px-4 py-1.5 rounded-md text-sm transition-all ${isActiveSub
-                                                                    ? 'text-purple-600 dark:text-purple-400 font-medium bg-purple-50 dark:bg-purple-900/10'
-                                                                    : 'text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white'
-                                                                    }`}
-                                                            >
-                                                                {sub}
-                                                            </button>
-                                                        );
-                                                    })}
-                                                </motion.div>
-                                            )}
-                                        </AnimatePresence>
-                                    </div>
-                                );
-                            })}
                         </div>
+
+                        <SidebarContent
+                            currentCategory={currentCategory}
+                            expandedCategories={expandedCategories}
+                            onCategoryChange={handleCategoryChange}
+                            onToggleExpand={toggleExpand}
+                        />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Desktop Sidebar */}
+            <div className="hidden md:block">
+                <div className="sticky top-24 flex flex-col gap-5">
+                    <div className="flex items-center gap-2 text-black dark:text-white">
+                        <PiFunnelBold className="w-4 h-4" />
+                        <h2 className="text-sm font-bold uppercase tracking-widest">Categorías</h2>
                     </div>
 
-                    {/* Fixed Custom Order Card */}
-                    <div className="shrink-0 pb-2">
-                        <CustomOrderCard />
-                    </div>
+                    <SidebarContent
+                        currentCategory={currentCategory}
+                        expandedCategories={expandedCategories}
+                        onCategoryChange={handleCategoryChange}
+                        onToggleExpand={toggleExpand}
+                    />
+
+                    <CustomOrderCard />
                 </div>
             </div>
-
-            {/* Backdrop for mobile */}
-            {isOpen && (
-                <div
-                    className="fixed inset-0 bg-black/50 z-40 md:hidden"
-                    onClick={toggleSidebar}
-                />
-            )}
         </>
+    );
+}
+
+/* ──────── Extracted sidebar content for reuse ──────── */
+
+function SidebarContent({
+    currentCategory,
+    expandedCategories,
+    onCategoryChange,
+    onToggleExpand,
+}: {
+    currentCategory: string;
+    expandedCategories: string[];
+    onCategoryChange: (cat: string) => void;
+    onToggleExpand: (cat: string) => void;
+}) {
+    return (
+        <div className="flex flex-col space-y-0.5">
+            {/* All Products */}
+            <button
+                onClick={() => onCategoryChange('Todos')}
+                className={`text-left px-3 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 cursor-pointer ${currentCategory === 'Todos'
+                        ? 'bg-black text-white dark:bg-white dark:text-black'
+                        : 'text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-900 hover:text-black dark:hover:text-white'
+                    }`}
+            >
+                Todos los Productos
+            </button>
+
+            <div className="h-px bg-neutral-100 dark:bg-neutral-800 my-2" />
+
+            {Object.entries(PRODUCT_CATEGORIES).map(([mainCat, subCats]) => {
+                const isExpanded = expandedCategories.includes(mainCat);
+                const isActiveMain = currentCategory === mainCat;
+                const hasActiveSub = subCats.includes(currentCategory);
+
+                return (
+                    <div key={mainCat}>
+                        <div className="flex items-center group">
+                            <button
+                                onClick={() => onCategoryChange(mainCat)}
+                                className={`flex-1 text-left px-3 py-2 rounded-lg text-sm transition-all duration-200 cursor-pointer ${isActiveMain
+                                        ? 'font-bold text-black dark:text-white bg-neutral-100 dark:bg-neutral-800/60'
+                                        : hasActiveSub
+                                            ? 'font-semibold text-black dark:text-white'
+                                            : 'font-medium text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-900'
+                                    }`}
+                            >
+                                {mainCat}
+                            </button>
+                            <button
+                                onClick={(e) => { e.stopPropagation(); onToggleExpand(mainCat); }}
+                                className="p-1.5 text-neutral-400 hover:text-black dark:hover:text-white rounded-md hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-all cursor-pointer"
+                                aria-label={`${isExpanded ? 'Contraer' : 'Expandir'} ${mainCat}`}
+                            >
+                                <motion.div
+                                    animate={{ rotate: isExpanded ? 0 : -90 }}
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    <PiCaretDownBold className="w-3 h-3" />
+                                </motion.div>
+                            </button>
+                        </div>
+
+                        <AnimatePresence initial={false}>
+                            {isExpanded && (
+                                <motion.div
+                                    initial={{ height: 0, opacity: 0 }}
+                                    animate={{ height: 'auto', opacity: 1 }}
+                                    exit={{ height: 0, opacity: 0 }}
+                                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                                    className="overflow-hidden"
+                                >
+                                    <div className="ml-3 pl-3 border-l border-neutral-200 dark:border-neutral-800 py-1 space-y-0.5">
+                                        {subCats.map(sub => {
+                                            const isActiveSub = currentCategory === sub;
+                                            return (
+                                                <button
+                                                    key={sub}
+                                                    onClick={() => onCategoryChange(sub)}
+                                                    className={`block w-full text-left px-3 py-1.5 rounded-md text-sm transition-all duration-200 cursor-pointer ${isActiveSub
+                                                            ? 'text-black dark:text-white font-semibold bg-neutral-100 dark:bg-neutral-800/60'
+                                                            : 'text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-neutral-50 dark:hover:bg-neutral-900'
+                                                        }`}
+                                                >
+                                                    {sub}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+                );
+            })}
+        </div>
     );
 }

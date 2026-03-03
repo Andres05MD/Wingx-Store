@@ -14,6 +14,7 @@ h4,
 h5,
 h6 {
   font-family: var(--font-heading);
+  letter-spacing: -0.02em;
 }
 
 /* Custom Scrollbar */
@@ -43,17 +44,17 @@ h6 {
   background: #737373;
 }
 
-/* Utilitarios Glassmorphism - Black & White Theme */
+/* Utilitarios Glassmorphism - Black & White / Liquid Glass Theme */
 .glass-panel {
-  @apply bg-white/90 dark:bg-black/90 backdrop-blur-xl border border-black/5 dark:border-white/10 shadow-2xl shadow-black/5 dark:shadow-white/5;
+  @apply bg-white/60 dark:bg-black/60 backdrop-blur-2xl border-b border-black/5 dark:border-white/10 shadow-2xl shadow-black/5 dark:shadow-white/5 transition-colors duration-500;
 }
 
 .glass-card {
-  @apply bg-white dark:bg-neutral-950/50 backdrop-blur-md border border-black/5 dark:border-white/10 hover:border-black/20 dark:hover:border-white/20 transition-all duration-300;
+  @apply bg-white/80 dark:bg-neutral-950/80 backdrop-blur-xl border border-black/5 dark:border-white/5 hover:border-black/20 dark:hover:border-white/20 transition-all duration-500 hover:shadow-2xl hover:shadow-black/5 dark:hover:shadow-white/5;
 }
 
 .glass-button {
-  @apply bg-white dark:bg-white/5 hover:bg-black/5 dark:hover:bg-white/10 border border-black/10 dark:border-white/10 backdrop-blur-sm transition-all active:scale-95;
+  @apply bg-white/90 dark:bg-neutral-900/90 hover:bg-black/5 dark:hover:bg-white/10 border border-black/10 dark:border-white/10 backdrop-blur-md transition-all duration-300 active:scale-95;
 }
 
 /* Modern Animations */
@@ -128,4 +129,185 @@ h6 {
 .bg-noise {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   background-repeat: repeat;
+}
+
+/* Catalog Accent Line */
+@keyframes accentExpand {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 3rem;
+  }
+}
+
+.catalog-accent-line {
+  display: inline-block;
+  height: 2px;
+  background: linear-gradient(90deg, #000, transparent);
+  animation: accentExpand 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.dark .catalog-accent-line {
+  background: linear-gradient(90deg, #fff, transparent);
+}
+
+/* Catalog Filter Chip */
+.filter-chip {
+  @apply px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-300 cursor-pointer select-none;
+}
+
+.filter-chip-active {
+  @apply bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-md;
+}
+
+.filter-chip-inactive {
+  @apply bg-transparent text-neutral-600 border-neutral-200 dark:text-neutral-400 dark:border-neutral-700 hover:border-neutral-400 dark:hover:border-neutral-500 hover:text-black dark:hover:text-white;
+}
+
+/* Pagination Button */
+.pagination-btn {
+  @apply w-10 h-10 flex items-center justify-center rounded-full text-sm font-medium transition-all duration-300 cursor-pointer;
+}
+
+.pagination-btn-active {
+  @apply bg-black text-white dark:bg-white dark:text-black shadow-lg;
+}
+
+.pagination-btn-inactive {
+  @apply text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-black dark:hover:text-white;
+}
+
+/* Hero Floating Orbs */
+@keyframes floatSlow {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  25% {
+    transform: translate(15px, -25px) scale(1.05);
+  }
+
+  50% {
+    transform: translate(-10px, -40px) scale(0.95);
+  }
+
+  75% {
+    transform: translate(-20px, -15px) scale(1.02);
+  }
+}
+
+@keyframes floatMedium {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(-20px, -30px) scale(1.08);
+  }
+
+  66% {
+    transform: translate(25px, -20px) scale(0.92);
+  }
+}
+
+@keyframes floatFast {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+
+  25% {
+    transform: translate(30px, -15px) scale(1.1) rotate(2deg);
+  }
+
+  50% {
+    transform: translate(-15px, -35px) scale(0.9) rotate(-2deg);
+  }
+
+  75% {
+    transform: translate(10px, -25px) scale(1.05) rotate(1deg);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 12s ease-in-out infinite;
+}
+
+.animate-float-medium {
+  animation: floatMedium 8s ease-in-out infinite;
+}
+
+.animate-float-fast {
+  animation: floatFast 6s ease-in-out infinite;
+}
+
+/* Hero Title Shine */
+@keyframes textShine {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.hero-title-shine {
+  background: linear-gradient(90deg,
+      currentColor 0%,
+      currentColor 40%,
+      rgba(0, 0, 0, 0.5) 50%,
+      currentColor 60%,
+      currentColor 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShine 6s linear infinite;
+}
+
+.dark .hero-title-shine {
+  background: linear-gradient(90deg,
+      white 0%,
+      white 40%,
+      rgba(255, 255, 255, 0.5) 50%,
+      white 60%,
+      white 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Hero Accent Line */
+@keyframes heroLineExpand {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+
+  to {
+    width: 5rem;
+    opacity: 1;
+  }
+}
+
+.hero-accent-line {
+  display: inline-block;
+  height: 3px;
+  background: linear-gradient(90deg, #000, transparent);
+  animation: heroLineExpand 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+  width: 0;
+  opacity: 0;
+}
+
+.dark .hero-accent-line {
+  background: linear-gradient(90deg, #fff, transparent);
 }

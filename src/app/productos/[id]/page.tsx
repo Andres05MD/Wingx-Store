@@ -151,7 +151,10 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
 
-            <ProductView product={product} />
+            <ProductView
+                product={product}
+                relatedProductIds={relatedProducts.map(p => p.id)}
+            />
 
             {/* Related Products Section */}
             {relatedProducts.length > 0 && (

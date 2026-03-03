@@ -29,7 +29,7 @@ export default function UserMenu() {
         <div className="relative">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="relative w-9 h-9 rounded-full overflow-hidden border border-black dark:border-white"
+                className="relative w-11 h-11 md:w-10 md:h-10 rounded-full overflow-hidden border border-black dark:border-white"
             >
                 {user.photoURL ? (
                     <Image

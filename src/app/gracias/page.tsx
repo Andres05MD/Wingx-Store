@@ -12,7 +12,9 @@ import {
     Sparkles,
     Loader2,
     XCircle,
-    PartyPopper
+    PartyPopper,
+    AlertCircle,
+    Scissors
 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { doc, onSnapshot } from 'firebase/firestore';
@@ -59,7 +61,7 @@ function GraciasContent() {
         return () => unsubscribe();
     }, [orderId]);
 
-    // Función para lanzar confetti
+    // Función para lanzar confetti (B&W + dorado sutil)
     const launchConfetti = () => {
         const duration = 3000;
         const animationEnd = Date.now() + duration;
@@ -79,7 +81,7 @@ function GraciasContent() {
                 angle: randomInRange(55, 125),
                 spread: randomInRange(50, 70),
                 origin: { x: randomInRange(0.1, 0.9), y: 0.6 },
-                colors: ['#10b981', '#14b8a6', '#22c55e', '#fbbf24', '#f59e0b']
+                colors: ['#000000', '#404040', '#808080', '#c0c0c0', '#ffffff']
             });
         }, 50);
     };
@@ -111,9 +113,9 @@ function GraciasContent() {
                         transition={{ type: 'spring', stiffness: 200 }}
                         className="w-24 h-24 mx-auto mb-6 relative"
                     >
-                        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full blur-xl opacity-50" />
-                        <div className="relative w-full h-full bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-500/30">
-                            <CheckCircle2 className="w-12 h-12 text-white" />
+                        <div className="absolute inset-0 bg-neutral-900 dark:bg-white rounded-full blur-xl opacity-30" />
+                        <div className="relative w-full h-full bg-neutral-900 dark:bg-white rounded-full flex items-center justify-center shadow-2xl shadow-black/20 dark:shadow-white/10">
+                            <CheckCircle2 className="w-12 h-12 text-white dark:text-black" />
                         </div>
                         <motion.div
                             initial={{ opacity: 0, scale: 0 }}
@@ -121,7 +123,9 @@ function GraciasContent() {
                             transition={{ delay: 0.3 }}
                             className="absolute -top-2 -right-2"
                         >
-                            <PartyPopper className="w-8 h-8 text-yellow-500" />
+                            <div className="w-8 h-8 bg-neutral-100 dark:bg-neutral-800 rounded-full flex items-center justify-center border border-neutral-200 dark:border-neutral-700">
+                                <PartyPopper className="w-4 h-4 text-neutral-900 dark:text-white" />
+                            </div>
                         </motion.div>
                     </motion.div>
 
@@ -131,7 +135,7 @@ function GraciasContent() {
                         animate={{ opacity: 1, y: 0 }}
                         className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-white mb-3"
                     >
-                        ¡Pago Verificado! 🎉
+                        ¡Pago Verificado!
                     </motion.h1>
 
                     {/* Subtitle */}
@@ -139,7 +143,7 @@ function GraciasContent() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-neutral-600 dark:text-neutral-400 text-lg mb-8"
+                        className="text-neutral-500 dark:text-neutral-400 text-lg mb-8"
                     >
                         Tu pago ha sido confirmado exitosamente
                     </motion.p>
@@ -149,20 +153,20 @@ function GraciasContent() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-500/10 dark:to-teal-500/10 border-2 border-emerald-200 dark:border-emerald-500/30 rounded-2xl p-6 mb-8"
+                        className="bg-neutral-900 dark:bg-white rounded-2xl p-6 mb-8"
                     >
                         <div className="flex items-start gap-4">
-                            <div className="w-12 h-12 bg-emerald-500 dark:bg-emerald-500/20 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-500/25">
-                                <CheckCircle2 className="w-6 h-6 text-white dark:text-emerald-400" />
+                            <div className="w-10 h-10 bg-white/10 dark:bg-black/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <Scissors className="w-5 h-5 text-white dark:text-black" />
                             </div>
                             <div className="text-left">
-                                <h3 className="font-bold text-emerald-700 dark:text-emerald-300 mb-1">
+                                <h3 className="font-bold text-white dark:text-black mb-1">
                                     ¡Pedido en Confección!
                                 </h3>
-                                <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                                    Hemos iniciado la preparación de tus prendas exclusivas. Recuerda que el
-                                    tiempo estimado de confección es de <span className="font-semibold text-emerald-800 dark:text-emerald-200">5 a 7 días hábiles</span>. Te contactaremos
-                                    cuando esté listo para envío o entrega.
+                                <p className="text-sm text-neutral-400 dark:text-neutral-600 leading-relaxed">
+                                    Hemos iniciado la preparación de tus prendas exclusivas. Tiempo estimado:
+                                    <span className="font-semibold text-white dark:text-black"> 5 a 7 días hábiles</span>. Te contactaremos
+                                    cuando esté listo.
                                 </p>
                             </div>
                         </div>
@@ -181,8 +185,8 @@ function GraciasContent() {
                         transition={{ type: 'spring', stiffness: 200 }}
                         className="w-24 h-24 mx-auto mb-6 relative"
                     >
-                        <div className="absolute inset-0 bg-gradient-to-br from-red-500 to-orange-500 rounded-full blur-xl opacity-50" />
-                        <div className="relative w-full h-full bg-gradient-to-br from-red-500 to-orange-500 rounded-full flex items-center justify-center shadow-lg shadow-red-500/30">
+                        <div className="absolute inset-0 bg-red-500 rounded-full blur-xl opacity-30" />
+                        <div className="relative w-full h-full bg-red-500 rounded-full flex items-center justify-center shadow-2xl shadow-red-500/20">
                             <XCircle className="w-12 h-12 text-white" />
                         </div>
                     </motion.div>
@@ -201,7 +205,7 @@ function GraciasContent() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="text-neutral-600 dark:text-neutral-400 text-lg mb-8"
+                        className="text-neutral-500 dark:text-neutral-400 text-lg mb-8"
                     >
                         No pudimos confirmar tu transferencia
                     </motion.p>
@@ -211,11 +215,11 @@ function GraciasContent() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-500/10 dark:to-orange-500/10 border-2 border-red-200 dark:border-red-500/30 rounded-2xl p-6 mb-8"
+                        className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-2xl p-6 mb-8"
                     >
                         <div className="flex items-start gap-4">
-                            <div className="w-12 h-12 bg-red-500 dark:bg-red-500/20 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-red-500/25">
-                                <XCircle className="w-6 h-6 text-white dark:text-red-400" />
+                            <div className="w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <XCircle className="w-5 h-5 text-white" />
                             </div>
                             <div className="text-left">
                                 <h3 className="font-bold text-red-700 dark:text-red-300 mb-1">
@@ -240,11 +244,11 @@ function GraciasContent() {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-                    className="w-24 h-24 mx-auto mb-6 relative"
+                    className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-5 sm:mb-6 relative"
                 >
-                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full blur-xl opacity-50" />
-                    <div className="relative w-full h-full bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center shadow-lg shadow-emerald-500/30">
-                        <CheckCircle2 className="w-12 h-12 text-white" />
+                    <div className="absolute inset-0 bg-neutral-900 dark:bg-white rounded-full blur-xl opacity-30" />
+                    <div className="relative w-full h-full bg-neutral-900 dark:bg-white rounded-full flex items-center justify-center shadow-2xl shadow-black/20 dark:shadow-white/10">
+                        <CheckCircle2 className="w-10 h-10 sm:w-12 sm:h-12 text-white dark:text-black" />
                     </div>
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -252,7 +256,9 @@ function GraciasContent() {
                         transition={{ delay: 0.5, duration: 0.5 }}
                         className="absolute -top-2 -right-2"
                     >
-                        <Sparkles className="w-8 h-8 text-yellow-500" />
+                        <div className="w-8 h-8 bg-neutral-100 dark:bg-neutral-800 rounded-full flex items-center justify-center border border-neutral-200 dark:border-neutral-700">
+                            <Sparkles className="w-4 h-4 text-neutral-900 dark:text-white" />
+                        </div>
                     </motion.div>
                 </motion.div>
 
@@ -261,7 +267,7 @@ function GraciasContent() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
-                    className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-white mb-3"
+                    className="text-2xl sm:text-4xl font-bold text-neutral-900 dark:text-white mb-2 sm:mb-3"
                 >
                     ¡Gracias por tu compra!
                 </motion.h1>
@@ -271,7 +277,7 @@ function GraciasContent() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4 }}
-                    className="text-neutral-600 dark:text-neutral-400 text-lg mb-8"
+                    className="text-sm sm:text-lg text-neutral-500 dark:text-neutral-400 mb-6 sm:mb-8"
                 >
                     Tu pedido ha sido registrado exitosamente
                 </motion.p>
@@ -281,21 +287,21 @@ function GraciasContent() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5 }}
-                    className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-500/10 dark:to-cyan-500/10 border border-blue-200 dark:border-blue-500/30 rounded-2xl p-6 mb-8"
+                    className="bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-2xl p-4 sm:p-6 mb-5 sm:mb-6"
                 >
-                    <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 bg-blue-500 dark:bg-blue-500/20 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-500/25">
-                            <Clock className="w-6 h-6 text-white dark:text-blue-400 animate-pulse" />
+                    <div className="flex items-start gap-3 sm:gap-4">
+                        <div className="w-10 h-10 bg-neutral-900 dark:bg-white rounded-xl flex items-center justify-center flex-shrink-0">
+                            <Clock className="w-5 h-5 text-white dark:text-black animate-pulse" />
                         </div>
                         <div className="text-left">
-                            <h3 className="font-bold text-blue-700 dark:text-blue-300 mb-1">
+                            <h3 className="font-bold text-neutral-900 dark:text-white mb-1">
                                 Verificando tu Transferencia
                             </h3>
-                            <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                            <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
                                 Estamos revisando tu pago móvil. Esta página se actualizará
                                 automáticamente cuando sea verificado.
                             </p>
-                            <div className="mt-3 flex items-center gap-2 text-blue-600 dark:text-blue-400">
+                            <div className="mt-3 flex items-center gap-2 text-neutral-900 dark:text-white">
                                 <Mail className="w-4 h-4" />
                                 <span className="text-sm font-medium">
                                     Tiempo estimado: 5-10 min
@@ -310,10 +316,11 @@ function GraciasContent() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 }}
-                    className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 rounded-xl p-4 mb-8 text-left"
+                    className="bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 rounded-xl p-3 sm:p-4 mb-6 sm:mb-8 text-left flex items-start gap-3"
                 >
-                    <p className="text-sm text-amber-700 dark:text-amber-300/90">
-                        <span className="font-bold">💡 Importante:</span> Conserva tu número de referencia
+                    <AlertCircle className="w-4 h-4 text-neutral-500 mt-0.5 shrink-0" />
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                        <span className="font-bold text-neutral-900 dark:text-white">Importante:</span> Conserva tu número de referencia
                         del pago móvil por si necesitas comunicarte con nosotros.
                     </p>
                 </motion.div>
@@ -322,18 +329,18 @@ function GraciasContent() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-neutral-100 via-white to-neutral-100 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950 flex items-center justify-center p-4">
-            {/* Background Effects */}
+        <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 flex items-center justify-center p-4">
+            {/* Background Pattern */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
-                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl" />
+                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-neutral-200/50 dark:bg-neutral-800/30 rounded-full blur-3xl" />
+                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neutral-300/30 dark:bg-neutral-700/20 rounded-full blur-3xl" />
             </div>
 
             <motion.div
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: 'easeOut' }}
-                className="relative z-10 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 rounded-3xl p-8 sm:p-12 max-w-lg w-full text-center shadow-2xl shadow-neutral-200/50 dark:shadow-black/20"
+                className="relative z-10 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl border border-neutral-200 dark:border-neutral-800 rounded-3xl p-6 sm:p-12 pb-24 sm:pb-12 max-w-lg w-full text-center shadow-2xl shadow-neutral-200/50 dark:shadow-black/30"
             >
                 <AnimatePresence mode="wait">
                     <motion.div
@@ -373,16 +380,16 @@ function GraciasContent() {
                 >
                     <Link
                         href="/"
-                        className="flex-1 py-3.5 px-6 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-black font-bold 
-                                 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors flex items-center justify-center gap-2 shadow-lg"
+                        className="flex-1 py-3.5 px-6 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-black font-bold
+                                 hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors flex items-center justify-center gap-2 shadow-lg shadow-black/10 dark:shadow-white/5 active:scale-[0.98] cursor-pointer"
                     >
                         <Home className="w-5 h-5" />
                         Ir al Inicio
                     </Link>
                     <Link
                         href="/catalogo"
-                        className="flex-1 py-3.5 px-6 rounded-xl border-2 border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-white font-semibold 
-                                 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2"
+                        className="flex-1 py-3.5 px-6 rounded-xl border border-neutral-300 dark:border-neutral-700 text-neutral-700 dark:text-white font-semibold
+                                 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2 active:scale-[0.98] cursor-pointer"
                     >
                         <ShoppingBag className="w-5 h-5" />
                         Seguir Comprando
@@ -401,7 +408,7 @@ function GraciasContent() {
                         href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_PHONE}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-emerald-600 dark:text-emerald-400 hover:underline font-medium"
+                        className="text-neutral-900 dark:text-white hover:underline font-semibold"
                     >
                         WhatsApp
                     </a>
@@ -414,9 +421,9 @@ function GraciasContent() {
 // Loading fallback para Suspense
 function GraciasLoading() {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-neutral-100 via-white to-neutral-100 dark:from-neutral-950 dark:via-neutral-900 dark:to-neutral-950 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 flex items-center justify-center p-4">
             <div className="flex flex-col items-center gap-4">
-                <Loader2 className="w-12 h-12 text-emerald-500 animate-spin" />
+                <Loader2 className="w-12 h-12 text-neutral-400 animate-spin" />
                 <p className="text-neutral-500">Cargando...</p>
             </div>
         </div>

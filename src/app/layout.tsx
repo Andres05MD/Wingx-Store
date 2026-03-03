@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit, Plus_Jakarta_Sans } from "next/font/google";
+import { DM_Sans, Sora } from "next/font/google";
 import "./globals.css";
 import React from 'react';
 import Header from "@/components/Header";
@@ -19,13 +19,14 @@ import { ExchangeRateProvider } from "@/context/ExchangeRateContext";
 
 import { ChatProvider } from "@/context/ChatContext";
 
-const outfit = Outfit({
+const sora = Sora({
   subsets: ["latin"],
   variable: "--font-heading",
   display: "swap",
+  weight: ["400", "600", "700", "800"],
 });
 
-const jakarta = Plus_Jakarta_Sans({
+const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
@@ -74,7 +75,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={`${jakarta.variable} ${outfit.variable} antialiased min-h-screen flex flex-col bg-white text-black dark:bg-black dark:text-white transition-colors duration-300 font-sans`}>
+      <body className={`${dmSans.variable} ${sora.variable} antialiased min-h-screen flex flex-col bg-white text-black dark:bg-black dark:text-white transition-colors duration-300 font-sans`}>
         <AuthProvider>
           <ExchangeRateProvider>
             <ChatProvider>
@@ -89,7 +90,7 @@ export default function RootLayout({
                     <ParticlesBackground />
                     <Header />
 
-                    <main className="flex-grow w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-6 pb-24 md:pb-6">
+                    <main className="grow w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-6 pb-32 md:pb-10">
                       {children}
                     </main>
 

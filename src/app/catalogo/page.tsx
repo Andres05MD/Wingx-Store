@@ -1,18 +1,13 @@
 
 import { getAllProducts } from "@/services/productService";
-import ProductCard from "@/components/ProductCard";
-import PaginationControls from "@/components/ui/PaginationControls";
 import { Product } from "@/types";
 import CatalogHeader from "@/components/CatalogHeader";
 import InfiniteMarquee from "@/components/ui/InfiniteMarquee";
-
 import AnimatedProductGrid from "@/components/AnimatedProductGrid";
+import CatalogSidebar from "@/components/CatalogSidebar";
 
 // Revalidate every 60 seconds
 export const revalidate = 60;
-
-// Import the new sidebar
-import CatalogSidebar from "@/components/CatalogSidebar";
 
 export default async function CatalogPage({
     searchParams,
@@ -54,22 +49,36 @@ export default async function CatalogPage({
     const end = start + PAGE_SIZE;
     const currentProducts = filteredProducts.slice(start, end);
 
-    // Default Categories (Extract unique categories from products or defined list)
+    // Categories
     const categories: string[] = ['Todos', ...Array.from(new Set(products.flatMap((p: Product) => p.categories || [p.category || 'Varios'])))];
 
+    // Dynamic header content
+    const headerTitle = searchTerm
+        ? `Resultados para "${resolvedSearchParams.search}"`
+        : categoryFilter !== 'Todos'
+            ? categoryFilter
+            : 'Catálogo';
+
+    const headerSubtitle = searchTerm
+        ? `${totalItems} producto${totalItems !== 1 ? 's' : ''} encontrado${totalItems !== 1 ? 's' : ''}.`
+        : 'Explora nuestra colección completa de moda exclusiva.';
+
     return (
-        <div className="space-y-8 min-h-screen container mx-auto px-4 py-8">
+        <div className="min-h-screen">
+            <CatalogHeader
+                title={headerTitle}
+                subtitle={headerSubtitle}
+                resultCount={totalItems}
+            />
 
-            <CatalogHeader />
-
-            <div className="flex flex-col md:flex-row gap-8">
+            <div className="flex flex-col md:flex-row gap-6 md:gap-10">
                 {/* Sidebar */}
-                <aside className="w-full md:w-64 shrink-0">
+                <aside className="w-full md:w-56 lg:w-60 shrink-0">
                     <CatalogSidebar categories={categories} />
                 </aside>
 
                 {/* Main Content */}
-                <main className="flex-1">
+                <main className="flex-1 min-w-0">
                     <AnimatedProductGrid
                         products={currentProducts}
                         totalItems={totalItems}
@@ -79,7 +88,8 @@ export default async function CatalogPage({
                 </main>
             </div>
 
-            <div className="-mx-4 mt-8 md:mt-12">
+            {/* Marquee */}
+            <div className="-mx-4 mt-10 md:mt-16">
                 <InfiniteMarquee items={[
                     "SE REALIZAN ENVÍOS NACIONALES", "•",
                     "ENVÍOS A TODO EL PAÍS", "•",

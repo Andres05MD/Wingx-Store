@@ -13,13 +13,13 @@ export function ModeToggle() {
     }, [])
 
     if (!mounted) {
-        return <div className="w-9 h-9" /> // Placeholder to avoid hydration mismatch
+        return <div className="w-11 h-11 md:w-10 md:h-10" /> // Placeholder to avoid hydration mismatch
     }
 
     return (
         <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors relative w-9 h-9 flex items-center justify-center"
+            className="p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors relative w-11 h-11 md:w-10 md:h-10 flex items-center justify-center"
             aria-label="Toggle theme"
         >
             {theme === 'dark' ? (

@@ -52,7 +52,7 @@ export default async function Home({
     const currentProducts = filteredProducts.slice(start, end);
 
     return (
-        <div className="space-y-8 animate-in fade-in duration-500">
+        <div className="space-y-6 animate-in fade-in duration-500">
             {/* Hero Section / Banner */}
             <HomeBanner
                 title={searchTerm ? `Resultados para "${resolvedSearchParams.search}"` : 'Bienvenido a Wingx'}
@@ -66,16 +66,31 @@ export default async function Home({
                 </>
             )}
 
-            <div className="w-full mx-auto px-4 py-8">
+            <div className="w-full mx-auto py-8 md:py-12">
                 {/* Main Content */}
                 <main className="flex-1">
                     {/* Product Grid */}
                     {currentProducts.length > 0 ? (
                         <>
-                            <h2 id="product-grid" className="text-xl md:text-2xl font-bold tracking-tight mb-4 md:mb-6 flex items-center gap-2">
-                                <span className="w-1 h-6 md:h-8 rounded-full bg-black dark:bg-white inline-block"></span>
-                                {searchTerm ? 'Resultados de búsqueda' : (categoryFilter !== 'Todos' ? categoryFilter : 'Prendas Destacadas')}
-                            </h2>
+                            <div id="product-grid" className="mb-10 md:mb-14">
+                                <div className="flex items-end justify-between gap-4">
+                                    <div>
+                                        <div className="flex items-center gap-3 mb-3">
+                                            <span className="text-[10px] font-bold text-neutral-400 dark:text-neutral-500 tracking-[0.25em] uppercase">
+                                                Colección
+                                            </span>
+                                            <span className="h-px w-12 bg-gradient-to-r from-black/15 to-transparent dark:from-white/15" />
+                                        </div>
+                                        <h2 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-[-0.03em] font-heading text-black dark:text-white leading-[1.1]">
+                                            {searchTerm ? 'Resultados de búsqueda' : (categoryFilter !== 'Todos' ? categoryFilter : 'Prendas Destacadas')}
+                                        </h2>
+                                    </div>
+                                    <a href="/catalogo" className="hidden md:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.15em] text-neutral-500 hover:text-black dark:hover:text-white transition-colors pb-2">
+                                        Ver todo
+                                        <span className="w-4 h-px bg-current" />
+                                    </a>
+                                </div>
+                            </div>
                             <div className="grid grid-cols-2 gap-3 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                                 {currentProducts.map((product) => (
                                     <ProductCard key={product.id} product={product} />
@@ -89,15 +104,20 @@ export default async function Home({
                             />
                         </>
                     ) : (
-                        <div className="text-center py-20 glass-card rounded-2xl border-2 border-dashed border-black/10 dark:border-white/10 bg-white dark:bg-black/50">
-                            <p className="text-neutral-500 dark:text-neutral-400 text-lg">
-                                {searchTerm
-                                    ? `No encontramos productos que coincidan con "${resolvedSearchParams.search}".`
-                                    : "No se encontraron productos en esta categoría."}
-                            </p>
-                            <a href="/" className="inline-block mt-4 text-sm font-semibold text-neutral-900 dark:text-neutral-100 hover:underline">
-                                Ver todos los productos
-                            </a>
+                        <div className="relative text-center py-20 rounded-[2rem] border border-dashed border-black/[0.06] dark:border-white/[0.06] bg-neutral-50/80 dark:bg-neutral-950/60 overflow-hidden">
+                            {/* Orbe decorativo */}
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-black/[0.02] dark:bg-white/[0.02] blur-3xl pointer-events-none" />
+                            <div className="relative z-10">
+                                <p className="text-neutral-400 dark:text-neutral-500 text-base">
+                                    {searchTerm
+                                        ? `No encontramos productos que coincidan con "${resolvedSearchParams.search}".`
+                                        : "No se encontraron productos en esta categoría."}
+                                </p>
+                                <a href="/" className="inline-flex items-center gap-1 mt-4 text-sm font-semibold text-black dark:text-white hover:opacity-70 transition-opacity">
+                                    Ver todos los productos
+                                    <span className="text-xs">→</span>
+                                </a>
+                            </div>
                         </div>
                     )}
                 </main>

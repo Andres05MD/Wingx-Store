@@ -1,4 +1,5 @@
 import React from 'react';
+import { ArrowRight } from 'lucide-react';
 
 interface PremiumButtonProps {
     children: React.ReactNode;
@@ -21,67 +22,82 @@ export default function PremiumButton({
     type = "button",
     variant = "outline"
 }: PremiumButtonProps) {
-    const commonStyles = `
+    const baseStyles = `
         appearance-none
-        rounded-[15px]
+        rounded-full
         cursor-pointer
-        ${fullWidth ? 'w-full flex justify-center' : 'inline-block'}
+        ${fullWidth ? 'w-full flex justify-center' : 'inline-flex items-center justify-center md:gap-2'}
         font-semibold
-        text-base
+        text-sm
         leading-normal
-        min-h-[60px]
+        min-h-[48px]
+        md:min-h-[52px]
         outline-none
-        px-9
-        py-4
+        px-8
+        py-3
+        md:py-3.5
         text-center
         no-underline
         transition-all
-        duration-300
-        ease-[cubic-bezier(0.23,1,0.32,1)]
+        duration-500
+        ease-[cubic-bezier(0.16,1,0.3,1)]
         select-none
         disabled:pointer-events-none
         disabled:opacity-50
+        group/btn
     `;
 
     const variants = {
         outline: `
             bg-transparent
-            border-2
-            border-black
-            dark:border-white
-            text-neutral-800
-            dark:text-neutral-200
-            hover:text-white
-            hover:bg-black
-            dark:hover:bg-white
-            dark:hover:text-black
-            hover:shadow-[0_8px_15px_rgba(0,0,0,0.25)]
-            hover:-translate-y-0.5
-            active:shadow-none
+            border
+            border-black/20
+            dark:border-white/20
+            text-black
+            dark:text-white
+            md:hover:bg-black
+            md:hover:text-white
+            md:hover:border-black
+            md:dark:hover:bg-white
+            md:dark:hover:text-black
+            md:dark:hover:border-white
+            md:hover:shadow-[0_8px_25px_rgba(0,0,0,0.15)]
+            md:dark:hover:shadow-[0_8px_25px_rgba(255,255,255,0.1)]
+            md:hover:-translate-y-0.5
             active:translate-y-0
+            active:shadow-none
+            backdrop-blur-sm
         `,
         solid: `
             bg-black
             dark:bg-white
             text-white
             dark:text-black
-            border-2
+            border
             border-black
             dark:border-white
-            hover:bg-neutral-800
-            dark:hover:bg-neutral-200
-            hover:shadow-lg
-            hover:-translate-y-0.5
+            md:hover:bg-neutral-800
+            md:dark:hover:bg-neutral-200
+            md:hover:shadow-[0_12px_30px_rgba(0,0,0,0.2)]
+            md:dark:hover:shadow-[0_12px_30px_rgba(255,255,255,0.15)]
+            md:hover:-translate-y-0.5
             active:translate-y-0
         `
     };
 
-    const styles = `${commonStyles} ${variants[variant]} ${className}`.replace(/\s+/g, ' ').trim();
+    const styles = `${baseStyles} ${variants[variant]} ${className}`.replace(/\s+/g, ' ').trim();
+
+    const content = (
+        <>
+            {children}
+            <ArrowRight className="hidden md:inline-block w-4 h-4 opacity-0 -translate-x-1 group-hover/btn:opacity-100 group-hover/btn:translate-x-0 transition-all duration-300" />
+        </>
+    );
 
     if (href) {
         return (
             <a href={href} className={styles}>
-                {children}
+                {content}
             </a>
         );
     }
@@ -93,7 +109,7 @@ export default function PremiumButton({
             disabled={disabled}
             className={styles}
         >
-            {children}
+            {content}
         </button>
     );
 }

@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2, Copy, CheckCircle2, Building2, Smartphone, User, Hash, Calendar, Wallet } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from './ui/Input';
+import { Select } from './ui/Select';
 import { cn } from '@/lib/utils';
 
 // Constantes de Bancos (Venezuela)
@@ -50,6 +51,7 @@ export default function PagoMovilForm({ onSubmit, onCancel, totalAmount, isLoadi
     const {
         register,
         handleSubmit,
+        control,
         formState: { errors },
     } = useForm<PagoMovilFormValues>({
         resolver: zodResolver(pagoMovilSchema),
@@ -184,34 +186,29 @@ export default function PagoMovilForm({ onSubmit, onCancel, totalAmount, isLoadi
             {/* Formulario de Reporte */}
             <form onSubmit={handleSubmit(submitHandler)} className="space-y-4 flex-1">
                 <div className="flex items-center gap-2 mb-2 px-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-black dark:bg-white animate-pulse" />
                     <h4 className="text-sm font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">Datos de tu Transferencia</h4>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                        <label className="text-xs font-semibold uppercase tracking-wider text-neutral-500 ml-1">Banco Origen</label>
-                        <div className="relative">
-                            <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
-                            <select
-                                {...register('bancoOrigen')}
-                                className={cn(
-                                    "w-full pl-11 pr-4 py-3 bg-white dark:bg-neutral-900 border rounded-xl text-sm appearance-none transition-all outline-none",
-                                    errors.bancoOrigen
-                                        ? "border-red-500 focus:ring-2 focus:ring-red-200"
-                                        : "border-neutral-200 dark:border-neutral-800 focus:ring-2 focus:ring-blue-500"
-                                )}
-                            >
-                                <option value="" disabled>Seleccionar banco...</option>
-                                {BANKS.map((bank) => (
-                                    <option key={bank.code} value={`${bank.name} (${bank.code})`}>
-                                        {bank.name} ({bank.code})
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        {errors.bancoOrigen && <p className="text-xs text-red-500 ml-1">{errors.bancoOrigen.message}</p>}
-                    </div>
+                    <Controller
+                        name="bancoOrigen"
+                        control={control}
+                        render={({ field }) => (
+                            <Select
+                                label="Banco Origen"
+                                icon={Building2}
+                                error={errors.bancoOrigen?.message}
+                                placeholder="Seleccionar banco..."
+                                opciones={BANKS.map((bank) => ({
+                                    value: `${bank.name} (${bank.code})`,
+                                    label: `${bank.name} (${bank.code})`,
+                                }))}
+                                value={field.value}
+                                onChange={field.onChange}
+                            />
+                        )}
+                    />
 
                     <Input
                         label="Teléfono Origen"
@@ -255,7 +252,7 @@ export default function PagoMovilForm({ onSubmit, onCancel, totalAmount, isLoadi
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold shadow-lg shadow-emerald-600/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                        className="w-full py-4 bg-black dark:bg-white hover:bg-neutral-800 dark:hover:bg-neutral-200 text-white dark:text-black rounded-2xl font-bold shadow-lg shadow-black/15 dark:shadow-white/10 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                     >
                         {isLoading ? (
                             <>

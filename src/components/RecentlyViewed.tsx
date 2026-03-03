@@ -8,9 +8,10 @@ import { motion } from 'framer-motion';
 
 interface RecentlyViewedProps {
     excludeProductId?: string;
+    excludeProductIds?: string[];
 }
 
-export default function RecentlyViewed({ excludeProductId }: RecentlyViewedProps) {
+export default function RecentlyViewed({ excludeProductId, excludeProductIds = [] }: RecentlyViewedProps) {
     const [recentProducts, setRecentProducts] = useState<Product[]>([]);
 
     useEffect(() => {
@@ -19,10 +20,12 @@ export default function RecentlyViewed({ excludeProductId }: RecentlyViewedProps
             try {
                 let products: Product[] = JSON.parse(stored);
 
-                // Filter out the current product if excludeProductId is provided
-                if (excludeProductId) {
-                    products = products.filter(p => p.id !== excludeProductId);
-                }
+                // Filter out the current product and any explicitly excluded ones
+                products = products.filter(p => {
+                    if (excludeProductId && p.id === excludeProductId) return false;
+                    if (excludeProductIds.length > 0 && excludeProductIds.includes(p.id)) return false;
+                    return true;
+                });
 
                 // Get last 4 visited products
                 setRecentProducts(products.slice(0, 4));
@@ -30,7 +33,7 @@ export default function RecentlyViewed({ excludeProductId }: RecentlyViewedProps
                 console.error('Error loading recently viewed', e);
             }
         }
-    }, [excludeProductId]);
+    }, [excludeProductId, excludeProductIds]);
 
     if (recentProducts.length === 0) return null;
 
