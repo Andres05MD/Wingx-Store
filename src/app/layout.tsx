@@ -32,13 +32,39 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Wingx Store",
-  description: "Moda moderna y exclusiva",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://wingx-store.vercel.app'),
+  title: {
+    default: "Wingx Store — Moda Exclusiva y Confección Propia",
+    template: "%s | Wingx Store",
+  },
+  description: "Moda moderna y exclusiva con confección propia. Diseños únicos, calidad premium y envíos a todo el país. Descubre tu estilo en Wingx.",
+  keywords: ['moda', 'ropa', 'tienda online', 'Venezuela', 'confección propia', 'Wingx', 'moda exclusiva', 'Barquisimeto'],
   icons: {
     icon: 'https://ik.imagekit.io/xwym4oquc/resources/Isotipo.png',
     shortcut: 'https://ik.imagekit.io/xwym4oquc/resources/Isotipo.png',
     apple: 'https://ik.imagekit.io/xwym4oquc/resources/Isotipo.png',
-  }
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'es_VE',
+    siteName: 'Wingx Store',
+    title: 'Wingx Store — Moda Exclusiva y Confección Propia',
+    description: 'Moda moderna y exclusiva con confección propia. Diseños únicos, calidad premium y envíos a todo el país.',
+    images: [
+      {
+        url: 'https://ik.imagekit.io/xwym4oquc/resources/Isotipo.png',
+        width: 512,
+        height: 512,
+        alt: 'Wingx Store Logo',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Wingx Store — Moda Exclusiva',
+    description: 'Diseños únicos, calidad premium y envíos a todo el país.',
+    images: ['https://ik.imagekit.io/xwym4oquc/resources/Isotipo.png'],
+  },
 };
 
 export default function RootLayout({

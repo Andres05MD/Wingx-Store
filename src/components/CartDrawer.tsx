@@ -149,6 +149,16 @@ export default function CartDrawer() {
 
                             {/* Items List */}
                             <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                                {items.length > 0 && (
+                                    <div className="bg-neutral-900 dark:bg-white text-white dark:text-black rounded-xl p-3 text-sm flex gap-3 items-center shadow-md">
+                                        <span className="text-lg">✨</span>
+                                        <p className="leading-tight">
+                                            Tus prendas serán <span className="font-bold">confeccionadas a medida</span>.
+                                            Tiempo estimado: <span className="font-bold underline decoration-white/30 dark:decoration-black/30 underline-offset-2">5-7 días hábiles</span>.
+                                        </p>
+                                    </div>
+                                )}
+
                                 {items.length === 0 ? (
                                     <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
                                         <div className="w-16 h-16 bg-neutral-100 dark:bg-white/5 rounded-full flex items-center justify-center">

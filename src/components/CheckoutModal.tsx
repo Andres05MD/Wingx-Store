@@ -121,7 +121,8 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
             `📋 *Orden:* #${orderId.slice(0, 6).toUpperCase()}\n` +
             `👤 *Cliente:* ${customerName}\n` +
             `💰 *Total:* $${total.toLocaleString('es-CO')}\n` +
-            `📱 *Método:* ${methodLabel}\n\n` +
+            `📱 *Método:* ${methodLabel}\n` +
+            `⏱️ *Confección:* 5-7 días hábiles\n\n` +
             `_Revisa el panel de gestión para más detalles._`
         );
         // Formatear número
@@ -236,6 +237,7 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
             });
             message += `💰 *Total: $${totalPrice.toLocaleString('es-CO')}*%0A`;
             if (data.notes) message += `📝 Nota: ${data.notes}%0A`;
+            message += `%0A⏱️ *Tiempo estimado de confección: 5-7 días hábiles.*%0A`;
 
             window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
 

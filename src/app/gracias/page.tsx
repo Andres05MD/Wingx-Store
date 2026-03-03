@@ -157,11 +157,12 @@ function GraciasContent() {
                             </div>
                             <div className="text-left">
                                 <h3 className="font-bold text-emerald-700 dark:text-emerald-300 mb-1">
-                                    ¡Pedido en Proceso!
+                                    ¡Pedido en Confección!
                                 </h3>
                                 <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                                    Hemos iniciado la preparación de tu pedido. Te contactaremos pronto
-                                    para coordinar la entrega.
+                                    Hemos iniciado la preparación de tus prendas exclusivas. Recuerda que el
+                                    tiempo estimado de confección es de <span className="font-semibold text-emerald-800 dark:text-emerald-200">5 a 7 días hábiles</span>. Te contactaremos
+                                    cuando esté listo para envío o entrega.
                                 </p>
                             </div>
                         </div>

@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Product } from '@/types';
 import { motion } from 'framer-motion';
-import Swal from 'sweetalert2';
 import { toast } from 'sonner';
 import { MessageCircle, ShoppingCart } from 'lucide-react';
 import PremiumButton from './PremiumButton';
@@ -73,27 +72,15 @@ export default function ProductView({ product }: ProductViewProps) {
 
     const handleAddToCart = () => {
         if (!selectedSize && product.sizes && product.sizes.length > 0) {
-            Swal.fire({
-                title: 'Talla requerida',
-                text: 'Por favor selecciona una talla para continuar.',
-                icon: 'warning',
-                background: '#0f172a',
-                color: '#f8fafc',
-                confirmButtonColor: '#3b82f6',
-                confirmButtonText: 'Entendido'
+            toast.warning('Talla requerida', {
+                description: 'Por favor selecciona una talla para continuar.'
             });
             return;
         }
 
         if (!selectedColor && product.colors && product.colors.length > 0) {
-            Swal.fire({
-                title: 'Color requerido',
-                text: 'Por favor selecciona un color para continuar.',
-                icon: 'warning',
-                background: '#0f172a',
-                color: '#f8fafc',
-                confirmButtonColor: '#3b82f6',
-                confirmButtonText: 'Entendido'
+            toast.warning('Color requerido', {
+                description: 'Por favor selecciona un color para continuar.'
             });
             return;
         }
@@ -127,7 +114,7 @@ export default function ProductView({ product }: ProductViewProps) {
                                 initial={{ opacity: 0, x: -10 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: 0.3 }}
-                                className="text-sm font-semibold tracking-wide text-blue-600 dark:text-blue-400 uppercase mb-2"
+                                className="text-sm font-semibold tracking-wide text-neutral-900 dark:text-neutral-100 uppercase mb-2"
                             >
                                 {product.category || 'MERCANCÍA GENERAL'}
                             </motion.p>
@@ -164,7 +151,7 @@ export default function ProductView({ product }: ProductViewProps) {
                                     <span className="block text-sm font-medium text-neutral-700 dark:text-white">Selecciona tu talla</span>
                                     <button
                                         onClick={() => setIsSizeGuideOpen(true)}
-                                        className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+                                        className="text-xs font-medium text-neutral-900 dark:text-neutral-100 hover:underline flex items-center gap-1"
                                     >
                                         <Ruler size={14} />
                                         Guía de tallas
@@ -200,7 +187,7 @@ export default function ProductView({ product }: ProductViewProps) {
                                     <span className="block text-sm font-medium text-neutral-700 dark:text-white">
                                         Selecciona el color
                                         {selectedColor && (
-                                            <span className="ml-2 text-blue-600 dark:text-blue-400 font-semibold">
+                                            <span className="ml-2 text-neutral-900 dark:text-neutral-100 font-semibold">
                                                 — {selectedColor}
                                             </span>
                                         )}
@@ -223,7 +210,7 @@ export default function ProductView({ product }: ProductViewProps) {
                                                 title={color}
                                                 className={`relative w-10 h-10 rounded-full transition-all duration-200 flex items-center justify-center
                                                     ${selectedColor === color
-                                                        ? 'ring-2 ring-offset-2 ring-blue-500 dark:ring-offset-slate-900'
+                                                        ? 'ring-2 ring-offset-2 ring-black dark:ring-white dark:ring-offset-slate-900'
                                                         : 'hover:ring-2 hover:ring-offset-2 hover:ring-black/20 dark:hover:ring-white/20 dark:hover:ring-offset-slate-900'
                                                     }
                                                     ${isLightColor ? 'border border-black/20 dark:border-white/20' : ''}
@@ -245,9 +232,20 @@ export default function ProductView({ product }: ProductViewProps) {
                         </ScrollReveal>
                     )}
 
-                    {/* Buy Button */}
+                    {/* Buy Button & Make-to-Order Warning */}
                     <ScrollReveal delay={0.4} direction="up">
-                        <div className="mt-8">
+                        <div className="mt-8 space-y-4">
+                            {/* Make-to-Order Alert */}
+                            <div className="bg-neutral-50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-xl p-4 flex gap-3 text-sm">
+                                <div className="text-xl">🧵</div>
+                                <div>
+                                    <p className="font-semibold text-neutral-900 dark:text-white mb-0.5">Artículo confeccionado bajo pedido</p>
+                                    <p className="text-neutral-600 dark:text-neutral-400">
+                                        Tiempo estimado de preparación: <span className="font-semibold text-black dark:text-white">5 a 7 días hábiles</span> tras el pago.
+                                    </p>
+                                </div>
+                            </div>
+
                             <PremiumButton
                                 onClick={handleAddToCart}
                                 className="w-full"

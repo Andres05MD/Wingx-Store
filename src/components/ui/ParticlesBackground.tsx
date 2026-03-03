@@ -9,6 +9,7 @@ export default function ParticlesBackground() {
     const [init, setInit] = useState(false);
     const { theme, systemTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
 
     // Determine actual theme (handles 'system' case)
     const currentTheme = theme === 'system' ? systemTheme : theme;
@@ -16,12 +17,24 @@ export default function ParticlesBackground() {
 
     useEffect(() => {
         setMounted(true);
-        initParticlesEngine(async (engine) => {
-            await loadSlim(engine);
-        }).then(() => {
-            setInit(true);
-        });
-    }, []);
+        // Check if device is mobile
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+
+        if (!isMobile) {
+            initParticlesEngine(async (engine) => {
+                await loadSlim(engine);
+            }).then(() => {
+                setInit(true);
+            });
+        }
+
+        return () => window.removeEventListener('resize', checkMobile);
+    }, [isMobile]);
 
     const particlesOptions = useMemo(() => ({
         background: {
