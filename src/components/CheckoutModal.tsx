@@ -163,7 +163,7 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                     name: data.name,
                     phone: data.phone,
                     address: data.address,
-                    email: user?.email || undefined,
+                    email: user?.email || '',
                     userId: user?.uid || null,
                     deliveryMethod: data.deliveryMethod,
                 },
