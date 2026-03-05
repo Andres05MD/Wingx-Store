@@ -64,7 +64,7 @@ export default async function CatalogPage({
         : 'Explora nuestra colección completa de moda exclusiva.';
 
     return (
-        <div className="min-h-screen">
+        <div>
             <CatalogHeader
                 title={headerTitle}
                 subtitle={headerSubtitle}

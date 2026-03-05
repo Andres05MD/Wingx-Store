@@ -13,7 +13,7 @@ export default function Footer() {
     ];
 
     return (
-        <footer className="relative mt-12 md:mt-20 z-10 w-full overflow-hidden bg-white/70 dark:bg-black/50 backdrop-blur-3xl border-t border-black/[0.04] dark:border-white/[0.06] shadow-[0_-8px_40px_rgba(0,0,0,0.02)] transition-colors duration-500 pb-20 md:pb-0">
+        <footer className="relative mt-4 md:mt-8 z-10 w-full overflow-hidden bg-white/70 dark:bg-black/50 backdrop-blur-3xl border-t border-black/[0.04] dark:border-white/[0.06] shadow-[0_-8px_40px_rgba(0,0,0,0.02)] transition-colors duration-500 pb-20 md:pb-0">
             {/* Textura de ruido sutil */}
             <div className="absolute inset-0 bg-noise opacity-[0.015] dark:opacity-[0.03] pointer-events-none mix-blend-overlay" />
 
@@ -99,7 +99,7 @@ export default function Footer() {
                     <p className="tracking-wide">© {currentYear} Wingx Store. Reservados todos los derechos.</p>
                     <div className="flex items-center gap-2">
                         <span className="w-1 h-1 rounded-full bg-green-500 animate-pulse" />
-                        <span>Sistemas operativos</span>
+                        <span>CEO: Valeria Petaccia</span>
                     </div>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Loader2, Minimize2, Bot } from "lucide-react";
+import { Send, Loader2, Minimize2, Sparkles, ShoppingCart, Package, Ruler, Truck, CreditCard, MapPin } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,7 +12,6 @@ interface Message {
     content: string;
 }
 
-// Zod Schema
 const chatSchema = z.object({
     message: z.string().min(1, 'Escribe un mensaje'),
 });
@@ -20,43 +19,36 @@ const chatSchema = z.object({
 type ChatFormValues = z.infer<typeof chatSchema>;
 
 const FormattedMessage = ({ content }: { content: string }) => {
-    // Split by newlines
     const lines = content.split('\n');
 
     return (
         <div className="space-y-1">
             {lines.map((line, i) => {
-                if (!line.trim()) return <div key={i} className="h-2" />; // Spacer for empty lines
+                if (!line.trim()) return <div key={i} className="h-2" />;
 
-                // Parse bold text: **text**
                 const parts = line.split(/(\*\*.*?\*\*)/g);
                 const formattedLine = parts.map((part, j) => {
                     if (part.startsWith('**') && part.endsWith('**')) {
-                        return <strong key={j} className="font-bold">{part.slice(2, -2)}</strong>;
+                        return <strong key={j} className="font-semibold">{part.slice(2, -2)}</strong>;
                     }
                     return part;
                 });
 
-                // Check for list items
                 const isList = line.trim().startsWith('- ') || line.trim().startsWith('• ');
 
                 if (isList) {
-                    // Strip the bullet for cleaner rendering
                     const cleanLineContent = line.replace(/^(\s*[-•]\s*)/, '');
-                    // Re-parse the clean content for bold
                     const listParts = cleanLineContent.split(/(\*\*.*?\*\*)/g).map((part, j) => {
                         if (part.startsWith('**') && part.endsWith('**')) {
-                            return <strong key={j} className="font-bold">{part.slice(2, -2)}</strong>;
+                            return <strong key={j} className="font-semibold">{part.slice(2, -2)}</strong>;
                         }
                         return part;
                     });
 
                     return (
                         <div key={i} className="flex gap-2 ml-1 items-start">
-                            <span className="mt-2 w-1.5 h-1.5 rounded-full bg-current flex-shrink-0 opacity-60" />
-                            <div className="flex-1">
-                                {listParts}
-                            </div>
+                            <span className="mt-[7px] w-1 h-1 rounded-full bg-current flex-shrink-0 opacity-40" />
+                            <div className="flex-1">{listParts}</div>
                         </div>
                     );
                 }
@@ -83,9 +75,7 @@ export default function ChatBot() {
         formState: { isValid }
     } = useForm<ChatFormValues>({
         resolver: zodResolver(chatSchema),
-        defaultValues: {
-            message: ''
-        }
+        defaultValues: { message: '' }
     });
 
     const scrollToBottom = () => {
@@ -144,6 +134,15 @@ export default function ChatBot() {
         setValue('message', text, { shouldValidate: true });
     };
 
+    const sugerencias = [
+        { icono: ShoppingCart, label: "Cómo comprar", texto: "¿Cómo puedo realizar una compra?" },
+        { icono: Package, label: "Envíos", texto: "¿Hacen envíos a toda Venezuela?" },
+        { icono: Ruler, label: "A medida", texto: "¿Cómo funcionan los pedidos hechos a la medida?" },
+        { icono: Truck, label: "Delivery", texto: "¿Tienen servicio de delivery en Barquisimeto?" },
+        { icono: CreditCard, label: "Pagos", texto: "¿Qué métodos de pago aceptan?" },
+        { icono: MapPin, label: "Ubicación", texto: "¿Dónde están ubicados?" }
+    ];
+
     return (
         <>
             <AnimatePresence>
@@ -152,105 +151,125 @@ export default function ChatBot() {
                         initial={{ opacity: 0, y: 20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                        className="fixed bottom-24 right-6 z-50 w-[calc(100vw-3rem)] max-w-[380px] bg-white dark:bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-200 dark:border-neutral-800 flex flex-col overflow-hidden h-[600px] max-h-[70vh]"
+                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                        className="fixed bottom-24 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-[380px] bg-white dark:bg-neutral-950 rounded-2xl shadow-[0_25px_60px_-12px_rgba(0,0,0,0.25)] dark:shadow-[0_25px_60px_-12px_rgba(0,0,0,0.5)] border border-neutral-200/80 dark:border-neutral-800 flex flex-col overflow-hidden h-[560px] max-h-[70vh]"
                     >
                         {/* Header */}
-                        <div className="p-4 bg-black dark:bg-white text-white dark:text-black flex items-center justify-between shadow-sm z-10">
-                            <div className="flex items-center gap-3">
-                                <div className="p-1.5 bg-white/20 dark:bg-black/10 rounded-full">
-                                    <Bot size={18} />
+                        <div className="px-5 py-4 bg-neutral-950 dark:bg-white text-white dark:text-black flex items-center justify-between relative overflow-hidden">
+                            <div className="absolute inset-0 bg-noise opacity-[0.03] pointer-events-none" />
+                            <div className="relative flex items-center gap-3">
+                                <div className="w-8 h-8 bg-white/10 dark:bg-black/10 rounded-lg flex items-center justify-center">
+                                    <Sparkles size={15} strokeWidth={2} />
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-sm leading-tight">Merlia</h3>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                                        <span className="text-[10px] opacity-80">En línea</span>
+                                    <h3 className="font-bold text-sm tracking-tight leading-none">Merlia</h3>
+                                    <div className="flex items-center gap-1.5 mt-1">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.6)]" />
+                                        <span className="text-[10px] font-medium opacity-50 tracking-wide">En línea</span>
                                     </div>
                                 </div>
                             </div>
                             <button
                                 onClick={() => setIsOpen(false)}
-                                className="p-1 hover:bg-white/10 dark:hover:bg-black/10 rounded-full transition-colors"
+                                className="relative p-1.5 hover:bg-white/10 dark:hover:bg-black/10 rounded-lg transition-colors"
+                                aria-label="Minimizar chat"
                             >
-                                <Minimize2 size={18} />
+                                <Minimize2 size={16} strokeWidth={2} />
                             </button>
                         </div>
 
                         {/* Messages */}
                         <div
-                            className="flex-1 overflow-y-auto overscroll-y-contain p-4 space-y-4 bg-neutral-50 dark:bg-neutral-950 scroll-smooth"
+                            className="flex-1 overflow-y-auto overscroll-y-contain p-4 space-y-3 bg-neutral-50/50 dark:bg-neutral-950 scroll-smooth"
                             data-lenis-prevent
                         >
                             {messages.length === 0 && (
-                                <div className="h-full flex flex-col items-center justify-center text-center text-neutral-500 p-8 space-y-4">
-                                    <div className="w-12 h-12 bg-neutral-100 dark:bg-neutral-900 rounded-full flex items-center justify-center mb-2">
-                                        <Bot size={24} className="opacity-50" />
+                                <div className="h-full flex flex-col items-center justify-center text-center px-4 py-6">
+                                    {/* Welcome */}
+                                    <div className="w-11 h-11 bg-neutral-900 dark:bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm">
+                                        <Sparkles size={18} className="text-white dark:text-black" strokeWidth={2} />
                                     </div>
-                                    <div>
-                                        <p className="font-medium text-neutral-800 dark:text-neutral-200">¡Hola! Soy Merlia, el asistente virtual de Wingx.</p>
-                                        <p className="text-sm mt-1">¿En qué puedo ayudarte hoy?</p>
-                                    </div>
-                                    <div className="flex flex-wrap gap-2 justify-center mt-4 max-w-[280px]">
-                                        {[
-                                            { label: "🛒 Cómo Comprar?", text: "¿Cómo puedo realizar una compra?" },
-                                            { label: "📦 Envíos Nacionales", text: "¿Hacen envíos a toda Venezuela?" },
-                                            { label: "📏 Pedidos a Medida", text: "¿Cómo funcionan los pedidos hechos a la medida?" },
-                                            { label: "🛵 Delivery BQTO", text: "¿Tienen servicio de delivery en Barquisimeto?" },
-                                            { label: "💳 Métodos de Pago", text: "¿Qué métodos de pago aceptan?" },
-                                            { label: "📍 Ubicación", text: "¿Dónde están ubicados?" }
-                                        ].map((suggestion, idx) => (
-                                            <button
-                                                key={idx}
-                                                onClick={() => handleSuggestionClick(suggestion.text)}
-                                                className="text-xs px-3 py-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-all hover:scale-105 active:scale-95 shadow-sm"
-                                            >
-                                                {suggestion.label}
-                                            </button>
-                                        ))}
+                                    <p className="font-bold text-sm text-neutral-900 dark:text-white tracking-tight">
+                                        ¡Hola! Soy Merlia
+                                    </p>
+                                    <p className="text-xs text-neutral-400 dark:text-neutral-500 mt-1 max-w-[220px] leading-relaxed">
+                                        Asistente virtual de Wingx. ¿En qué puedo ayudarte?
+                                    </p>
+
+                                    {/* Sugerencias */}
+                                    <div className="grid grid-cols-2 gap-2 mt-6 w-full max-w-[300px]">
+                                        {sugerencias.map((s, idx) => {
+                                            const Icono = s.icono;
+                                            return (
+                                                <motion.button
+                                                    key={idx}
+                                                    onClick={() => handleSuggestionClick(s.texto)}
+                                                    whileHover={{ scale: 1.02 }}
+                                                    whileTap={{ scale: 0.97 }}
+                                                    className="flex items-center gap-2 text-left text-[11px] font-medium px-3 py-2.5 bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 rounded-xl hover:border-neutral-300 dark:hover:border-neutral-700 transition-colors text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white"
+                                                >
+                                                    <Icono size={13} strokeWidth={2} className="flex-shrink-0 opacity-50" />
+                                                    <span>{s.label}</span>
+                                                </motion.button>
+                                            );
+                                        })}
                                     </div>
                                 </div>
                             )}
+
                             {messages.map((msg, idx) => (
-                                <div
+                                <motion.div
                                     key={idx}
-                                    className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`}
+                                    initial={{ opacity: 0, y: 8 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.25, ease: "easeOut" }}
+                                    className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                                 >
                                     <div
-                                        className={`max-w-[85%] p-3.5 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
-                                            ? 'bg-black dark:bg-white text-white dark:text-black rounded-tr-none shadow-md'
-                                            : 'bg-white dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 border border-neutral-200 dark:border-neutral-700 rounded-tl-none shadow-sm'
+                                        className={`max-w-[82%] px-4 py-3 text-[13px] leading-relaxed ${msg.role === 'user'
+                                            ? 'bg-neutral-900 dark:bg-white text-white dark:text-black rounded-2xl rounded-br-md shadow-sm'
+                                            : 'bg-white dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 border border-neutral-100 dark:border-neutral-800 rounded-2xl rounded-bl-md shadow-sm'
                                             }`}
                                     >
                                         <FormattedMessage content={msg.content} />
                                     </div>
-                                </div>
+                                </motion.div>
                             ))}
+
                             {isLoading && messages[messages.length - 1]?.role === 'user' && (
-                                <div className="flex justify-start animate-in fade-in slide-in-from-bottom-2">
-                                    <div className="bg-white dark:bg-neutral-800 p-4 rounded-2xl rounded-tl-none border border-neutral-200 dark:border-neutral-700 shadow-sm flex items-center gap-2">
-                                        <Loader2 size={14} className="animate-spin text-neutral-400" />
-                                        <span className="text-xs text-neutral-400">Pensando...</span>
+                                <motion.div
+                                    initial={{ opacity: 0, y: 8 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="flex justify-start"
+                                >
+                                    <div className="bg-white dark:bg-neutral-900 px-4 py-3 rounded-2xl rounded-bl-md border border-neutral-100 dark:border-neutral-800 shadow-sm flex items-center gap-2">
+                                        <div className="flex gap-1">
+                                            <span className="w-1.5 h-1.5 rounded-full bg-neutral-300 dark:bg-neutral-600 animate-bounce [animation-delay:0ms]" />
+                                            <span className="w-1.5 h-1.5 rounded-full bg-neutral-300 dark:bg-neutral-600 animate-bounce [animation-delay:150ms]" />
+                                            <span className="w-1.5 h-1.5 rounded-full bg-neutral-300 dark:bg-neutral-600 animate-bounce [animation-delay:300ms]" />
+                                        </div>
                                     </div>
-                                </div>
+                                </motion.div>
                             )}
                             <div ref={messagesEndRef} />
                         </div>
 
                         {/* Input */}
-                        <form onSubmit={handleSubmit(onSubmit)} className="p-3 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800">
+                        <form onSubmit={handleSubmit(onSubmit)} className="p-3 bg-white dark:bg-neutral-950 border-t border-neutral-100 dark:border-neutral-800/50">
                             <div className="flex gap-2 items-center relative">
                                 <input
                                     type="text"
                                     {...register('message')}
                                     placeholder="Escribe tu mensaje..."
-                                    className="flex-1 bg-neutral-100 dark:bg-neutral-800 border-none rounded-2xl pl-4 pr-12 py-3 text-sm focus:ring-2 focus:ring-black/5 dark:focus:ring-white/10 focus:outline-none transition-all placeholder:text-neutral-400"
+                                    className="flex-1 bg-neutral-50 dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 rounded-xl pl-4 pr-12 py-3 text-[13px] focus:ring-2 focus:ring-neutral-900/5 dark:focus:ring-white/10 focus:outline-none focus:border-neutral-300 dark:focus:border-neutral-700 transition-all placeholder:text-neutral-300 dark:placeholder:text-neutral-600 font-medium"
                                 />
                                 <button
                                     type="submit"
                                     disabled={isLoading || !isValid}
-                                    className="absolute right-1.5 p-2 bg-black dark:bg-white text-white dark:text-black rounded-xl hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm"
+                                    className="absolute right-1.5 p-2.5 bg-neutral-900 dark:bg-white text-white dark:text-black rounded-lg hover:bg-black dark:hover:bg-neutral-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                                    aria-label="Enviar mensaje"
                                 >
-                                    <Send size={16} />
+                                    <Send size={14} strokeWidth={2.5} />
                                 </button>
                             </div>
                         </form>
@@ -258,19 +277,20 @@ export default function ChatBot() {
                 )}
             </AnimatePresence>
 
-            {/* Floating Button - Hidden when chat is open */}
+            {/* Floating Button */}
             <AnimatePresence>
                 {!isOpen && (
                     <motion.button
                         onClick={() => setIsOpen(true)}
-                        className="hidden md:flex fixed bottom-6 right-6 z-50 items-center justify-center w-14 h-14 bg-black dark:bg-white text-white dark:text-black rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.25)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] transition-shadow border-2 border-white dark:border-black"
+                        className="hidden md:flex fixed bottom-6 right-6 z-50 items-center justify-center w-13 h-13 bg-neutral-900 dark:bg-white text-white dark:text-black rounded-2xl shadow-[0_8px_30px_-5px_rgba(0,0,0,0.3)] dark:shadow-[0_8px_30px_-5px_rgba(255,255,255,0.15)] hover:shadow-[0_12px_40px_-5px_rgba(0,0,0,0.35)] transition-shadow border border-white/10 dark:border-black/10"
                         initial={{ scale: 0, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0, opacity: 0 }}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
+                        aria-label="Abrir chat"
                     >
-                        <MessageCircle size={28} />
+                        <Sparkles size={22} strokeWidth={2} />
                     </motion.button>
                 )}
             </AnimatePresence>

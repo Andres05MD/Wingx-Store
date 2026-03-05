@@ -1,8 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
 
 interface CatalogHeaderProps {
     title?: string;
@@ -22,17 +20,7 @@ export default function CatalogHeader({
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="mb-6 md:mb-10"
         >
-            {/* Breadcrumb */}
-            <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-neutral-400 dark:text-neutral-500 mb-4 md:mb-6">
-                <Link
-                    href="/"
-                    className="hover:text-black dark:hover:text-white transition-colors duration-200"
-                >
-                    Inicio
-                </Link>
-                <ChevronRight className="w-3 h-3" />
-                <span className="text-black dark:text-white font-medium">Catálogo</span>
-            </nav>
+
 
             {/* Title Section */}
             <div className="flex flex-col gap-3 md:gap-4">
