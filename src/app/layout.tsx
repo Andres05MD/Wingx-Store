@@ -4,20 +4,13 @@ import "./globals.css";
 import React from 'react';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Toaster } from "sonner";
-import ParticlesBackground from "@/components/ui/ParticlesBackground";
 import { ThemeProvider } from "@/components/ui/ThemeProvider";
-import ChatBot from "@/components/ChatBot";
-import SmoothScroll from "@/components/SmoothScroll";
-import MobileBottomNav from "@/components/MobileBottomNav";
 import { CartProvider } from "@/context/CartContext";
-import CartDrawer from "@/components/CartDrawer";
 import { WishlistProvider } from "@/context/WishlistContext";
-import WishlistDrawer from "@/components/WishlistDrawer";
 import { AuthProvider } from "@/context/AuthContext";
 import { ExchangeRateProvider } from "@/context/ExchangeRateContext";
-
 import { ChatProvider } from "@/context/ChatContext";
+import ClientShell from "@/components/ClientShell";
 
 const sora = Sora({
   subsets: ["latin"],
@@ -81,25 +74,19 @@ export default function RootLayout({
             <ChatProvider>
               <CartProvider>
                 <WishlistProvider>
-                  <SmoothScroll />
                   <ThemeProvider
                     attribute="class"
                     defaultTheme="light"
                     disableTransitionOnChange
                   >
-                    <ParticlesBackground />
                     <Header />
 
                     <main className="grow w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-6 pb-32 md:pb-10">
                       {children}
                     </main>
 
-                    <CartDrawer />
-                    <WishlistDrawer />
                     <Footer />
-                    <MobileBottomNav />
-                    <ChatBot />
-                    <Toaster position="top-center" richColors />
+                    <ClientShell />
                   </ThemeProvider>
                 </WishlistProvider>
               </CartProvider>

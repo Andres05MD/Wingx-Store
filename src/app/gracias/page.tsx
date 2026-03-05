@@ -14,13 +14,16 @@ import {
     XCircle,
     PartyPopper,
     AlertCircle,
-    Scissors
+    Scissors,
+    MessageCircle,
+    Package,
+    Truck,
+    Copy
 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { StoreOrder } from '@/types/order';
-import confetti from 'canvas-confetti';
 
 // Componente que usa useSearchParams (debe estar dentro de Suspense)
 function GraciasContent() {
@@ -61,8 +64,10 @@ function GraciasContent() {
         return () => unsubscribe();
     }, [orderId]);
 
-    // Función para lanzar confetti (B&W + dorado sutil)
-    const launchConfetti = () => {
+    // Función para lanzar confetti (B&W + dorado sutil) — lazy loaded
+    const launchConfetti = async () => {
+        const confettiModule = await import('canvas-confetti');
+        const confetti = confettiModule.default;
         const duration = 3000;
         const animationEnd = Date.now() + duration;
 
@@ -84,6 +89,21 @@ function GraciasContent() {
                 colors: ['#000000', '#404040', '#808080', '#c0c0c0', '#ffffff']
             });
         }, 50);
+    };
+
+    // Timeline steps del pedido
+    const timelineSteps = [
+        { id: 'ordered', label: 'Pedido', icon: ShoppingBag, completado: true },
+        { id: 'verification', label: 'Verificación', icon: Clock, completado: status === 'paid' || status === 'rejected' },
+        { id: 'production', label: 'Confección', icon: Scissors, completado: status === 'paid' },
+        { id: 'delivery', label: 'Entrega', icon: Truck, completado: false },
+    ];
+
+    // Copiar ID de orden
+    const copiarIdOrden = () => {
+        if (orderId) {
+            navigator.clipboard.writeText(orderId.slice(0, 8).toUpperCase());
+        }
     };
 
     // Renderizar contenido según el estado
@@ -156,7 +176,7 @@ function GraciasContent() {
                         className="bg-neutral-900 dark:bg-white rounded-2xl p-6 mb-8"
                     >
                         <div className="flex items-start gap-4">
-                            <div className="w-10 h-10 bg-white/10 dark:bg-black/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <div className="w-10 h-10 bg-white/10 dark:bg-black/10 rounded-xl flex items-center justify-center shrink-0">
                                 <Scissors className="w-5 h-5 text-white dark:text-black" />
                             </div>
                             <div className="text-left">
@@ -218,7 +238,7 @@ function GraciasContent() {
                         className="bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-2xl p-6 mb-8"
                     >
                         <div className="flex items-start gap-4">
-                            <div className="w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <div className="w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center shrink-0">
                                 <XCircle className="w-5 h-5 text-white" />
                             </div>
                             <div className="text-left">
@@ -290,7 +310,7 @@ function GraciasContent() {
                     className="bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-2xl p-4 sm:p-6 mb-5 sm:mb-6"
                 >
                     <div className="flex items-start gap-3 sm:gap-4">
-                        <div className="w-10 h-10 bg-neutral-900 dark:bg-white rounded-xl flex items-center justify-center flex-shrink-0">
+                        <div className="w-10 h-10 bg-neutral-900 dark:bg-white rounded-xl flex items-center justify-center shrink-0">
                             <Clock className="w-5 h-5 text-white dark:text-black animate-pulse" />
                         </div>
                         <div className="text-left">
@@ -316,7 +336,7 @@ function GraciasContent() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 }}
-                    className="bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 rounded-xl p-3 sm:p-4 mb-6 sm:mb-8 text-left flex items-start gap-3"
+                    className="bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-700 rounded-xl p-3 sm:p-4 mb-4 text-left flex items-start gap-3"
                 >
                     <AlertCircle className="w-4 h-4 text-neutral-500 mt-0.5 shrink-0" />
                     <p className="text-sm text-neutral-600 dark:text-neutral-400">
@@ -353,6 +373,80 @@ function GraciasContent() {
                         {renderStatusContent()}
                     </motion.div>
                 </AnimatePresence>
+
+                {/* Timeline Visual (fuera de renderStatusContent para evitar narrowing de TypeScript) */}
+                {status !== 'loading' && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.65 }}
+                        className="mb-4"
+                    >
+                        <div className="flex items-center justify-between relative">
+                            {/* Línea de conexión */}
+                            <div className="absolute top-4 left-[10%] right-[10%] h-0.5 bg-neutral-200 dark:bg-neutral-700" />
+                            <div
+                                className="absolute top-4 left-[10%] h-0.5 bg-black dark:bg-white transition-all duration-1000"
+                                style={{
+                                    width: status === 'paid' ? '60%'
+                                        : status === 'rejected' ? '26%'
+                                            : '0%'
+                                }}
+                            />
+
+                            {timelineSteps.map((step) => (
+                                <div key={step.id} className="flex flex-col items-center z-10 relative">
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 ${step.completado
+                                        ? 'bg-black dark:bg-white text-white dark:text-black shadow-lg'
+                                        : 'bg-neutral-200 dark:bg-neutral-700 text-neutral-400 dark:text-neutral-500'
+                                        }`}>
+                                        <step.icon size={14} />
+                                    </div>
+                                    <span className={`text-[9px] sm:text-[10px] mt-1.5 font-medium transition-colors ${step.completado
+                                        ? 'text-neutral-900 dark:text-white'
+                                        : 'text-neutral-400 dark:text-neutral-500'
+                                        }`}>
+                                        {step.label}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
+                )}
+
+                {/* Detalles del Pedido */}
+                {order && status !== 'loading' && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.75 }}
+                        className="bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 mb-4 text-left"
+                    >
+                        <h4 className="text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-3">Tu Pedido</h4>
+                        <div className="space-y-2">
+                            {order.items?.map((item, i) => (
+                                <div key={i} className="flex justify-between items-center text-sm">
+                                    <span className="text-neutral-700 dark:text-neutral-300">
+                                        {item.quantity}x {item.name}
+                                        {item.selectedSize && <span className="text-neutral-400"> ({item.selectedSize})</span>}
+                                    </span>
+                                    <span className="font-semibold text-neutral-900 dark:text-white">${item.price}</span>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="mt-3 pt-3 border-t border-neutral-100 dark:border-neutral-800 flex justify-between">
+                            <span className="font-bold text-neutral-900 dark:text-white">Total</span>
+                            <span className="font-bold text-lg">${order.totalPrice?.toLocaleString('es-CO')}</span>
+                        </div>
+                        {order.customer?.deliveryMethod && (
+                            <div className="mt-2 flex items-center gap-2 text-xs text-neutral-500">
+                                {order.customer.deliveryMethod === 'pickup' && <><Package size={12} /> Retiro en punto de encuentro</>}
+                                {order.customer.deliveryMethod === 'delivery' && <><Truck size={12} /> Delivery Barquisimeto</>}
+                                {order.customer.deliveryMethod === 'shipment' && <><Truck size={12} /> Envío Nacional</>}
+                            </div>
+                        )}
+                    </motion.div>
+                )}
 
                 {/* Order ID */}
                 {orderId && (
@@ -403,14 +497,15 @@ function GraciasContent() {
                     transition={{ delay: 0.8 }}
                     className="mt-8 text-xs text-neutral-500"
                 >
-                    ¿Tienes alguna pregunta? Contáctanos por{' '}
+                    ¿Tienes alguna pregunta?{' '}
                     <a
-                        href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_PHONE}`}
+                        href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_PHONE}${orderId ? `?text=${encodeURIComponent(`Hola, tengo una consulta sobre mi pedido #${orderId.slice(0, 6).toUpperCase()}`)}` : ''}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-neutral-900 dark:text-white hover:underline font-semibold"
+                        className="inline-flex items-center gap-1 text-neutral-900 dark:text-white hover:underline font-semibold"
                     >
-                        WhatsApp
+                        <MessageCircle size={12} />
+                        Contáctanos por WhatsApp
                     </a>
                 </motion.p>
             </motion.div>

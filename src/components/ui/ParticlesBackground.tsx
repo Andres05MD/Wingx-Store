@@ -17,6 +17,10 @@ export default function ParticlesBackground() {
 
     useEffect(() => {
         setMounted(true);
+        // Respetar la preferencia de movimiento reducido
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) return;
+
         // Check if device is mobile
         const checkMobile = () => {
             setIsMobile(window.innerWidth < 768);

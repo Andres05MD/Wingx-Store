@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ShoppingCart, User, MapPin, Phone, Smartphone, MessageCircle, ArrowLeft, CreditCard, ChevronRight, CheckCircle2, Truck, Store, Package, Scissors } from 'lucide-react';
+import { X, ShoppingCart, User, MapPin, Phone, Smartphone, MessageCircle, ArrowLeft, CreditCard, ChevronRight, CheckCircle2, Truck, Store, Package, Scissors, Copy, ExternalLink, RefreshCw } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useAuth } from '@/context/AuthContext';
 import { useExchangeRate } from '@/context/ExchangeRateContext';
@@ -42,10 +42,13 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
     const router = useRouter();
     const { items, totalPrice, clearCart } = useCart();
     const { user, signInWithGoogle } = useAuth();
-    const { formatBs } = useExchangeRate();
+    const { formatBs, rate, refreshRate } = useExchangeRate();
 
     const [loading, setLoading] = useState(false);
-    const [checkoutStep, setCheckoutStep] = useState<'info' | 'payment-method' | 'pago-movil'>('info');
+    const [checkoutStep, setCheckoutStep] = useState<'info' | 'payment-method' | 'pago-movil' | 'whatsapp-confirm'>('info');
+    const [whatsappOrderId, setWhatsappOrderId] = useState<string | null>(null);
+    const [whatsappMessage, setWhatsappMessage] = useState<string>('');
+    const [whatsappLink, setWhatsappLink] = useState<string>('');
 
     // Inicializar React Hook Form
     const {
@@ -178,6 +181,9 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
             clearCart();
             toast.success("¡Pago reportado exitosamente!");
 
+            // Notificar al admin del nuevo pedido
+            notifyAdminNewOrder(orderId, data.name, totalPrice, 'pago-movil');
+
             onClose();
             router.push(`/gracias?orderId=${orderId}`);
         } catch (error) {
@@ -216,7 +222,7 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
 
             const docRef = await addDoc(collection(db, "orders"), orderData);
             const orderId = docRef.id;
-            clearCart();
+            setWhatsappOrderId(orderId);
 
             const phone = process.env.NEXT_PUBLIC_WHATSAPP_PHONE || '59170000000';
             let message = `¡Hola Wingx! 🦋 Quisiera procesar mi pedido *#${orderId.slice(0, 6)}* realizado en la web.%0A%0A`;
@@ -241,15 +247,48 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
             if (data.notes) message += `📝 Nota: ${data.notes}%0A`;
             message += `%0A⏱️ *Tiempo estimado de confección: 5-7 días hábiles.*%0A`;
 
-            window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
+            const link = `https://wa.me/${phone}?text=${message}`;
+            setWhatsappMessage(
+                `¡Hola Wingx! 🦋 Quisiera procesar mi pedido #${orderId.slice(0, 6)} realizado en la web.\n\n` +
+                `👤 Cliente: ${data.name}\n` +
+                `${methodMap[data.deliveryMethod]}\n\n` +
+                `Pedido:\n` +
+                items.map(item => {
+                    let d = `▪️ ${item.quantity}x ${item.name}`;
+                    if (item.selectedSize) d += ` (${item.selectedSize})`;
+                    if (item.selectedColor) d += ` - ${item.selectedColor}`;
+                    d += ` — $${item.price}`;
+                    return d;
+                }).join('\n') + '\n' +
+                `💰 Total: $${totalPrice.toLocaleString('es-CO')}\n` +
+                (data.notes ? `📝 Nota: ${data.notes}\n` : '') +
+                `\n⏱️ Tiempo estimado de confección: 5-7 días hábiles.`
+            );
+            setWhatsappLink(link);
 
-            onClose();
+            // Ir al paso de confirmación inline en vez de abrir WhatsApp directamente
+            setCheckoutStep('whatsapp-confirm');
+
         } catch (error) {
             console.error("Error creating order: ", error);
             toast.error("Error al procesar el pedido.");
         } finally {
             setLoading(false);
         }
+    };
+
+    // Confirmar y abrir WhatsApp
+    const confirmarWhatsApp = () => {
+        clearCart();
+        notifyAdminNewOrder(whatsappOrderId || '', formData.name, totalPrice, 'whatsapp');
+        window.open(whatsappLink, '_blank');
+        onClose();
+    };
+
+    // Copiar resumen al portapapeles
+    const copiarResumen = () => {
+        navigator.clipboard.writeText(whatsappMessage);
+        toast.success('Resumen copiado al portapapeles');
     };
 
     return (
@@ -280,7 +319,11 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                                     <div className="flex items-center gap-4">
                                         {checkoutStep !== 'info' ? (
                                             <button
-                                                onClick={() => setCheckoutStep(checkoutStep === 'pago-movil' ? 'payment-method' : 'info')}
+                                                onClick={() => setCheckoutStep(
+                                                    checkoutStep === 'pago-movil' ? 'payment-method'
+                                                        : checkoutStep === 'whatsapp-confirm' ? 'payment-method'
+                                                            : 'info'
+                                                )}
                                                 className="p-2 -ml-2 hover:bg-neutral-100 dark:hover:bg-white/10 rounded-full transition-colors group"
                                             >
                                                 <ArrowLeft size={20} className="text-neutral-600 dark:text-neutral-400 group-hover:text-black dark:group-hover:text-white transition-colors" />
@@ -296,11 +339,13 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                                                 {checkoutStep === 'info' && 'Finalizar Compra'}
                                                 {checkoutStep === 'payment-method' && 'Método de Pago'}
                                                 {checkoutStep === 'pago-movil' && 'Reportar Pago'}
+                                                {checkoutStep === 'whatsapp-confirm' && 'Confirmar Pedido'}
                                             </h2>
                                             <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
                                                 {checkoutStep === 'info' && 'Tus datos de envío'}
                                                 {checkoutStep === 'payment-method' && 'Selecciona una opción'}
                                                 {checkoutStep === 'pago-movil' && 'Detalles de la transferencia'}
+                                                {checkoutStep === 'whatsapp-confirm' && 'Revisa y envía por WhatsApp'}
                                             </p>
                                         </div>
                                     </div>
@@ -318,9 +363,10 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                                         className="h-full bg-black dark:bg-white"
                                         initial={{ width: "33%" }}
                                         animate={{
-                                            width: checkoutStep === 'info' ? "33%"
-                                                : checkoutStep === 'payment-method' ? "66%"
-                                                    : "100%"
+                                            width: checkoutStep === 'info' ? "25%"
+                                                : checkoutStep === 'payment-method' ? "50%"
+                                                    : checkoutStep === 'pago-movil' ? "75%"
+                                                        : "100%"
                                         }}
                                         transition={{ duration: 0.5, ease: "easeInOut" }}
                                     />
@@ -574,6 +620,83 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                                             />
                                         </motion.div>
                                     )}
+
+                                    {checkoutStep === 'whatsapp-confirm' && (
+                                        <motion.div
+                                            key="whatsapp-confirm"
+                                            initial={{ opacity: 0, x: 20 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            exit={{ opacity: 0, x: -20 }}
+                                            className="space-y-5"
+                                        >
+                                            {/* Resumen del pedido */}
+                                            <div className="bg-white dark:bg-neutral-900 rounded-2xl p-5 border border-neutral-100 dark:border-neutral-800 shadow-sm">
+                                                <div className="flex justify-between items-center mb-4">
+                                                    <span className="text-xs font-medium text-neutral-500 uppercase tracking-wider">Resumen del Pedido</span>
+                                                    <span className="text-xs font-medium text-neutral-500">#{whatsappOrderId?.slice(0, 6).toUpperCase()}</span>
+                                                </div>
+                                                <div className="space-y-2 mb-4">
+                                                    {items.map((item, i) => (
+                                                        <div key={i} className="flex justify-between items-center text-sm">
+                                                            <span className="text-neutral-700 dark:text-neutral-300">
+                                                                {item.quantity}x {item.name}
+                                                                {item.selectedSize && ` (${item.selectedSize})`}
+                                                            </span>
+                                                            <span className="font-semibold text-neutral-900 dark:text-white">${item.price}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                <div className="pt-3 border-t border-neutral-100 dark:border-neutral-800 flex justify-between">
+                                                    <span className="font-bold text-neutral-900 dark:text-white">Total</span>
+                                                    <div className="text-right">
+                                                        <p className="font-bold text-lg">${totalPrice.toLocaleString('es-CO')}</p>
+                                                        <p className="text-xs text-neutral-500">{formatBs(totalPrice)}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Preview del mensaje */}
+                                            <div className="bg-neutral-50 dark:bg-neutral-800/50 rounded-2xl p-4 border border-neutral-200 dark:border-neutral-700">
+                                                <div className="flex items-center justify-between mb-3">
+                                                    <span className="text-xs font-semibold uppercase tracking-wider text-neutral-500">Mensaje para WhatsApp</span>
+                                                    <button
+                                                        onClick={copiarResumen}
+                                                        className="flex items-center gap-1 px-2 py-1 bg-neutral-200 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 rounded-lg text-[10px] font-bold hover:bg-neutral-300 dark:hover:bg-neutral-600 transition-colors cursor-pointer active:scale-95"
+                                                    >
+                                                        <Copy size={10} />
+                                                        Copiar
+                                                    </button>
+                                                </div>
+                                                <pre className="text-xs text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap leading-relaxed font-sans max-h-32 overflow-y-auto">
+                                                    {whatsappMessage}
+                                                </pre>
+                                            </div>
+
+                                            {/* Botones de acción */}
+                                            <div className="space-y-3 pt-2">
+                                                <button
+                                                    onClick={confirmarWhatsApp}
+                                                    className="w-full py-4 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-2xl font-bold shadow-lg shadow-[#25D366]/20 active:scale-[0.98] transition-all flex items-center justify-center gap-3 cursor-pointer"
+                                                >
+                                                    <MessageCircle size={22} />
+                                                    Enviar por WhatsApp
+                                                    <ExternalLink size={16} className="opacity-60" />
+                                                </button>
+
+                                                <button
+                                                    onClick={() => {
+                                                        copiarResumen();
+                                                        clearCart();
+                                                        onClose();
+                                                    }}
+                                                    className="w-full py-3 border border-neutral-300 dark:border-neutral-600 text-neutral-700 dark:text-neutral-300 rounded-xl font-medium text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
+                                                >
+                                                    <Copy size={16} />
+                                                    Solo copiar resumen
+                                                </button>
+                                            </div>
+                                        </motion.div>
+                                    )}
                                 </AnimatePresence>
                             </div>
 
@@ -584,7 +707,11 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
                                         <div className="flex flex-col">
                                             <span className="text-[10px] sm:text-xs text-neutral-500 uppercase font-medium">Total Estimado</span>
                                             <span className="text-xl sm:text-2xl font-bold font-heading">${totalPrice.toLocaleString('es-CO')}</span>
-                                            <span className="text-[10px] sm:text-xs text-neutral-400 font-medium text-right">{formatBs(totalPrice)}</span>
+                                            <div className="flex items-center gap-1.5">
+                                                <span className="text-[10px] sm:text-xs text-neutral-400 font-medium">{formatBs(totalPrice)}</span>
+                                                <span className="text-[8px] text-neutral-300 dark:text-neutral-600">•</span>
+                                                <span className="text-[9px] text-neutral-400">BCV: {rate?.toFixed(2)}</span>
+                                            </div>
                                         </div>
                                     </div>
                                     <button

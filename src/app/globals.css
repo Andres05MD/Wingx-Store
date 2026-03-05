@@ -311,3 +311,15 @@ h6 {
 .dark .hero-accent-line {
   background: linear-gradient(90deg, #fff, transparent);
 }
+
+/* Accesibilidad: Reducir movimiento para usuarios que lo prefieran */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -22,6 +22,7 @@ export interface PagoMovilData {
     bancoDestino?: string;
     telefonoDestino?: string;
     cedulaDestino?: string;
+    comprobanteUrl?: string; // URL del comprobante en ImageKit
 }
 
 export interface CustomerInfo {
