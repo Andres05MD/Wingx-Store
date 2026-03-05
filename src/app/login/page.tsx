@@ -83,7 +83,7 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-white dark:bg-black">
+        <div className="min-h-[calc(100dvh-4rem)] grid grid-cols-1 lg:grid-cols-2 bg-white dark:bg-black">
 
             {/* Left Side - Visual */}
             <div className="relative hidden lg:flex flex-col justify-between p-12 bg-black text-white overflow-hidden">
@@ -113,8 +113,8 @@ export default function LoginPage() {
             </div>
 
             {/* Right Side - Form */}
-            <div className="flex flex-col justify-center items-center p-6 sm:p-12 lg:p-24 overflow-y-auto">
-                <div className="w-full max-w-md space-y-8">
+            <div className="flex flex-col justify-center items-center p-6 pb-28 sm:p-12 sm:pb-12 lg:p-24 overflow-y-auto">
+                <div className="w-full max-w-md space-y-6 sm:space-y-8">
 
                     <div className="text-center lg:text-left">
                         <Link href="/" className="lg:hidden inline-flex items-center gap-2 text-sm font-medium text-neutral-500 mb-8">
