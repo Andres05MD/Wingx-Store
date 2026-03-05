@@ -117,9 +117,6 @@ export default function LoginPage() {
                 <div className="w-full max-w-md space-y-6 sm:space-y-8">
 
                     <div className="text-center lg:text-left">
-                        <Link href="/" className="lg:hidden inline-flex items-center gap-2 text-sm font-medium text-neutral-500 mb-8">
-                            <ArrowLeft size={16} /> Volver a la tienda
-                        </Link>
                         <h2 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white mb-2">
                             {isLogin ? 'Bienvenido de nuevo' : 'Crea tu cuenta'}
                         </h2>
