@@ -95,8 +95,12 @@ export default function Footer() {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="mt-10 md:mt-12 pt-6 border-t border-black/[0.04] dark:border-white/[0.06] flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left text-[10px] md:text-[11px] text-neutral-400 dark:text-neutral-500">
-                    <p className="tracking-wide">© {currentYear} Wingx Store. Reservados todos los derechos.</p>
+                <div className="mt-10 md:mt-12 pt-6 border-t border-black/[0.04] dark:border-white/[0.06] flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left text-[12px] md:text-[13px] text-neutral-400 dark:text-neutral-500">
+                    <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4">
+                        <p className="tracking-wide">© {currentYear} Wingx Store. Reservados todos los derechos.</p>
+                        <span className="hidden md:inline">|</span>
+                        <span>Designed by: Juan17md</span>
+                    </div>
                     <div className="flex items-center gap-2">
                         <span className="w-1 h-1 rounded-full bg-green-500 animate-pulse" />
                         <span>CEO: Valeria Petaccia</span>

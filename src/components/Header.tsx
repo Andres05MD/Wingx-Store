@@ -26,7 +26,7 @@ export default function Header() {
 
     // Scroll detection for visual change
     useEffect(() => {
-        const handleScroll = () => setScrolled(window.scrollY > 20);
+        const handleScroll = () => setScrolled(window.scrollY > 50);
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
@@ -96,19 +96,16 @@ export default function Header() {
     };
 
     return (
-        <header className={`sticky top-0 z-50 transition-all duration-700 pointer-events-none ${scrolled
-            ? 'py-3'
-            : 'py-0'
-            }`}>
-            <div className={`mx-auto pointer-events-auto transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${scrolled
-                ? 'w-[96%] max-w-7xl rounded-full bg-white/80 dark:bg-black/70 backdrop-blur-2xl shadow-[0_8px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgba(255,255,255,0.03)] border border-black/[0.04] dark:border-white/[0.06] h-14'
-                : 'w-full bg-white/60 dark:bg-black/60 backdrop-blur-xl border-b border-black/[0.04] dark:border-white/[0.06] h-16 rounded-none'
+        <header className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
+            <div className={`mx-auto pointer-events-auto ${scrolled
+                ? 'w-full bg-white dark:bg-black backdrop-blur-md shadow-lg dark:shadow-[0_8px_30px_rgba(255,255,255,0.03)] border-b border-black/[0.06] dark:border-white/[0.08]'
+                : 'w-full bg-white/95 dark:bg-black/95 backdrop-blur-md border-b border-black/[0.04] dark:border-white/[0.06]'
                 }`}>
 
                 {/* Textura de ruido sutil opcional */}
-                <div className={`absolute inset-0 bg-noise opacity-[0.015] dark:opacity-[0.03] pointer-events-none transition-opacity ${scrolled ? 'rounded-full' : ''}`} />
+                <div className={`absolute inset-0 bg-noise opacity-[0.015] dark:opacity-[0.03] pointer-events-none ${scrolled ? 'rounded-full' : ''}`} />
 
-                <div className="relative px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-4">
+                <div className="relative px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-4 md:py-2">
                     {/* Logo */}
                     <div className="flex items-center gap-2 flex-shrink-0">
                         <Link href="/" className="flex items-center gap-3 group">
@@ -118,7 +115,7 @@ export default function Header() {
                                 alt="Wingx Logo"
                                 width={48}
                                 height={48}
-                                className={`object-contain group-hover:scale-105 transition-transform duration-300 dark:hidden ${scrolled ? 'w-8 h-8' : 'w-10 h-10'}`}
+                                className="object-contain group-hover:scale-105 dark:hidden w-10 h-10"
                             />
                             <Image
                                 loader={imagekitLoader}
@@ -126,9 +123,9 @@ export default function Header() {
                                 alt="Wingx Logo"
                                 width={48}
                                 height={48}
-                                className={`object-contain group-hover:scale-105 transition-transform duration-300 hidden dark:block ${scrolled ? 'w-8 h-8' : 'w-10 h-10'}`}
+                                className="object-contain group-hover:scale-105 hidden dark:block w-10 h-10"
                             />
-                            <span className={`font-black tracking-tighter text-black dark:text-white group-hover:opacity-80 transition-all duration-300 font-heading ${scrolled ? 'text-lg' : 'text-xl'}`}>
+                            <span className="font-black tracking-tighter text-black dark:text-white group-hover:opacity-80 font-heading text-xl">
                                 Wingx
                             </span>
                         </Link>
@@ -147,7 +144,7 @@ export default function Header() {
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 onFocus={() => setIsSearchFocused(true)}
                                 onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-                                className={`w-full bg-black/[0.02] dark:bg-white/[0.02] backdrop-blur-md border border-transparent hover:border-black/[0.1] dark:hover:border-white/[0.1] rounded-full pl-5 pr-12 text-sm text-black dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-400 focus:outline-none focus:bg-white/90 dark:focus:bg-neutral-900/90 focus:border-black/20 dark:focus:border-white/20 transition-all duration-300 focus:shadow-[0_0_15px_rgba(0,0,0,0.05)] dark:focus:shadow-[0_0_15px_rgba(255,255,255,0.05)] ${scrolled ? 'py-1.5' : 'py-2.5'}`}
+                                className="w-full bg-black/[0.02] dark:bg-white/[0.02] backdrop-blur-md border border-transparent hover:border-black/[0.1] dark:hover:border-white/[0.1] rounded-full pl-5 pr-12 py-2.5 text-sm text-black dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-400 focus:outline-none focus:bg-white/90 dark:focus:bg-neutral-900/90 focus:border-black/20 dark:focus:border-white/20 focus:shadow-[0_0_15px_rgba(0,0,0,0.05)] dark:focus:shadow-[0_0_15px_rgba(255,255,255,0.05)]"
                             />
                             <button
                                 type="submit"
@@ -217,7 +214,7 @@ export default function Header() {
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className={`relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full group ${isActive(link.href)
+                                className={`relative px-4 py-2 text-base font-medium transition-all duration-300 rounded-full group ${isActive(link.href)
                                     ? 'text-black dark:text-white bg-black/[0.04] dark:bg-white/[0.08]'
                                     : 'text-neutral-500 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06]'
                                     }`}

@@ -81,7 +81,7 @@ export default function RootLayout({
                   >
                     <Header />
 
-                    <main className="grow w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-6 pb-24 md:pb-4">
+                    <main className="grow w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-20 pb-24 md:pb-4">
                       {children}
                     </main>
 
