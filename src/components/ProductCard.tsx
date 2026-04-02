@@ -5,11 +5,14 @@ import Image from 'next/image';
 import { Product } from '@/types';
 import imagekitLoader from '@/lib/imagekitLoader';
 import { motion } from 'framer-motion';
-import { useWishlist } from '@/context/WishlistContext';
 import { Heart, ShoppingCart } from 'lucide-react';
+import { useRendimiento } from '@/context/RendimientoContext';
+import { useWishlist } from '@/context/WishlistContext';
+import { memo } from 'react';
 
-export default function ProductCard({ product }: { product: Product }) {
+function ProductCard({ product }: { product: Product }) {
     const { toggleWishlist, isInWishlist } = useWishlist();
+    const { esBajoRendimiento } = useRendimiento();
     const liked = isInWishlist(product.id);
 
     const precioEntero = Math.floor(product.price);
@@ -17,7 +20,7 @@ export default function ProductCard({ product }: { product: Product }) {
     return (
         <motion.div
             className="h-full relative group"
-            whileHover={{ y: -4 }}
+            whileHover={esBajoRendimiento ? {} : { y: -4 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         >
             <Link href={`/productos/${product.id}`} className="block h-full">
@@ -56,10 +59,11 @@ export default function ProductCard({ product }: { product: Product }) {
                                 e.stopPropagation();
                                 toggleWishlist(product);
                             }}
-                            className={`absolute top-2.5 right-2.5 sm:top-3 sm:right-3 z-20 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full backdrop-blur-md transition-all duration-200 shadow-sm cursor-pointer active:scale-90
+                            className={`absolute top-2.5 right-2.5 sm:top-3 sm:right-3 z-20 w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all duration-200 shadow-sm cursor-pointer active:scale-90
+                                ${esBajoRendimiento ? '' : 'backdrop-blur-md'}
                                 ${liked
                                     ? 'bg-red-500 text-white shadow-red-500/25'
-                                    : 'bg-white/80 dark:bg-neutral-800/80 text-neutral-400 hover:text-neutral-700 dark:hover:text-white'
+                                    : 'bg-white/90 dark:bg-neutral-800/90 text-neutral-400 hover:text-neutral-700 dark:hover:text-white'
                                 }`}
                             aria-label={liked ? 'Quitar de favoritos' : 'Agregar a favoritos'}
                         >
@@ -72,7 +76,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
                         {/* Badge categoría */}
                         <div className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 z-10">
-                            <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-white/80 dark:bg-black/60 backdrop-blur-md text-[10px] font-bold uppercase tracking-[0.12em] text-neutral-700 dark:text-neutral-300 shadow-sm">
+                            <span className={`inline-flex items-center px-2.5 py-1 rounded-lg bg-white/90 dark:bg-black/80 text-[10px] font-bold uppercase tracking-[0.12em] text-neutral-700 dark:text-neutral-300 shadow-sm ${esBajoRendimiento ? '' : 'backdrop-blur-md'}`}>
                                 {product.category || 'Colección'}
                             </span>
                         </div>
@@ -106,3 +110,5 @@ export default function ProductCard({ product }: { product: Product }) {
         </motion.div>
     );
 }
+
+export default memo(ProductCard);

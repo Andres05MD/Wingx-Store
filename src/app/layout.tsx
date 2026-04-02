@@ -11,6 +11,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { ExchangeRateProvider } from "@/context/ExchangeRateContext";
 import { ChatProvider } from "@/context/ChatContext";
 import ClientShell from "@/components/ClientShell";
+import { RendimientoProvider } from "@/context/RendimientoContext";
 
 const sora = Sora({
   subsets: ["latin"],
@@ -70,28 +71,30 @@ export default function RootLayout({
     <html lang="es" suppressHydrationWarning>
       <body className={`${dmSans.variable} ${sora.variable} antialiased min-h-screen flex flex-col bg-white text-black dark:bg-black dark:text-white transition-colors duration-300 font-sans`}>
         <AuthProvider>
-          <ExchangeRateProvider>
-            <ChatProvider>
-              <CartProvider>
-                <WishlistProvider>
-                  <ThemeProvider
-                    attribute="class"
-                    defaultTheme="light"
-                    disableTransitionOnChange
-                  >
-                    <Header />
+          <RendimientoProvider>
+            <ExchangeRateProvider>
+              <ChatProvider>
+                <CartProvider>
+                  <WishlistProvider>
+                    <ThemeProvider
+                      attribute="class"
+                      defaultTheme="light"
+                      disableTransitionOnChange
+                    >
+                      <Header />
 
-                    <main className="grow w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-20 pb-24 md:pb-4">
-                      {children}
-                    </main>
+                      <main className="grow w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-20 pb-24 md:pb-4">
+                        {children}
+                      </main>
 
-                    <Footer />
-                    <ClientShell />
-                  </ThemeProvider>
-                </WishlistProvider>
-              </CartProvider>
-            </ChatProvider>
-          </ExchangeRateProvider>
+                      <Footer />
+                      <ClientShell />
+                    </ThemeProvider>
+                  </WishlistProvider>
+                </CartProvider>
+              </ChatProvider>
+            </ExchangeRateProvider>
+          </RendimientoProvider>
         </AuthProvider>
       </body>
     </html>

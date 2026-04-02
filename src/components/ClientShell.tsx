@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { useRendimiento } from '@/context/RendimientoContext';
 
 // Dynamic imports — componentes pesados que no necesitan SSR
 const ParticlesBackground = dynamic(() => import("@/components/ui/ParticlesBackground"), { ssr: false });
@@ -16,10 +17,12 @@ const Toaster = dynamic(() => import("sonner").then(m => m.Toaster), { ssr: fals
  * Esto reduce el bundle inicial significativamente (~70KB+).
  */
 export default function ClientShell() {
+    const { esBajoRendimiento } = useRendimiento();
+
     return (
         <>
-            <SmoothScroll />
-            <ParticlesBackground />
+            {!esBajoRendimiento && <SmoothScroll />}
+            {!esBajoRendimiento && <ParticlesBackground />}
             <CartDrawer />
             <WishlistDrawer />
             <MobileBottomNav />

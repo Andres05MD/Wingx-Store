@@ -323,3 +323,39 @@ h6 {
     scroll-behavior: auto !important;
   }
 }
+
+/* 🚀 Optimización para equipos de Bajo Rendimiento */
+[data-bajo-rendimiento="true"] {
+  /* Desactivar desenfoques pesados (backdrop-filter) */
+  *, *::before, *::after {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Simplificar transiciones */
+  *, *::before, *::after {
+    transition-duration: 150ms !important; /* Transiciones rápidas y sencillas */
+  }
+
+  /* Desactivar animaciones de alto consumo */
+  .animate-shimmer,
+  .animate-float-slow,
+  .animate-float-medium,
+  .animate-float-fast,
+  .hero-title-shine {
+    animation: none !important;
+    background-size: auto !important;
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  /* Desactivar efectos de hover que usen sombras pesadas */
+  .glass-card:hover,
+  .btn-glow:hover {
+    box-shadow: none !important;
+  }
+
+  /* Desactivar el efecto de brillo en botones */
+  .btn-glow::after {
+    display: none !important;
+  }
+}
