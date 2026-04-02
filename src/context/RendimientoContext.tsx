@@ -4,6 +4,8 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 
 interface RendimientoContextType {
     esBajoRendimiento: boolean;
+    esMovil: boolean;
+    priorizarCargaLimpia: boolean;
     cargandoDeteccion: boolean;
 }
 
@@ -11,6 +13,8 @@ const RendimientoContext = createContext<RendimientoContextType | undefined>(und
 
 export function RendimientoProvider({ children }: { children: ReactNode }) {
     const [esBajoRendimiento, setEsBajoRendimiento] = useState(false);
+    const [esMovil, setEsMovil] = useState(false);
+    const [priorizarCargaLimpia, setPriorizarCargaLimpia] = useState(false);
     const [cargandoDeteccion, setCargandoDeteccion] = useState(true);
 
     useEffect(() => {
@@ -42,6 +46,8 @@ export function RendimientoProvider({ children }: { children: ReactNode }) {
                 if (esMovil && (nucleos <= 2 || (memoria && memoria <= 2))) bajoRendimiento = true;
 
                 setEsBajoRendimiento(bajoRendimiento);
+                setEsMovil(esMovil);
+                setPriorizarCargaLimpia(esMovil || bajoRendimiento);
                 
                 // Inyectar atributo global para CSS
                 if (typeof document !== 'undefined') {
@@ -62,7 +68,7 @@ export function RendimientoProvider({ children }: { children: ReactNode }) {
     }, []);
 
     return (
-        <RendimientoContext.Provider value={{ esBajoRendimiento, cargandoDeteccion }}>
+        <RendimientoContext.Provider value={{ esBajoRendimiento, esMovil, priorizarCargaLimpia, cargandoDeteccion }}>
             {children}
         </RendimientoContext.Provider>
     );

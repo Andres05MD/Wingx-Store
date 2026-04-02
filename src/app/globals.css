@@ -324,7 +324,34 @@ h6 {
   }
 }
 
-/* 🚀 Optimización para equipos de Bajo Rendimiento */
+/* 🚀 Optimización para equipos de Bajo Rendimiento y Móviles */
+@media (max-width: 768px) {
+  /* Desactivar desenfoques pesados en dispositivos móviles por defecto */
+  .backdrop-blur-md, 
+  .backdrop-blur-xl, 
+  .backdrop-blur-2xl,
+  .glass-card,
+  nav {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-color: rgba(255, 255, 255, 0.98) !important;
+  }
+
+  .dark .backdrop-blur-md, 
+  .dark .backdrop-blur-xl, 
+  .dark .backdrop-blur-2xl,
+  .dark .glass-card,
+  .dark nav {
+    background-color: rgba(10, 10, 10, 0.98) !important;
+  }
+
+  /* Forzar GPU para evitar tirones en scroll */
+  .will-change-transform {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+}
+
 [data-bajo-rendimiento="true"] {
   /* Desactivar desenfoques pesados (backdrop-filter) */
   *, *::before, *::after {
@@ -334,7 +361,7 @@ h6 {
 
   /* Simplificar transiciones */
   *, *::before, *::after {
-    transition-duration: 150ms !important; /* Transiciones rápidas y sencillas */
+    transition-duration: 150ms !important;
   }
 
   /* Desactivar animaciones de alto consumo */
@@ -342,7 +369,8 @@ h6 {
   .animate-float-slow,
   .animate-float-medium,
   .animate-float-fast,
-  .hero-title-shine {
+  .hero-title-shine,
+  .animate-pulse {
     animation: none !important;
     background-size: auto !important;
     -webkit-text-fill-color: currentColor !important;
@@ -350,8 +378,16 @@ h6 {
 
   /* Desactivar efectos de hover que usen sombras pesadas */
   .glass-card:hover,
-  .btn-glow:hover {
+  .btn-glow:hover,
+  .product-card:hover {
     box-shadow: none !important;
+    transform: none !important;
+  }
+
+  /* Evitar sombras complejas */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
   }
 
   /* Desactivar el efecto de brillo en botones */

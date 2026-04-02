@@ -10,9 +10,9 @@ import { useRendimiento } from '@/context/RendimientoContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { memo } from 'react';
 
-function ProductCard({ product }: { product: Product }) {
+function ProductCard({ product, priority = false }: { product: Product, priority?: boolean }) {
     const { toggleWishlist, isInWishlist } = useWishlist();
-    const { esBajoRendimiento } = useRendimiento();
+    const { esBajoRendimiento, esMovil } = useRendimiento();
     const liked = isInWishlist(product.id);
 
     const precioEntero = Math.floor(product.price);
@@ -20,7 +20,7 @@ function ProductCard({ product }: { product: Product }) {
     return (
         <motion.div
             className="h-full relative group"
-            whileHover={esBajoRendimiento ? {} : { y: -4 }}
+            whileHover={(esBajoRendimiento || esMovil) ? {} : { y: -4 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
         >
             <Link href={`/productos/${product.id}`} className="block h-full">
@@ -33,6 +33,7 @@ function ProductCard({ product }: { product: Product }) {
                             loader={imagekitLoader}
                             alt={product.name}
                             fill
+                            priority={priority}
                             className={`object-cover transition-all duration-500 ease-out will-change-transform ${product.images && product.images.length > 1 ? 'group-hover:opacity-0' : 'group-hover:scale-103'}`}
                             sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
                         />
