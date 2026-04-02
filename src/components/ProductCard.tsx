@@ -17,12 +17,7 @@ function ProductCard({ product, priority = false }: { product: Product, priority
 
     const precioEntero = Math.floor(product.price);
 
-    return (
-        <motion.div
-            className="h-full relative group"
-            whileHover={(esBajoRendimiento || esMovil) ? {} : { y: -4 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        >
+    const cardContent = (
             <Link href={`/productos/${product.id}`} className="block h-full">
                 <div className="relative flex flex-col h-full rounded-2xl sm:rounded-3xl overflow-hidden bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-neutral-800 transition-all duration-300 hover:shadow-[0_16px_48px_-12px_rgba(0,0,0,0.12)] dark:hover:shadow-[0_16px_48px_-12px_rgba(255,255,255,0.06)] hover:border-neutral-200 dark:hover:border-neutral-700">
 
@@ -108,6 +103,19 @@ function ProductCard({ product, priority = false }: { product: Product, priority
 
                 </div>
             </Link>
+    );
+
+    if (esBajoRendimiento || esMovil) {
+        return <div className="h-full relative group">{cardContent}</div>;
+    }
+
+    return (
+        <motion.div
+            className="h-full relative group"
+            whileHover={{ y: -4 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        >
+            {cardContent}
         </motion.div>
     );
 }
