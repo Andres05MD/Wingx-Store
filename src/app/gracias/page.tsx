@@ -241,14 +241,23 @@ function GraciasContent() {
                             <div className="w-10 h-10 bg-red-500 rounded-xl flex items-center justify-center shrink-0">
                                 <XCircle className="w-5 h-5 text-white" />
                             </div>
-                            <div className="text-left">
+                            <div className="text-left w-full">
                                 <h3 className="font-bold text-red-700 dark:text-red-300 mb-1">
                                     Verifica tus datos
                                 </h3>
-                                <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+                                <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
                                     Puede que los datos de la transferencia no coincidan. Por favor
                                     contáctanos por WhatsApp para resolver este inconveniente.
                                 </p>
+                                <a
+                                    href={`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_PHONE || '584121234567'}?text=${encodeURIComponent(`Hola, tengo un inconveniente. Mi pedido #${orderId?.slice(0, 8).toUpperCase()} aparece como Pago No Verificado y quisiera ayuda para revisarlo.`)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center justify-center gap-2 w-full px-5 py-3 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl font-bold transition-all shadow-md shadow-[#25D366]/20 active:scale-95"
+                                >
+                                    <MessageCircle size={18} />
+                                    Resolver por WhatsApp
+                                </a>
                             </div>
                         </div>
                     </motion.div>

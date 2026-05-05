@@ -81,7 +81,7 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
         }
     }, [user, setValue]);
 
-    // Lock body scroll
+    // Bloquear scroll del body
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
@@ -93,7 +93,7 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
         };
     }, [isOpen]);
 
-    // Reset step
+    // Restablecer paso
     useEffect(() => {
         if (!isOpen) {
             setCheckoutStep('info');
@@ -149,15 +149,18 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
         setLoading(true);
         try {
             const data = formData;
-            const orderItems: OrderItem[] = items.map(item => ({
-                id: item.id,
-                name: item.name,
-                price: item.price,
-                quantity: item.quantity,
-                selectedSize: item.selectedSize,
-                selectedColor: item.selectedColor,
-                imageUrl: item.imageUrl,
-            }));
+            const orderItems: OrderItem[] = items.map(item => {
+                const itemData = {
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    selectedSize: item.selectedSize,
+                    selectedColor: item.selectedColor,
+                    imageUrl: item.imageUrl,
+                };
+                return Object.fromEntries(Object.entries(itemData).filter(([_, v]) => v !== undefined)) as unknown as OrderItem;
+            });
 
             const orderId = await createOrderWithPagoMovil({
                 items: orderItems,
@@ -199,8 +202,21 @@ export default function CheckoutModal({ isOpen, onClose }: CheckoutModalProps) {
         setLoading(true);
         try {
             const data = formData;
+            const cleanItems = items.map(item => {
+                const itemData = {
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    selectedSize: item.selectedSize,
+                    selectedColor: item.selectedColor,
+                    imageUrl: item.imageUrl,
+                };
+                return Object.fromEntries(Object.entries(itemData).filter(([_, v]) => v !== undefined)) as unknown as OrderItem;
+            });
+
             const orderData = {
-                items,
+                items: cleanItems,
                 totalPrice,
                 customer: {
                     name: data.name,

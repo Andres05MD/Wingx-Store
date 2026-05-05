@@ -160,8 +160,12 @@ export default function PagoMovilForm({ onSubmit, onCancel, totalAmount, isLoadi
             bancoDestino: storePagoMovil.banco,
             telefonoDestino: storePagoMovil.telefono,
             cedulaDestino: storePagoMovil.cedula,
-            comprobanteUrl: urlComprobante || undefined,
         };
+
+        if (urlComprobante) {
+            completeData.comprobanteUrl = urlComprobante;
+        }
+
         await onSubmit(completeData);
     };
 
