@@ -28,7 +28,7 @@ export default function PaginationControls({
         return `${pathname}?${params.toString()}`;
     };
 
-    // Generate page numbers to display
+    // Generar números de página a mostrar
     const getPageNumbers = (): (number | 'ellipsis')[] => {
         const pages: (number | 'ellipsis')[] = [];
 

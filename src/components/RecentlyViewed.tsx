@@ -20,14 +20,14 @@ export default function RecentlyViewed({ excludeProductId, excludeProductIds = [
             try {
                 let products: Product[] = JSON.parse(stored);
 
-                // Filter out the current product and any explicitly excluded ones
+                // Filtrar el producto actual y cualquiera explícitamente excluido
                 products = products.filter(p => {
                     if (excludeProductId && p.id === excludeProductId) return false;
                     if (excludeProductIds.length > 0 && excludeProductIds.includes(p.id)) return false;
                     return true;
                 });
 
-                // Get last 4 visited products
+                // Obtener últimos 4 productos visitados
                 setRecentProducts(products.slice(0, 4));
             } catch (e) {
                 console.error('Error loading recently viewed', e);
@@ -61,7 +61,7 @@ export default function RecentlyViewed({ excludeProductId, excludeProductIds = [
     );
 }
 
-// Utility to add to history
+// Función utilitaria para agregar al historial
 export const addToRecentlyViewed = (product: Product) => {
     if (typeof window === 'undefined') return;
 
@@ -69,13 +69,13 @@ export const addToRecentlyViewed = (product: Product) => {
         const stored = localStorage.getItem('wingx_recently_viewed');
         let products: Product[] = stored ? JSON.parse(stored) : [];
 
-        // Remove duplicate if exists
+        // Eliminar duplicado si existe
         products = products.filter(p => p.id !== product.id);
 
-        // Add to front
+        // Agregar al inicio
         products.unshift(product);
 
-        // Limit to 10
+        // Limitar a 10
         if (products.length > 10) {
             products = products.slice(0, 10);
         }

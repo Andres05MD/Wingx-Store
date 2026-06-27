@@ -54,11 +54,20 @@ export async function getAllProducts(): Promise<Product[]> {
 }
 
 /**
- * Obtiene solo los productos destacados (featured)
+ * Obtiene solo los productos destacados (featured) directamente de Firestore
  */
 export async function getFeaturedProducts(): Promise<Product[]> {
-    const allProducts = await getAllProducts();
-    return allProducts.filter((p) => p.featured === true);
+    try {
+        const productsRef = collection(db, 'productos');
+        const q = query(productsRef, where('featured', '==', true));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) return [];
+        return snapshot.docs.map((docSnap) => docToProduct(docSnap.id, docSnap.data()));
+    } catch (error) {
+        console.error('Error fetching featured products:', error);
+        return [];
+    }
 }
 
 /**

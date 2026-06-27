@@ -29,7 +29,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
     const [isWishlistOpen, setIsWishlistOpen] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
 
-    // Load from localStorage
+    // Cargar desde localStorage
     useEffect(() => {
         const saved = localStorage.getItem('wingx_wishlist');
         if (saved) {
@@ -42,7 +42,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
         setIsLoaded(true);
     }, []);
 
-    // Save to localStorage
+    // Guardar en localStorage
     useEffect(() => {
         if (isLoaded) {
             localStorage.setItem('wingx_wishlist', JSON.stringify(wishlist));

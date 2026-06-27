@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { MotionConfig } from 'framer-motion';
 import { useRendimiento } from '@/context/RendimientoContext';
 import { useState, useEffect } from 'react';
 
@@ -31,7 +32,7 @@ export default function ClientShell() {
     }, [priorizarCargaLimpia]);
 
     return (
-        <>
+        <MotionConfig reducedMotion="user">
             {!esBajoRendimiento && <SmoothScroll />}
             {!esBajoRendimiento && <ParticlesBackground />}
             <CartDrawer />
@@ -39,6 +40,6 @@ export default function ClientShell() {
             <MobileBottomNav />
             {mounted && <ChatBot />}
             <Toaster position="top-center" richColors />
-        </>
+        </MotionConfig>
     );
 }

@@ -7,26 +7,26 @@ export default function imagekitLoader({ src, width, quality }: { src: string; w
         const paramsString = params.join(',');
         const urlParts = src.split('?');
         if (urlParts.length > 1) {
-            // If it already has params? typically ImageKit uses /tr: params or query params
-            // Let's assume standard intuitive usage: standard ImageKit URLs often use `tr` query param or path segment.
+        // Si ya tiene parámetros? típicamente ImageKit usa /tr: parámetros o query params
+        // Asumamos uso estándar e intuitivo: URLs de ImageKit usualmente usan parámetro `tr` o segmento de path.
             // E.g. https://ik.imagekit.io/id/image.jpg?tr=w-300
             return `${src}&tr=${paramsString}`;
         }
         return `${src}?tr=${paramsString}`;
     }
 
-    // If it's a relative path, prepend the endpoint
+    // Si es una ruta relativa, anteponer el endpoint
     const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT;
     if (urlEndpoint && !src.startsWith('http')) {
         const params = [`w-${width}`];
         if (quality) params.push(`q-${quality}`);
         const paramsString = params.join(',');
-        // handle leading slash
+        // manejar barra inicial
         const cleanSrc = src.startsWith('/') ? src.slice(1) : src;
         const cleanEndpoint = urlEndpoint.endsWith('/') ? urlEndpoint.slice(0, -1) : urlEndpoint;
         return `${cleanEndpoint}/${cleanSrc}?tr=${paramsString}`;
     }
 
-    // Fallback for other URLs (e.g. Firebase Storage direct link if not proxied)
+    // Fallback para otras URLs (ej. enlace directo de Firebase Storage si no está)
     return src;
 }

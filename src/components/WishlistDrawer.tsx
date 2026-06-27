@@ -21,7 +21,7 @@ export default function WishlistDrawer() {
     const backdropRef = useRef<HTMLDivElement>(null);
     const isBrowserNavigation = useRef(false);
 
-    // Format currency
+    // Formatear moneda
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('es-CO', {
             style: 'currency',
@@ -30,11 +30,11 @@ export default function WishlistDrawer() {
         }).format(price);
     };
 
-    // Handle mobile back gesture
+    // Manejar gesto de retroceso en móvil
     useEffect(() => {
         if (!isWishlistOpen) return;
 
-        // Reset flag and visibility style immediately upon opening
+        // Restablecer indicador y estilo de visibilidad al abrir
         isBrowserNavigation.current = false;
         if (drawerRef.current) {
             drawerRef.current.style.display = '';
@@ -45,18 +45,18 @@ export default function WishlistDrawer() {
             backdropRef.current.style.opacity = '';
         }
 
-        // Add state to history when drawer opens
+        // Agregar estado al historial cuando se abre el drawer
         window.history.pushState({ wishlistOpen: true }, '');
 
         const handlePopState = () => {
-            // Mark as browser navigation
+            // Marcar como navegación del navegador
             isBrowserNavigation.current = true;
 
-            // AGGRESSIVE FIX for iOS flicker: Remove from flow immediately
+            // CORRECCIÓN AGRESIVA para parpadeo en iOS: Eliminar inmediatamente del flujo
             if (drawerRef.current) drawerRef.current.style.display = 'none';
             if (backdropRef.current) backdropRef.current.style.display = 'none';
 
-            // Close drawer when user navigates back
+            // Cerrar drawer cuando el usuario navega hacia atrás
             setIsWishlistOpen(false);
         };
 
@@ -67,11 +67,11 @@ export default function WishlistDrawer() {
         };
     }, [isWishlistOpen, setIsWishlistOpen]);
 
-    // Close on click outside
+    // Cerrar al hacer clic fuera
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) {
-                // Go back in history to remove the pushed state
+                // Regresar en el historial para eliminar el estado introducido
                 window.history.back();
             }
         };
@@ -87,7 +87,7 @@ export default function WishlistDrawer() {
         };
     }, [isWishlistOpen, setIsWishlistOpen]);
 
-    // Handler to close drawer via X button (needs to go back in history)
+    // Manejador para cerrar drawer mediante botón X (necesita regresar en el historial)
     const handleClose = () => {
         window.history.back();
     };
@@ -197,7 +197,7 @@ export default function WishlistDrawer() {
 
                                             <button
                                                 onClick={() => {
-                                                    // Add to cart and potentially remove from wishlist
+                                                    // Agregar al carrito y potencialmente eliminar de la lista de deseos
                                                     addToCart(item);
                                                     removeFromWishlist(item.id);
                                                 }}

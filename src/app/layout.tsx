@@ -35,9 +35,9 @@ export const metadata: Metadata = {
   description: "Moda moderna y exclusiva con confección propia. Diseños únicos, calidad premium y envíos a todo el país. Descubre tu estilo en Wingx.",
   keywords: ['moda', 'ropa', 'tienda online', 'Venezuela', 'confección propia', 'Wingx', 'moda exclusiva', 'Barquisimeto'],
   icons: {
-    icon: 'https://ik.imagekit.io/xwym4oquc/resources/Isotipo.png',
-    shortcut: 'https://ik.imagekit.io/xwym4oquc/resources/Isotipo.png',
-    apple: 'https://ik.imagekit.io/xwym4oquc/resources/Isotipo.png',
+    icon: '/isotipo-white.png',
+    shortcut: '/isotipo-white.png',
+    apple: '/isotipo-white.png',
   },
   openGraph: {
     type: 'website',
@@ -81,9 +81,16 @@ export default function RootLayout({
                       defaultTheme="light"
                       disableTransitionOnChange
                     >
+                      {/* Skip link — accesibilidad WCAG 2.4.1 */}
+                      <a
+                        href="#contenido-principal"
+                        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-black focus:text-white focus:dark:bg-white focus:dark:text-black focus:rounded-full focus:font-bold focus:text-sm focus:shadow-lg"
+                      >
+                        Saltar al contenido principal
+                      </a>
                       <Header />
 
-                      <main className="grow w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-20 pb-24 md:pb-4">
+                      <main id="contenido-principal" className="grow w-full max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-20 pb-24 md:pb-4">
                         {children}
                       </main>
 

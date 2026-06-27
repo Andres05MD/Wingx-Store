@@ -17,7 +17,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
     const [currentSlide, setCurrentSlide] = useState(0);
     const scrollRef = useRef<HTMLDivElement>(null);
 
-    // Handle scroll for mobile dots
+    // Manejar scroll para puntos móviles
     const handleScroll = () => {
         if (scrollRef.current) {
             const width = scrollRef.current.offsetWidth;
@@ -143,9 +143,9 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
                             className="relative w-full h-full flex items-center justify-center"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            {/* Keep it simple for lightbox - just show active desktop or first image if came from mobile (though mobile doesn't trigger this yet) */}
+                            {/* Mantener simple para lightbox - simplemente mostrar imagen activa de desktop o primera imagen si vino de móvil (aunque móvil aún no activa esto) */}
                             <Image
-                                src={activeImage} // Ideally track clicked image for lightbox even on mobile, but keep simple for now
+                                src={activeImage} // Idealmente rastrear imagen clicada para lightbox incluso en móvil, pero mantener simple por ahora
                                 loader={imagekitLoader}
                                 alt={productName}
                                 fill

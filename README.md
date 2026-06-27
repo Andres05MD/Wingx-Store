@@ -103,11 +103,7 @@ src/
 ├── lib/                  # Utilidades y configuración
 ├── services/             # Servicios (Firebase, etc.)
 └── types/                # TypeScript types
-```
-
-## 🔗 Proyecto Relacionado
-
-Este proyecto funciona junto con [Wingx Gestión](https://github.com/Andres05MD/Wingx-Gestion) - Panel de administración para gestionar pedidos, inventario y verificación de pagos.
+`
 
 ## 🛠️ Tecnologías
 
@@ -121,31 +117,6 @@ Este proyecto funciona junto con [Wingx Gestión](https://github.com/Andres05MD/
 - **Formularios:** React Hook Form + Zod
 - **UI:** Lucide Icons, Sonner (toasts)
 
-## 📦 Scripts
-
-```bash
-npm run dev      # Servidor de desarrollo
-npm run build    # Build de producción
-npm run start    # Servidor de producción
-npm run lint     # Linter
-```
-
-## 🚀 Deploy
-
-### Vercel (Recomendado)
-
-1. Conecta tu repositorio en [Vercel](https://vercel.com)
-2. Configura las variables de entorno
-3. Deploy automático en cada push
-
-### Otras plataformas
-
-Compatible con cualquier plataforma que soporte Next.js (Netlify, Railway, etc.)
-
-## 📄 Licencia
-
-Proyecto privado - Todos los derechos reservados.
-
 ---
 
-Desarrollado con 💜 para **Wingx**
+Desarrollado por Juan17md con 💜 para **Wingx**

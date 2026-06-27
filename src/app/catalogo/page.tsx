@@ -1,4 +1,5 @@
 
+import type { Metadata } from "next";
 import { getAllProducts } from "@/services/productService";
 import { Product } from "@/types";
 import CatalogHeader from "@/components/CatalogHeader";
@@ -6,8 +7,18 @@ import InfiniteMarquee from "@/components/ui/InfiniteMarquee";
 import AnimatedProductGrid from "@/components/AnimatedProductGrid";
 import CatalogSidebar from "@/components/CatalogSidebar";
 
-// Revalidate every 60 seconds
+// Revalidar cada 60 segundos
 export const revalidate = 60;
+
+// SEO: Metadata estática para la página de catálogo
+export const metadata: Metadata = {
+    title: 'Catálogo',
+    description: 'Explora nuestra colección completa de moda exclusiva. Diseños únicos con confección propia, calidad premium y envíos a todo el país.',
+    openGraph: {
+        title: 'Catálogo — Wingx Store',
+        description: 'Explora nuestra colección completa de moda exclusiva.',
+    },
+};
 
 export default async function CatalogPage({
     searchParams,
@@ -19,11 +30,11 @@ export default async function CatalogPage({
     const searchTerm = resolvedSearchParams.search?.toLowerCase() || '';
     const categoryFilter = resolvedSearchParams.category || 'Todos';
 
-    // Pagination settings
+    // Configuración de paginación
     const PAGE_SIZE = 12;
     const currentPage = Number(resolvedSearchParams.page) || 1;
 
-    // Filter Logic
+    // Lógica de filtrado
     let filteredProducts = products;
 
     // 1. Filter by Category
@@ -43,16 +54,16 @@ export default async function CatalogPage({
         );
     }
 
-    // Pagination Slicing
+    // Segmentación de paginación
     const totalItems = filteredProducts.length;
     const start = (currentPage - 1) * PAGE_SIZE;
     const end = start + PAGE_SIZE;
     const currentProducts = filteredProducts.slice(start, end);
 
-    // Categories
+    // Categorías
     const categories: string[] = ['Todos', ...Array.from(new Set(products.flatMap((p: Product) => p.categories || [p.category || 'Varios'])))];
 
-    // Dynamic header content
+    // Contenido dinámico del encabezado
     const headerTitle = searchTerm
         ? `Resultados para "${resolvedSearchParams.search}"`
         : categoryFilter !== 'Todos'

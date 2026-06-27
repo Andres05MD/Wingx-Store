@@ -7,7 +7,7 @@ import InfoSections from "@/components/InfoSections";
 
 import { Product } from "@/types";
 
-// Revalidate/update cache every 60 seconds (ISR) - Mejor rendimiento y menos costos que force-dynamic
+// Revalidar/actualizar caché cada 60 segundos (ISR) - Mejor rendimiento y menos costos que force-dynamic
 export const revalidate = 60;
 
 export default async function Home({
@@ -20,14 +20,14 @@ export default async function Home({
     const searchTerm = resolvedSearchParams.search?.toLowerCase() || '';
     const categoryFilter = resolvedSearchParams.category || 'Todos';
 
-    // Pagination settings
+    // Configuración de paginación
     const PAGE_SIZE = 12; // 3 rows * 4 columns
     const currentPage = Number(resolvedSearchParams.page) || 1;
 
-    // Default Categories (Extract unique categories from products)
+    // Categorías por defecto (Extraer categorías únicas de productos)
     const categories = ['Todos', ...Array.from(new Set(products.flatMap(p => p.categories || [p.category || 'Varios'])))];
 
-    // Filter Logic
+    // Lógica de filtrado
     let filteredProducts = products;
 
     // 1. Filter by Category
@@ -51,8 +51,43 @@ export default async function Home({
     const end = start + PAGE_SIZE;
     const currentProducts = filteredProducts.slice(start, end);
 
+    // JSON-LD: WebSite + Organization (para Google Sitelinks Search + rich snippets)
+    const sitioWeb = {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'Wingx Store',
+        url: process.env.NEXT_PUBLIC_SITE_URL || 'https://wingx-store.vercel.app',
+        potentialAction: {
+            '@type': 'SearchAction',
+            target: {
+                '@type': 'EntryPoint',
+                urlTemplate: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://wingx-store.vercel.app'}/catalogo?search={search_term_string}`,
+            },
+            'query-input': 'required name=search_term_string',
+        },
+    };
+
+    const organizacion = {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'Wingx',
+        url: process.env.NEXT_PUBLIC_SITE_URL || 'https://wingx-store.vercel.app',
+        logo: 'https://ik.imagekit.io/xwym4oquc/resources/Isotipo.png',
+        description: 'Moda moderna y exclusiva con confección propia. Diseños únicos, calidad premium.',
+        address: {
+            '@type': 'PostalAddress',
+            addressLocality: 'Barquisimeto',
+            addressCountry: 'VE',
+        },
+    };
+
     return (
         <div className="space-y-6 animate-in fade-in duration-500">
+            {/* JSON-LD para SEO */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify([sitioWeb, organizacion]) }}
+            />
             {/* Hero Section / Banner */}
             <HomeBanner
                 title={searchTerm ? `Resultados para "${resolvedSearchParams.search}"` : 'Bienvenido a Wingx'}

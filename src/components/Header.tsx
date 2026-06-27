@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
@@ -20,50 +20,52 @@ export default function Header() {
     const router = useRouter();
     const pathname = usePathname();
 
-    // Logo URLs
+    // URLs del Logo
     const lightModeLogo = 'https://ik.imagekit.io/xwym4oquc/resources/Isotipo.png';
     const darkModeLogo = 'https://ik.imagekit.io/xwym4oquc/resources/Isotipo(Invert).png';
 
-    // Scroll detection for visual change
+    // Detección de scroll para cambio visual
     useEffect(() => {
         const handleScroll = () => setScrolled(window.scrollY > 50);
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Fetch basic product info for search index on mount
-    useEffect(() => {
-        const fetchSearchIndex = async () => {
-            try {
-                const { collection, getDocs, query, limit } = await import('firebase/firestore');
-                const { db } = await import('@/lib/firebase');
+    // Diferir carga del índice hasta el primer focus del input de búsqueda
+    const indiceYaCargado = useRef(false);
 
-                const q = query(collection(db, "productos"), limit(100));
-                const snapshot = await getDocs(q);
+    const cargarIndiceBusqueda = useCallback(async () => {
+        if (indiceYaCargado.current) return;
+        indiceYaCargado.current = true;
 
-                const products = snapshot.docs.map(doc => {
-                    const data = doc.data();
-                    let img = data.imageUrl;
-                    if (data.images && data.images.length > 0) img = data.images[0];
+        try {
+            const { collection, getDocs, query, limit } = await import('firebase/firestore');
+            const { db } = await import('@/lib/firebase');
 
-                    return {
-                        id: doc.id,
-                        name: data.name || '',
-                        category: data.category || '',
-                        imageUrl: img || ''
-                    };
-                });
+            const q = query(collection(db, "productos"), limit(100));
+            const snapshot = await getDocs(q);
 
-                setAllProducts(products);
-            } catch (err) {
-                console.error("Error fetching search index", err);
-            }
-        };
+            const products = snapshot.docs.map(docSnap => {
+                const data = docSnap.data();
+                let img = data.imageUrl;
+                if (data.images && data.images.length > 0) img = data.images[0];
 
-        fetchSearchIndex();
+                return {
+                    id: docSnap.id,
+                    name: data.name || '',
+                    category: data.category || '',
+                    imageUrl: img || ''
+                };
+            });
+
+            setAllProducts(products);
+        } catch (err) {
+            indiceYaCargado.current = false; // Permitir reintento
+            console.error("Error fetching search index", err);
+        }
     }, []);
 
-    // Local filter logic
+    // Lógica de filtrado local
     useEffect(() => {
         if (searchTerm.trim() === '') {
             setSearchResults([]);
@@ -136,21 +138,28 @@ export default function Header() {
 
                     {/* Desktop Search Bar */}
                     <div className="hidden md:flex flex-1 max-w-sm mx-auto relative group">
-                        <form onSubmit={handleSearch} className="relative w-full z-20">
+                        <form onSubmit={handleSearch} className="relative w-full z-20" role="search">
+                            <label htmlFor="busqueda-header" className="sr-only">Buscar productos</label>
                             <input
-                                type="text"
+                                id="busqueda-header"
+                                type="search"
                                 placeholder="Buscar por categoría o prenda..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                onFocus={() => setIsSearchFocused(true)}
+                                onFocus={() => {
+                                    setIsSearchFocused(true);
+                                    cargarIndiceBusqueda();
+                                }}
                                 onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
+                                autoComplete="off"
                                 className="w-full bg-black/[0.02] dark:bg-white/[0.02] backdrop-blur-md border border-transparent hover:border-black/[0.1] dark:hover:border-white/[0.1] rounded-full pl-5 pr-12 py-2.5 text-sm text-black dark:text-white placeholder:text-neutral-500 dark:placeholder:text-neutral-400 focus:outline-none focus:bg-white/90 dark:focus:bg-neutral-900/90 focus:border-black/20 dark:focus:border-white/20 focus:shadow-[0_0_15px_rgba(0,0,0,0.05)] dark:focus:shadow-[0_0_15px_rgba(255,255,255,0.05)]"
                             />
                             <button
                                 type="submit"
+                                aria-label="Buscar productos"
                                 className="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 text-neutral-400 hover:text-black dark:hover:text-white transition-all hover:scale-110 cursor-pointer"
                             >
-                                <Search className="w-4 h-4" />
+                                <Search className="w-4 h-4" aria-hidden="true" />
                             </button>
                         </form>
 
@@ -206,7 +215,7 @@ export default function Header() {
                     </div>
 
                     {/* Desktop Navigation */}
-                    <nav className="hidden md:flex items-center gap-1.5">
+                    <nav className="hidden md:flex items-center gap-1.5" aria-label="Navegación principal">
                         {[
                             { href: '/', label: 'Inicio' },
                             { href: '/catalogo', label: 'Catálogo' },

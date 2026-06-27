@@ -11,7 +11,7 @@ export default function ParticlesBackground() {
     const [mounted, setMounted] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
 
-    // Determine actual theme (handles 'system' case)
+    // Determinar tema real (maneja el caso 'system')
     const currentTheme = theme === 'system' ? systemTheme : theme;
     const isDark = currentTheme === 'dark';
 
@@ -21,7 +21,7 @@ export default function ParticlesBackground() {
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         if (prefersReducedMotion) return;
 
-        // Check if device is mobile
+        // Verificar si el dispositivo es móvil
         const checkMobile = () => {
             setIsMobile(window.innerWidth < 768);
         };

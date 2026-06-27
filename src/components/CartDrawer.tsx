@@ -27,7 +27,7 @@ export default function CartDrawer() {
     const isBrowserNavigation = useRef(false);
     const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
-    // Format currency
+    // Formatear moneda
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('es-CO', {
             style: 'currency',
@@ -36,11 +36,11 @@ export default function CartDrawer() {
         }).format(price);
     };
 
-    // Handle mobile back gesture
+    // Manejar gesto de retroceso en móvil
     useEffect(() => {
         if (!isCartOpen) return;
 
-        // Reset flag and visibility style immediately upon opening
+        // Restablecer indicador y estilo de visibilidad al abrir
         isBrowserNavigation.current = false;
         if (drawerRef.current) {
             drawerRef.current.style.display = '';
@@ -51,18 +51,18 @@ export default function CartDrawer() {
             backdropRef.current.style.opacity = '';
         }
 
-        // Add state to history when drawer opens
+        // Agregar estado al historial cuando se abre el drawer
         window.history.pushState({ cartOpen: true }, '');
 
         const handlePopState = (event: PopStateEvent) => {
-            // Mark as browser navigation
+            // Marcar como navegación del navegador
             isBrowserNavigation.current = true;
 
-            // AGGRESSIVE FIX for iOS flicker: Remove from flow immediately
+            // CORRECCIÓN AGRESIVA para parpadeo en iOS: Eliminar inmediatamente del flujo
             if (drawerRef.current) drawerRef.current.style.display = 'none';
             if (backdropRef.current) backdropRef.current.style.display = 'none';
 
-            // Close drawer when user navigates back
+            // Cerrar drawer cuando el usuario navega hacia atrás
             setIsCartOpen(false);
         };
 
@@ -73,37 +73,37 @@ export default function CartDrawer() {
         };
     }, [isCartOpen, setIsCartOpen]);
 
-    // Close on click outside
+    // Cerrar al hacer clic fuera
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) {
-                // Go back in history to remove the pushed state
+                // Regresar en el historial para eliminar el estado introducido
                 window.history.back();
             }
         };
 
         if (isCartOpen) {
             document.addEventListener('mousedown', handleClickOutside);
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            document.body.style.overflow = 'hidden'; // Prevenir scroll del fondo
         }
 
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
-            // Only reset overflow if drawer is closing and modal is NOT open
+            // Solo restablecer overflow si el drawer se está cerrando y el modal NO está abierto
             if (!isCheckoutOpen) {
                 document.body.style.overflow = 'unset';
             }
         };
     }, [isCartOpen, setIsCartOpen, isCheckoutOpen]);
 
-    // Handler to close drawer via X button (needs to go back in history)
+    // Manejador para cerrar drawer mediante botón X (necesita regresar en el historial)
     const handleClose = () => {
         window.history.back();
     };
 
     const handleCheckout = () => {
         setIsCheckoutOpen(true);
-        // Go back in history to remove the cart drawer state, then close
+        // Regresar en el historial para eliminar el estado del drawer y luego cerrar
         window.history.back();
     };
 

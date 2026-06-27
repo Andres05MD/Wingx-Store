@@ -16,7 +16,7 @@ export default function CatalogFilters({ categories }: CatalogFiltersProps) {
 
     const handleCategoryChange = (category: string) => {
         const params = new URLSearchParams(searchParams);
-        params.set('page', '1'); // Reset to page 1
+        params.set('page', '1'); // Restablecer a página 1
 
         if (category === 'Todos') {
             params.delete('category');

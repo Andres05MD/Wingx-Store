@@ -13,7 +13,7 @@ export function ModeToggle() {
     }, [])
 
     if (!mounted) {
-        return <div className="w-11 h-11 md:w-10 md:h-10" /> // Placeholder to avoid hydration mismatch
+        return <div className="w-11 h-11 md:w-10 md:h-10" /> // Marcador de posición para evitar desajuste de hidratación
     }
 
     return (

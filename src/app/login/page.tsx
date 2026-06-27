@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/Input';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Suspense } from 'react';
 
-// Schemas
+// Esquemas
 const loginSchema = z.object({
     name: z.string().optional(),
     email: z.string().email('Email inválido'),
