@@ -3,34 +3,33 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { PiShirtFoldedBold, PiPantsBold, PiCoatHangerBold, PiSunglassesBold } from "react-icons/pi";
+import { Shirt, ShirtIcon, WashingMachine, Sun } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 
-// You can expand this list or fetch it dynamically later
 const CATEGORIES = [
     {
         id: "camisas",
         name: "Camisas",
         href: "/catalogo?search=Camisa",
-        icon: <PiShirtFoldedBold className="w-8 h-8 text-black dark:text-white" />
+        icon: <ShirtIcon className="w-8 h-8 text-black dark:text-white" />
     },
     {
         id: "pantalones",
         name: "Pantalones",
         href: "/catalogo?search=Pantalón",
-        icon: <PiPantsBold className="w-8 h-8 text-black dark:text-white" />
+        icon: <Shirt className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
     },
     {
         id: "conjuntos",
         name: "Conjuntos",
         href: "/catalogo?search=Conjunto",
-        icon: <PiCoatHangerBold className="w-8 h-8 text-black dark:text-white" />
+        icon: <WashingMachine className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
     },
     {
         id: "trajes-bano",
         name: "Trajes de baño",
         href: "/catalogo?search=Traje de baño",
-        icon: <PiSunglassesBold className="w-8 h-8 text-black dark:text-white" />
+        icon: <Sun className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
     },
 ];
 

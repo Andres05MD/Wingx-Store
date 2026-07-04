@@ -1,7 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
-
 interface CatalogHeaderProps {
     title?: string;
     subtitle?: string;
@@ -14,11 +10,7 @@ export default function CatalogHeader({
     resultCount,
 }: CatalogHeaderProps) {
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="mb-6 md:mb-10"
+        <div className="mb-6 md:mb-10"
         >
 
 
@@ -35,6 +27,6 @@ export default function CatalogHeader({
 
 
             </div>
-        </motion.div>
+        </div>
     );
 }

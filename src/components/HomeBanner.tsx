@@ -53,44 +53,39 @@ export default function HomeBanner({ title, subtitle, showResetLink }: HomeBanne
             {/* Content Container */}
             <div className="relative z-10 container mx-auto px-4 sm:px-6 text-center">
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
                     className="max-w-4xl mx-auto p-2 sm:p-4 md:p-12 relative z-20"
                 >
 
-
-                    {/* Título con efecto shine + más dramático */}
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.25, duration: 0.6 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.1, duration: 0.3 }}
                     >
                         <h1 className="text-[2.5rem] sm:text-6xl md:text-[7rem] lg:text-[8.5rem] font-black tracking-[-0.04em] mb-3 md:mb-4 text-black dark:text-white leading-[0.9] font-heading hero-title-shine">
                             {title}
                         </h1>
 
-                        {/* Línea decorativa debajo del título */}
                         <div className="flex justify-center mb-6 md:mb-8">
                             <span className="hero-accent-line" />
                         </div>
                     </motion.div>
 
-                    {/* Subtítulo */}
                     <motion.p
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ delay: 0.45, duration: 0.6 }}
+                        transition={{ delay: 0.2, duration: 0.3 }}
                         className="text-base md:text-xl text-neutral-500 dark:text-neutral-400 mx-auto max-w-lg leading-relaxed font-light font-sans tracking-wide"
                     >
                         {subtitle}
                     </motion.p>
 
-                    {/* CTAs */}
                     <motion.div
-                        initial={{ opacity: 0, y: 15 }}
+                        initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.65, duration: 0.8, ease: "easeOut" }}
+                        transition={{ delay: 0.3, duration: 0.3, ease: "easeOut" }}
                         className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5 mt-8 sm:mt-12 md:mt-16"
                     >
                         {showResetLink ? (

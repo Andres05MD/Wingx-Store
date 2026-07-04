@@ -69,7 +69,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={`${dmSans.variable} ${sora.variable} antialiased min-h-screen flex flex-col bg-white text-black dark:bg-black dark:text-white transition-colors duration-300 font-sans`}>
+      <head>
+        <link rel="preconnect" href="https://ik.imagekit.io" />
+        <link rel="preconnect" href="https://firestore.googleapis.com" />
+        <link rel="preconnect" href="https://identitytoolkit.googleapis.com" />
+      </head>
+      <body className={`${dmSans.variable} ${sora.variable} antialiased min-h-screen flex flex-col bg-white text-black dark:bg-black dark:text-white font-sans`}>
         <AuthProvider>
           <RendimientoProvider>
             <ExchangeRateProvider>

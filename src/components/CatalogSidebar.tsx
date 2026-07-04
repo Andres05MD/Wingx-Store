@@ -2,7 +2,7 @@
 
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from "framer-motion";
-import { PiFunnelBold, PiXBold, PiCaretDownBold, PiCaretRightBold } from "react-icons/pi";
+import { Filter, X, ChevronDown } from "lucide-react";
 import { useState, useEffect } from 'react';
 import CustomOrderCard from './CustomOrderCard';
 
@@ -80,7 +80,7 @@ export default function CatalogSidebar({ categories }: CatalogSidebarProps) {
                     onClick={toggleSidebar}
                     className="w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-black dark:bg-white text-white dark:text-black font-medium text-sm cursor-pointer active:scale-[0.98] transition-transform"
                 >
-                    <PiFunnelBold className="w-4 h-4" />
+                    <Filter className="w-4 h-4" />
                     Filtrar por Categoría
                 </button>
             </div>
@@ -111,7 +111,7 @@ export default function CatalogSidebar({ categories }: CatalogSidebarProps) {
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="text-lg font-bold font-heading tracking-tight">Categorías</h2>
                             <button onClick={toggleSidebar} className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-900 rounded-lg transition-colors cursor-pointer">
-                                <PiXBold className="w-5 h-5" />
+                                <X className="w-5 h-5" />
                             </button>
                         </div>
 
@@ -129,7 +129,7 @@ export default function CatalogSidebar({ categories }: CatalogSidebarProps) {
             <div className="hidden md:block">
                 <div className="sticky top-24 flex flex-col gap-5">
                     <div className="flex items-center gap-2 text-black dark:text-white">
-                        <PiFunnelBold className="w-4 h-4" />
+                        <Filter className="w-4 h-4" />
                         <h2 className="text-sm font-bold uppercase tracking-widest">Categorías</h2>
                     </div>
 
@@ -203,7 +203,7 @@ function SidebarContent({
                                     animate={{ rotate: isExpanded ? 0 : -90 }}
                                     transition={{ duration: 0.2 }}
                                 >
-                                    <PiCaretDownBold className="w-3 h-3" />
+                                    <ChevronDown className="w-3 h-3" strokeWidth={3} />
                                 </motion.div>
                             </button>
                         </div>

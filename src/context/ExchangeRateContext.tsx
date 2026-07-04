@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
 
 interface ExchangeRateContextType {
     rate: number;
@@ -126,8 +126,12 @@ export const ExchangeRateProvider = ({ children }: { children: React.ReactNode }
         }).format(bsAmount)}`;
     }, [convertToBs]);
 
+    const value = useMemo(() => ({
+        rate, loading, error, convertToBs, formatBs, refreshRate
+    }), [rate, loading, error, convertToBs, formatBs, refreshRate]);
+
     return (
-        <ExchangeRateContext.Provider value={{ rate, loading, error, convertToBs, formatBs, refreshRate }}>
+        <ExchangeRateContext.Provider value={value}>
             {children}
         </ExchangeRateContext.Provider>
     );

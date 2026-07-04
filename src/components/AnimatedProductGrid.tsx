@@ -74,13 +74,12 @@ export default function AnimatedProductGrid({
                         <motion.div
                             key={product.id}
                             className="h-full"
-                            initial={{ opacity: 0, y: 16 }}
+                            initial={{ opacity: 0, y: 12 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-40px" }}
+                            viewport={{ once: true, margin: "-30px" }}
                             transition={{
-                                duration: 0.4,
-                                delay: (index % 4) * 0.08,
-                                ease: [0.16, 1, 0.3, 1]
+                                duration: 0.2,
+                                ease: "easeOut"
                             }}
                         >
                             <ProductCard product={product} priority={index < 4} />
@@ -89,19 +88,11 @@ export default function AnimatedProductGrid({
                 })}
             </div>
 
-            {/* Pagination */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3 }}
-            >
-                <PaginationControls
+            <PaginationControls
                     totalItems={totalItems}
                     pageSize={pageSize}
                     currentPage={currentPage}
                 />
-            </motion.div>
         </>
     );
 }

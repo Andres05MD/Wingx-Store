@@ -179,73 +179,32 @@ h6 {
   @apply text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-black dark:hover:text-white;
 }
 
-/* Hero Floating Orbs */
+/* Hero Floating Orbs — simplificado a solo translateY para menor carga GPU */
 @keyframes floatSlow {
-
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  25% {
-    transform: translate(15px, -25px) scale(1.05);
-  }
-
-  50% {
-    transform: translate(-10px, -40px) scale(0.95);
-  }
-
-  75% {
-    transform: translate(-20px, -15px) scale(1.02);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
 }
 
 @keyframes floatMedium {
-
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  33% {
-    transform: translate(-20px, -30px) scale(1.08);
-  }
-
-  66% {
-    transform: translate(25px, -20px) scale(0.92);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
 }
 
 @keyframes floatFast {
-
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1) rotate(0deg);
-  }
-
-  25% {
-    transform: translate(30px, -15px) scale(1.1) rotate(2deg);
-  }
-
-  50% {
-    transform: translate(-15px, -35px) scale(0.9) rotate(-2deg);
-  }
-
-  75% {
-    transform: translate(10px, -25px) scale(1.05) rotate(1deg);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 .animate-float-slow {
-  animation: floatSlow 12s ease-in-out infinite;
+  animation: floatSlow 6s ease-in-out infinite;
 }
 
 .animate-float-medium {
-  animation: floatMedium 8s ease-in-out infinite;
+  animation: floatMedium 4s ease-in-out infinite;
 }
 
 .animate-float-fast {
-  animation: floatFast 6s ease-in-out infinite;
+  animation: floatFast 3s ease-in-out infinite;
 }
 
 /* Hero Title Shine */
@@ -324,6 +283,23 @@ h6 {
   }
 }
 
+/* Content-visibility para secciones fuera de viewport */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 500px;
+}
+
+/* Marquee animation — CSS puro, sin JS */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+  min-width: 200%;
+}
+
 /* 🚀 Optimización para equipos de Bajo Rendimiento y Móviles */
 @media (max-width: 768px) {
   /* Desactivar desenfoques pesados en dispositivos móviles por defecto */
@@ -369,6 +345,7 @@ h6 {
   .animate-float-slow,
   .animate-float-medium,
   .animate-float-fast,
+  .animate-marquee,
   .hero-title-shine,
   .animate-pulse {
     animation: none !important;

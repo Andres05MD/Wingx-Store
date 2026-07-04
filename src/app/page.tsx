@@ -96,9 +96,9 @@ export default async function Home({
             />
 
             {!searchTerm && (
-                <>
+                <div className="content-visibility-auto">
                     <InfoSections />
-                </>
+                </div>
             )}
 
             <div className="w-full mx-auto py-8 md:py-12">
@@ -107,7 +107,7 @@ export default async function Home({
                     {/* Product Grid */}
                     {currentProducts.length > 0 ? (
                         <>
-                            <div id="product-grid" className="mb-10 md:mb-14">
+                            <div id="product-grid" className="mb-10 md:mb-14 content-visibility-auto">
                                 <div className="flex items-end justify-between gap-4">
                                     <div>
                                         <div className="flex items-center gap-3 mb-3">

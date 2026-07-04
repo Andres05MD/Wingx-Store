@@ -3,9 +3,6 @@
 import { Product } from '@/types';
 import { useState, useEffect } from 'react';
 import ProductCard from './ProductCard';
-import ScrollReveal from './ScrollReveal';
-import { motion } from 'framer-motion';
-
 interface RecentlyViewedProps {
     excludeProductId?: string;
     excludeProductIds?: string[];
@@ -16,22 +13,38 @@ export default function RecentlyViewed({ excludeProductId, excludeProductIds = [
 
     useEffect(() => {
         const stored = localStorage.getItem('wingx_recently_viewed');
-        if (stored) {
-            try {
-                let products: Product[] = JSON.parse(stored);
+        if (!stored) return;
 
-                // Filtrar el producto actual y cualquiera explícitamente excluido
-                products = products.filter(p => {
-                    if (excludeProductId && p.id === excludeProductId) return false;
-                    if (excludeProductIds.length > 0 && excludeProductIds.includes(p.id)) return false;
-                    return true;
+        try {
+            let products: Product[] = JSON.parse(stored);
+
+            products = products.filter(p => {
+                if (excludeProductId && p.id === excludeProductId) return false;
+                if (excludeProductIds.length > 0 && excludeProductIds.includes(p.id)) return false;
+                return true;
+            });
+
+            if (products.length === 0) return;
+
+            // Verificar qué productos siguen existiendo en Firestore
+            import('firebase/firestore').then(({ collection, getDocs, query, where }) => {
+                import('@/lib/firebase').then(({ db }) => {
+                    const ids = products.map(p => p.id);
+                    const q = query(collection(db, 'productos'), where('__name__', 'in', ids));
+                    getDocs(q).then(snapshot => {
+                        const validIds = new Set(snapshot.docs.map(d => d.id));
+                        const valid = products.filter(p => validIds.has(p.id));
+                        setRecentProducts(valid.slice(0, 4));
+
+                        // Limpiar localStorage si hay productos inválidos
+                        if (valid.length !== products.length) {
+                            localStorage.setItem('wingx_recently_viewed', JSON.stringify(valid));
+                        }
+                    });
                 });
-
-                // Obtener últimos 4 productos visitados
-                setRecentProducts(products.slice(0, 4));
-            } catch (e) {
-                console.error('Error loading recently viewed', e);
-            }
+            });
+        } catch (e) {
+            console.error('Error loading recently viewed', e);
         }
     }, [excludeProductId, excludeProductIds]);
 
@@ -39,22 +52,13 @@ export default function RecentlyViewed({ excludeProductId, excludeProductIds = [
 
     return (
         <section className="border-t border-black/10 dark:border-white/10 pt-12 mt-12">
-            <ScrollReveal>
-                <motion.h2
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    className="text-2xl font-bold text-black dark:text-white mb-6"
-                >
-                    Visto Recientemente
-                </motion.h2>
-            </ScrollReveal>
+            <h2 className="text-2xl font-bold text-black dark:text-white mb-6">
+                Visto Recientemente
+            </h2>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-                {recentProducts.map((product, index) => (
-                    <ScrollReveal key={product.id} delay={index * 0.1}>
-                        <ProductCard product={product} />
-                    </ScrollReveal>
+                {recentProducts.map((product) => (
+                    <ProductCard key={product.id} product={product} />
                 ))}
             </div>
         </section>

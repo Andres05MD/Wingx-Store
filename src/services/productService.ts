@@ -25,14 +25,15 @@ function docToProduct(id: string, data: Record<string, unknown>): Product {
 
     return {
         id,
+        ...data,
         name: (data.name as string) || 'Sin Nombre',
         price: typeof data.price === 'number' ? data.price : 0,
         description: (data.description as string) || '',
         imageUrl: (data.imageUrl as string) || DEFAULT_IMAGE,
+        images: (data.images as string[])?.filter(Boolean) || [],
         category: categories[0] || 'Varios',
         categories,
         gender: (data.gender as Product['gender']) || 'Unisex',
-        ...data,
     } as Product;
 }
 

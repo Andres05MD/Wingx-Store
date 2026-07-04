@@ -16,6 +16,7 @@ function ProductCard({ product, priority = false }: { product: Product, priority
     const liked = isInWishlist(product.id);
 
     const precioEntero = Math.floor(product.price);
+    const imgSrc = product.imageUrl || '/no-image.svg';
 
     const cardContent = (
             <Link href={`/productos/${product.id}`} className="block h-full">
@@ -24,7 +25,7 @@ function ProductCard({ product, priority = false }: { product: Product, priority
                     {/* Imagen */}
                     <div className="relative aspect-4/5 w-full bg-neutral-100 dark:bg-neutral-800 overflow-hidden">
                         <Image
-                            src={product.imageUrl}
+                            src={imgSrc}
                             loader={imagekitLoader}
                             alt={product.name}
                             fill
@@ -36,7 +37,7 @@ function ProductCard({ product, priority = false }: { product: Product, priority
                         {/* Segunda imagen (hover desktop) */}
                         {product.images && product.images.length > 1 && (
                             <Image
-                                src={product.images[1]}
+                                src={product.images[1] || imgSrc}
                                 loader={imagekitLoader}
                                 alt={`${product.name} vista alternativa`}
                                 fill

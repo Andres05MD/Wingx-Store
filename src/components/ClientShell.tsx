@@ -3,27 +3,19 @@
 import dynamic from 'next/dynamic';
 import { MotionConfig } from 'framer-motion';
 import { useRendimiento } from '@/context/RendimientoContext';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ComponentType } from 'react';
 
-// Dynamic imports — componentes pesados que no necesitan SSR
-const ParticlesBackground = dynamic(() => import("@/components/ui/ParticlesBackground"), { ssr: false });
 const ChatBot = dynamic(() => import("@/components/ChatBot"), { ssr: false });
-const SmoothScroll = dynamic(() => import("@/components/SmoothScroll"), { ssr: false });
 const MobileBottomNav = dynamic(() => import("@/components/MobileBottomNav"), { ssr: false });
 const CartDrawer = dynamic(() => import("@/components/CartDrawer"), { ssr: false });
 const WishlistDrawer = dynamic(() => import("@/components/WishlistDrawer"), { ssr: false });
 const Toaster = dynamic(() => import("sonner").then(m => m.Toaster), { ssr: false });
 
-/**
- * Wrapper cliente que carga componentes pesados de forma lazy.
- * Esto reduce el bundle inicial significativamente (~70KB+).
- */
 export default function ClientShell() {
     const { esBajoRendimiento, priorizarCargaLimpia } = useRendimiento();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        // En móviles o equipos lentos, diferimos la carga de widgets no críticos
         const timer = setTimeout(() => {
             setMounted(true);
         }, priorizarCargaLimpia ? 2000 : 500);
@@ -32,9 +24,10 @@ export default function ClientShell() {
     }, [priorizarCargaLimpia]);
 
     return (
-        <MotionConfig reducedMotion="user">
-            {!esBajoRendimiento && <SmoothScroll />}
-            {!esBajoRendimiento && <ParticlesBackground />}
+        <MotionConfig reducedMotion={esBajoRendimiento ? "always" : "user"}>
+            {!esBajoRendimiento && (
+                <SmoothScrollDynamic />
+            )}
             <CartDrawer />
             <WishlistDrawer />
             <MobileBottomNav />
@@ -42,4 +35,17 @@ export default function ClientShell() {
             <Toaster position="top-center" richColors />
         </MotionConfig>
     );
+}
+
+function SmoothScrollDynamic() {
+    const [LenisComponent, setLenisComponent] = useState<ComponentType | null>(null);
+
+    useEffect(() => {
+        import("@/components/SmoothScroll").then((mod) => {
+            setLenisComponent(() => mod.default);
+        });
+    }, []);
+
+    if (!LenisComponent) return null;
+    return <LenisComponent />;
 }

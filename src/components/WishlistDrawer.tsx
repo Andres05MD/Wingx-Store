@@ -1,219 +1,102 @@
 'use client';
 
 import { useWishlist } from '@/context/WishlistContext';
-import { AnimatePresence, motion } from 'framer-motion';
-import { X, Trash2, ShoppingCart, Heart } from 'lucide-react';
+import { Heart, Trash2, ShoppingBag } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useRef } from 'react';
-import { useCart } from '@/context/CartContext';
+import PremiumButton from './PremiumButton';
+import Drawer from '@/components/ui/Drawer';
+import { formatPrice } from '@/lib/utils';
 
 export default function WishlistDrawer() {
-    const {
-        isWishlistOpen,
-        setIsWishlistOpen,
-        wishlist,
-        removeFromWishlist
-    } = useWishlist();
-
-    const { addToCart } = useCart();
-    const drawerRef = useRef<HTMLDivElement>(null);
-    const backdropRef = useRef<HTMLDivElement>(null);
-    const isBrowserNavigation = useRef(false);
-
-    // Formatear moneda
-    const formatPrice = (price: number) => {
-        return new Intl.NumberFormat('es-CO', {
-            style: 'currency',
-            currency: 'COP',
-            maximumFractionDigits: 0
-        }).format(price);
-    };
-
-    // Manejar gesto de retroceso en móvil
-    useEffect(() => {
-        if (!isWishlistOpen) return;
-
-        // Restablecer indicador y estilo de visibilidad al abrir
-        isBrowserNavigation.current = false;
-        if (drawerRef.current) {
-            drawerRef.current.style.display = '';
-            drawerRef.current.style.opacity = '';
-        }
-        if (backdropRef.current) {
-            backdropRef.current.style.display = '';
-            backdropRef.current.style.opacity = '';
-        }
-
-        // Agregar estado al historial cuando se abre el drawer
-        window.history.pushState({ wishlistOpen: true }, '');
-
-        const handlePopState = () => {
-            // Marcar como navegación del navegador
-            isBrowserNavigation.current = true;
-
-            // CORRECCIÓN AGRESIVA para parpadeo en iOS: Eliminar inmediatamente del flujo
-            if (drawerRef.current) drawerRef.current.style.display = 'none';
-            if (backdropRef.current) backdropRef.current.style.display = 'none';
-
-            // Cerrar drawer cuando el usuario navega hacia atrás
-            setIsWishlistOpen(false);
-        };
-
-        window.addEventListener('popstate', handlePopState);
-
-        return () => {
-            window.removeEventListener('popstate', handlePopState);
-        };
-    }, [isWishlistOpen, setIsWishlistOpen]);
-
-    // Cerrar al hacer clic fuera
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (drawerRef.current && !drawerRef.current.contains(event.target as Node)) {
-                // Regresar en el historial para eliminar el estado introducido
-                window.history.back();
-            }
-        };
-
-        if (isWishlistOpen) {
-            document.addEventListener('mousedown', handleClickOutside);
-            document.body.style.overflow = 'hidden';
-        }
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-            document.body.style.overflow = 'unset';
-        };
-    }, [isWishlistOpen, setIsWishlistOpen]);
-
-    // Manejador para cerrar drawer mediante botón X (necesita regresar en el historial)
-    const handleClose = () => {
-        window.history.back();
-    };
+    const { isWishlistOpen, setIsWishlistOpen, wishlist, removeFromWishlist } = useWishlist();
 
     return (
-        <AnimatePresence>
-            {isWishlistOpen && (
-                <>
-                    {/* Backdrop */}
-                    <motion.div
-                        ref={backdropRef}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[60]"
-                        aria-hidden="true"
-                    />
-
-                    {/* Drawer */}
-                    <motion.div
-                        ref={drawerRef}
-                        initial={{ x: '100%' }}
-                        animate={{ x: 0 }}
-                        exit={isBrowserNavigation.current ? { opacity: 0, transition: { duration: 0 } } : { x: '100%' }}
-                        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="fixed top-0 right-0 h-full w-full sm:w-[450px] bg-white dark:bg-neutral-900 shadow-2xl z-[60] flex flex-col border-l border-neutral-200 dark:border-neutral-800"
-                    >
-                        {/* Header */}
-                        <div className="flex items-center justify-between p-6 border-b border-neutral-100 dark:border-white/5">
-                            <div className="flex items-center gap-3">
-                                <div className="bg-red-500 text-white p-2 rounded-lg">
-                                    <Heart size={20} fill="currentColor" />
-                                </div>
-                                <h2 className="text-xl font-bold font-heading">Lista de Deseos ({wishlist.length})</h2>
-                            </div>
-                            <button
-                                onClick={handleClose}
-                                className="p-2 hover:bg-neutral-100 dark:hover:bg-white/5 rounded-full transition-colors"
+        <Drawer
+            isOpen={isWishlistOpen}
+            onClose={() => setIsWishlistOpen(false)}
+            title="Mis Favoritos"
+            icon={Heart}
+            count={wishlist.length}
+        >
+            <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                {wishlist.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
+                        <div className="w-16 h-16 bg-neutral-100 dark:bg-white/5 rounded-full flex items-center justify-center">
+                            <Heart size={32} className="text-neutral-400" />
+                        </div>
+                        <div>
+                            <p className="text-lg font-medium text-neutral-900 dark:text-white">Tu lista está vacía</p>
+                            <p className="text-neutral-500 text-sm mt-1">Guarda tus prendas favoritas aquí.</p>
+                        </div>
+                        <button
+                            onClick={() => setIsWishlistOpen(false)}
+                            className="text-sm font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400"
+                        >
+                            Explorar catálogo
+                        </button>
+                    </div>
+                ) : (
+                    wishlist.map((item) => (
+                        <div
+                            key={item.id}
+                            className="flex gap-4 p-4 rounded-xl border border-neutral-100 dark:border-white/5 bg-neutral-50/50 dark:bg-white/[0.02]"
+                        >
+                            <Link
+                                href={`/productos/${item.id}`}
+                                onClick={() => setIsWishlistOpen(false)}
+                                className="relative w-24 h-28 flex-shrink-0 bg-neutral-100 dark:bg-white/5 rounded-lg overflow-hidden group"
                             >
-                                <X size={24} className="text-neutral-500" />
-                            </button>
-                        </div>
+                                <Image
+                                    src={item.imageUrl || '/no-image.svg'}
+                                    alt={item.name}
+                                    fill
+                                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                                    sizes="100px"
+                                />
+                            </Link>
 
-                        {/* Items List */}
-                        <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                            {wishlist.length === 0 ? (
-                                <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
-                                    <div className="w-16 h-16 bg-neutral-100 dark:bg-white/5 rounded-full flex items-center justify-center">
-                                        <Heart size={32} className="text-neutral-400" />
-                                    </div>
-                                    <div>
-                                        <p className="text-lg font-medium text-neutral-900 dark:text-white">Tu lista está vacía</p>
-                                        <p className="text-neutral-500 text-sm mt-1">Guarda lo que te gusta para no perderlo de vista.</p>
-                                    </div>
-                                    <button
-                                        onClick={handleClose}
-                                        className="text-sm font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400"
-                                    >
-                                        Explorar productos
-                                    </button>
-                                </div>
-                            ) : (
-                                wishlist.map((item) => (
-                                    <motion.div
-                                        layout
-                                        key={item.id}
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        className="flex gap-4 p-4 rounded-xl border border-neutral-100 dark:border-white/5 bg-neutral-50/50 dark:bg-white/[0.02]"
-                                    >
-                                        <Link
-                                            href={`/productos/${item.id}`}
-                                            onClick={() => setIsWishlistOpen(false)}
-                                            className="relative w-24 h-28 flex-shrink-0 bg-neutral-100 dark:bg-white/5 rounded-lg overflow-hidden group"
-                                        >
-                                            <Image
-                                                src={item.imageUrl}
-                                                alt={item.name}
-                                                fill
-                                                className="object-cover group-hover:scale-110 transition-transform duration-500"
-                                                sizes="100px"
-                                            />
+                            <div className="flex-1 flex flex-col justify-between py-1">
+                                <div>
+                                    <div className="flex justify-between items-start gap-2">
+                                        <Link href={`/productos/${item.id}`} onClick={() => setIsWishlistOpen(false)}>
+                                            <h3 className="font-semibold text-neutral-900 dark:text-white hover:underline line-clamp-2">
+                                                {item.name}
+                                            </h3>
                                         </Link>
+                                        <button
+                                            onClick={() => removeFromWishlist(item.id)}
+                                            className="text-neutral-400 hover:text-red-500 transition-colors p-1"
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </div>
+                                    {item.category && (
+                                        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
+                                            {item.category}
+                                        </p>
+                                    )}
+                                </div>
 
-                                        <div className="flex-1 flex flex-col justify-between">
-                                            <div>
-                                                <div className="flex justify-between items-start gap-2">
-                                                    <Link
-                                                        href={`/productos/${item.id}`}
-                                                        onClick={() => setIsWishlistOpen(false)}
-                                                    >
-                                                        <h3 className="font-semibold text-neutral-900 dark:text-white line-clamp-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                                                            {item.name}
-                                                        </h3>
-                                                    </Link>
-                                                    <button
-                                                        onClick={() => removeFromWishlist(item.id)}
-                                                        className="text-neutral-400 hover:text-red-500 transition-colors p-1"
-                                                    >
-                                                        <Trash2 size={16} />
-                                                    </button>
-                                                </div>
-                                                <p className="font-bold text-neutral-900 dark:text-white mt-1">
-                                                    {formatPrice(item.price)}
-                                                </p>
-                                            </div>
-
-                                            <button
-                                                onClick={() => {
-                                                    // Agregar al carrito y potencialmente eliminar de la lista de deseos
-                                                    addToCart(item);
-                                                    removeFromWishlist(item.id);
-                                                }}
-                                                className="flex items-center justify-center gap-2 w-full py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
-                                            >
-                                                <ShoppingCart size={14} />
-                                                Mover al carrito
-                                            </button>
-                                        </div>
-                                    </motion.div>
-                                ))
-                            )}
+                                <div className="flex items-center justify-between mt-2">
+                                    <p className="font-bold text-neutral-900 dark:text-white">
+                                        {formatPrice(item.price)}
+                                    </p>
+                                    <Link
+                                        href={`/productos/${item.id}`}
+                                        onClick={() => setIsWishlistOpen(false)}
+                                    >
+                                        <PremiumButton variant="solid" className="!py-1.5 !px-4 !min-h-0 !text-xs">
+                                            <ShoppingBag size={14} />
+                                            <span>Ver</span>
+                                        </PremiumButton>
+                                    </Link>
+                                </div>
+                            </div>
                         </div>
-                    </motion.div>
-                </>
-            )}
-        </AnimatePresence>
+                    ))
+                )}
+            </div>
+        </Drawer>
     );
 }

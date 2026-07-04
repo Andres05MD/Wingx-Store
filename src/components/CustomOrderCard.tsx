@@ -1,12 +1,12 @@
 import React from 'react';
-import { PiScissorsBold, PiWhatsappLogoBold } from "react-icons/pi";
+import { Scissors, MessageCircle } from "lucide-react";
 
 export default function CustomOrderCard() {
     return (
         <div className="mt-6 p-6 rounded-xl bg-white dark:bg-neutral-900 border-2 border-neutral-200 dark:border-neutral-700 shadow-lg">
             <div className="flex items-center gap-3 mb-4">
                 <div className="p-2.5 bg-black dark:bg-white rounded-lg shadow-md text-white dark:text-black">
-                    <PiScissorsBold className="w-5 h-5" />
+                    <Scissors className="w-5 h-5" strokeWidth={2.5} />
                 </div>
                 <div>
                     <h3 className="font-bold text-sm text-neutral-900 dark:text-white">
@@ -29,7 +29,7 @@ export default function CustomOrderCard() {
                 className="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-black dark:bg-white text-white dark:text-black rounded-lg text-xs font-bold hover:bg-neutral-800 dark:hover:bg-neutral-200 shadow-lg transition-all duration-200"
             >
                 <span>Personalizar Pedido</span>
-                <PiWhatsappLogoBold className="w-4 h-4" />
+                <MessageCircle className="w-4 h-4" strokeWidth={2.5} />
             </a>
         </div>
     );

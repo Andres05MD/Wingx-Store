@@ -12,7 +12,8 @@ interface ImageGalleryProps {
 }
 
 export default function ImageGallery({ images, productName }: ImageGalleryProps) {
-    const [activeImage, setActiveImage] = useState(images[0]);
+    const filteredImages = images.filter(Boolean);
+    const [activeImage, setActiveImage] = useState(filteredImages[0]);
     const [isZoomed, setIsZoomed] = useState(false);
     const [currentSlide, setCurrentSlide] = useState(0);
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -70,10 +71,7 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
             {/* Desktop Gallery (Hidden on Mobile) */}
             <div className="hidden md:flex flex-col gap-4 w-full">
                 {/* Main Image with Zoom */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.2, duration: 0.5 }}
+                <div
                     className="relative w-full aspect-square lg:aspect-[3/4] rounded-2xl overflow-hidden bg-neutral-100 dark:bg-neutral-800 shadow-sm border border-black/5 dark:border-white/5 group cursor-zoom-in"
                     onClick={() => setIsZoomed(true)}
                 >
@@ -92,12 +90,12 @@ export default function ImageGallery({ images, productName }: ImageGalleryProps)
                     <div className="absolute top-4 right-4 bg-black/50 dark:bg-white/50 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <ZoomIn className="w-5 h-5 text-white dark:text-black" />
                     </div>
-                </motion.div>
+                </div>
 
                 {/* Thumbnails Gallery */}
-                {images.length > 1 && (
+                {filteredImages.length > 1 && (
                     <div className="grid grid-cols-5 gap-3">
-                        {images.map((img, idx) => (
+                    {filteredImages.map((img, idx) => (
                             <motion.button
                                 key={idx}
                                 whileHover={{ scale: 1.05 }}

@@ -39,6 +39,14 @@ export default function Header() {
         indiceYaCargado.current = true;
 
         try {
+            // Intentar cargar desde sessionStorage primero
+            const cached = sessionStorage.getItem('wingx_search_index');
+            if (cached) {
+                const parsed = JSON.parse(cached);
+                setAllProducts(parsed);
+                return;
+            }
+
             const { collection, getDocs, query, limit } = await import('firebase/firestore');
             const { db } = await import('@/lib/firebase');
 
@@ -59,8 +67,9 @@ export default function Header() {
             });
 
             setAllProducts(products);
+            sessionStorage.setItem('wingx_search_index', JSON.stringify(products));
         } catch (err) {
-            indiceYaCargado.current = false; // Permitir reintento
+            indiceYaCargado.current = false;
             console.error("Error fetching search index", err);
         }
     }, []);
@@ -181,7 +190,7 @@ export default function Header() {
                                             <div className="relative w-10 h-10 bg-neutral-100 dark:bg-neutral-800 rounded-full overflow-hidden flex-shrink-0 group-hover/item:scale-105 transition-transform">
                                                 <Image
                                                     loader={imagekitLoader}
-                                                    src={product.imageUrl}
+                                                    src={product.imageUrl || '/no-image.svg'}
                                                     alt={product.name}
                                                     fill
                                                     className="object-cover"

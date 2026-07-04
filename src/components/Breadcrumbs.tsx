@@ -1,8 +1,5 @@
-'use client';
-
 import Link from 'next/link';
 import { ChevronRight, Home } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 interface BreadcrumbsProps {
     items: {
@@ -13,10 +10,7 @@ interface BreadcrumbsProps {
 
 export default function Breadcrumbs({ items }: BreadcrumbsProps) {
     return (
-        <motion.nav
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+        <nav
             className="flex items-center gap-2 text-sm mb-6 overflow-x-auto pb-2 scrollbar-hide"
             aria-label="Breadcrumb"
         >
@@ -49,6 +43,6 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
                     </div>
                 );
             })}
-        </motion.nav>
+        </nav>
     );
 }

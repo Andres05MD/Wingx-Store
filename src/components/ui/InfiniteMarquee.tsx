@@ -1,8 +1,3 @@
-"use client";
-
-import React from 'react';
-import { motion } from 'framer-motion';
-
 export default function InfiniteMarquee({ items: customItems }: { items?: string[] }) {
     const defaultItems = [
         "ENTREGAS SEGURAS",
@@ -20,20 +15,9 @@ export default function InfiniteMarquee({ items: customItems }: { items?: string
     const items = customItems || defaultItems;
 
     return (
-        <div className="w-full bg-neutral-100/90 dark:bg-neutral-900/90 text-neutral-500 dark:text-neutral-400 py-1.5 md:py-3 overflow-hidden border-y border-neutral-200 dark:border-neutral-800 backdrop-blur-sm">
-            <div className="relative flex whitespace-nowrap overflow-hidden">
-                <motion.div
-                    className="flex gap-4 md:gap-8 items-center"
-                    animate={{ x: "-50%" }}
-                    transition={{
-                        duration: 20,
-                        repeat: Infinity,
-                        ease: "linear",
-                        repeatType: "loop"
-                    }}
-                    style={{ minWidth: "200%" }}
-                >
-                    {/* Render content twice to create seamless loop */}
+        <div className="w-full bg-neutral-100/90 dark:bg-neutral-900/90 text-neutral-500 dark:text-neutral-400 py-1.5 md:py-3 overflow-hidden border-y border-neutral-200 dark:border-neutral-800">
+            <div className="flex whitespace-nowrap overflow-hidden">
+                <div className="flex gap-4 md:gap-8 items-center animate-marquee">
                     {[...Array(2)].map((_, i) => (
                         <div key={i} className="flex gap-4 md:gap-8 items-center flex-shrink-0">
                             {items.map((item, idx) => (
@@ -43,7 +27,7 @@ export default function InfiniteMarquee({ items: customItems }: { items?: string
                             ))}
                         </div>
                     ))}
-                </motion.div>
+                </div>
             </div>
         </div>
     );

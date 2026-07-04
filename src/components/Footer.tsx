@@ -1,6 +1,3 @@
-"use client";
-
-import React from 'react';
 import Link from 'next/link';
 import { Instagram, MessageCircle, ArrowUpRight } from 'lucide-react';
 
@@ -13,15 +10,7 @@ export default function Footer() {
     ];
 
     return (
-        <footer className="relative mt-4 md:mt-8 z-10 w-full overflow-hidden bg-white/70 dark:bg-black/50 backdrop-blur-3xl border-t border-black/[0.04] dark:border-white/[0.06] shadow-[0_-8px_40px_rgba(0,0,0,0.02)] transition-colors duration-500 pb-20 md:pb-0">
-            {/* Textura de ruido sutil */}
-            <div className="absolute inset-0 bg-noise opacity-[0.015] dark:opacity-[0.03] pointer-events-none mix-blend-overlay" />
-
-            {/* Orbes decorativos integrados */}
-            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-                <div className="absolute -top-24 -left-24 w-64 h-64 rounded-full bg-black/[0.02] dark:bg-white/[0.02] blur-3xl" />
-                <div className="absolute -bottom-24 -right-24 w-80 h-80 rounded-full bg-black/[0.03] dark:bg-white/[0.03] blur-3xl" />
-            </div>
+        <footer className="relative mt-4 md:mt-8 z-10 w-full overflow-hidden bg-white/70 dark:bg-black/50 border-t border-black/[0.04] dark:border-white/[0.06] transition-colors duration-500 pb-20 md:pb-0">
 
             <div className="relative z-10 max-w-[1800px] mx-auto px-5 sm:px-8 lg:px-12 pt-10 pb-6 md:py-16">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-8">
@@ -102,7 +91,7 @@ export default function Footer() {
                         <span>Designed by: Juan17md</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className="w-1 h-1 rounded-full bg-green-500 animate-pulse" />
+                        <span className="w-1 h-1 rounded-full bg-green-500" />
                         <span>CEO: Valeria Petaccia</span>
                     </div>
                 </div>
