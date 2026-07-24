@@ -1,39 +1,64 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Shirt, ShirtIcon, WashingMachine, Sun } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
+import { getCategorias, type Categoria } from '@/services/categoryService';
 
-const CATEGORIES = [
-    {
-        id: "camisas",
-        name: "Camisas",
-        href: "/catalogo?search=Camisa",
-        icon: <ShirtIcon className="w-8 h-8 text-black dark:text-white" />
-    },
-    {
-        id: "pantalones",
-        name: "Pantalones",
-        href: "/catalogo?search=Pantalón",
-        icon: <Shirt className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
-    },
-    {
-        id: "conjuntos",
-        name: "Conjuntos",
-        href: "/catalogo?search=Conjunto",
-        icon: <WashingMachine className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
-    },
-    {
-        id: "trajes-bano",
-        name: "Trajes de baño",
-        href: "/catalogo?search=Traje de baño",
-        icon: <Sun className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />
-    },
-];
+interface CategoryWithIcon {
+    id: string;
+    name: string;
+    href: string;
+    icon: React.ReactNode;
+}
+
+const iconMap: Record<string, React.ComponentType<{ className?: string; strokeWidth?: number }>> = {
+    Shirt: LucideIcons.Shirt,
+    ShirtIcon: LucideIcons.Shirt,
+    Layers: LucideIcons.Layers,
+    Sun: LucideIcons.Sun,
+    Wind: LucideIcons.Wind,
+    Umbrella: LucideIcons.Umbrella,
+    Watch: LucideIcons.Watch,
+    BaggageClaim: LucideIcons.BaggageClaim,
+    Shoe: LucideIcons.Footprints,
+    Gem: LucideIcons.Gem,
+    Sparkles: LucideIcons.Sparkles,
+    Heart: LucideIcons.Heart,
+    Star: LucideIcons.Star,
+    Zap: LucideIcons.Zap,
+    Flame: LucideIcons.Flame,
+    Droplets: LucideIcons.Droplets,
+    Package: LucideIcons.Package,
+    Backpack: LucideIcons.Backpack,
+    Tag: LucideIcons.Tag,
+    Snowflake: LucideIcons.Snowflake,
+};
 
 export default function CategoryGrid() {
+    const [categories, setCategories] = useState<CategoryWithIcon[]>([]);
+
+    useEffect(() => {
+        getCategorias().then((data: Categoria[]) => {
+            const withIcons = data
+                .filter(cat => cat.icon)
+                .map(cat => {
+                    const IconComp = iconMap[cat.icon!] || LucideIcons.Tag;
+                    return {
+                        id: cat.name.toLowerCase().replace(/\s+/g, '-'),
+                        name: cat.name,
+                        href: `/catalogo?search=${encodeURIComponent(cat.name)}`,
+                        icon: <IconComp className="w-8 h-8 text-black dark:text-white" strokeWidth={1.5} />,
+                    };
+                });
+            setCategories(withIcons);
+        }).catch(console.error);
+    }, []);
+
+    if (categories.length === 0) return null;
+
     return (
         <section className="my-12">
             <h2 className="text-2xl font-bold tracking-tight mb-6 flex items-center gap-2">
@@ -41,7 +66,7 @@ export default function CategoryGrid() {
                 Explora por Categoría
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {CATEGORIES.map((category, index) => (
+                {categories.map((category, index) => (
                     <ScrollReveal key={category.id} delay={index * 0.1}>
                         <Link href={category.href} className="group block h-full">
                             <motion.div
@@ -59,7 +84,6 @@ export default function CategoryGrid() {
                                     <div className="h-1 w-8 bg-black/50 dark:bg-white/50 rounded-full mt-2 group-hover:w-16 transition-all duration-300" />
                                 </div>
 
-                                {/* Decorative bubbles - Subtle contrast */}
                                 <div className="absolute -top-4 -right-4 w-24 h-24 bg-black/5 dark:bg-white/5 rounded-full blur-2xl" />
                                 <div className="absolute -bottom-8 -left-4 w-32 h-32 bg-black/5 dark:bg-white/5 rounded-full blur-xl" />
                             </motion.div>

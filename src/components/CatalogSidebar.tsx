@@ -2,42 +2,42 @@
 
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from "framer-motion";
-import { Filter, X, ChevronDown } from "lucide-react";
+import { Filter, X, ChevronDown, Loader2 } from "lucide-react";
 import { useState, useEffect } from 'react';
+import { getCategorias, type Categoria } from '@/services/categoryService';
 import CustomOrderCard from './CustomOrderCard';
-
-// Define the hierarchy (Matches Gestion Project)
-const PRODUCT_CATEGORIES: Record<string, string[]> = {
-    "Camisas": ["Franela", "Casual", "Formal", "Manga Larga", "Manga Corta", "Oversize", "Blusa"],
-    "Pantalones": ["Vestir", "Mono", "Joggers", "Jeans", "Cargo", "Shorts", "Leggins"],
-    "Conjuntos": ["Deportivo", "Casual", "Formal", "Verano", "Invierno"],
-    "Trajes de baño": ["Enterizo", "Bikini", "Short"],
-    "Abrigos": ["Poleron", "Chaqueta", "Sueter", "Chaleco", "Cortavientos", "Cardigan"],
-    "Vestidos": ["Largo", "Corto", "Fiesta", "Casual"],
-    "Accesorios": ["Gorras", "Medias", "Bolsos", "Lentes", "Joyeria", "Cinturones"],
-    "Lenceria": ["Conjuntos", "Individuales", "Pijamas", "Batas"],
-    "Otros": ["Varios"]
-};
 
 interface CatalogSidebarProps {
     categories?: string[];
 }
 
-export default function CatalogSidebar({ categories }: CatalogSidebarProps) {
+export default function CatalogSidebar({ categories: _categories }: CatalogSidebarProps) {
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
     const [isOpen, setIsOpen] = useState(false);
+    const [productCategories, setProductCategories] = useState<Record<string, string[]>>({});
+    const [loading, setLoading] = useState(true);
 
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
 
     const currentCategory = searchParams.get('category') || 'Todos';
 
+    useEffect(() => {
+        getCategorias().then((data: Categoria[]) => {
+            const map: Record<string, string[]> = {};
+            for (const cat of data) {
+                map[cat.name] = cat.subcategorias;
+            }
+            setProductCategories(map);
+        }).catch(console.error).finally(() => setLoading(false));
+    }, []);
+
     // Auto-expand active category group
     useEffect(() => {
-        if (currentCategory !== 'Todos') {
-            const activeMain = Object.keys(PRODUCT_CATEGORIES).find(key =>
-                key === currentCategory || PRODUCT_CATEGORIES[key].includes(currentCategory)
+        if (currentCategory !== 'Todos' && !loading) {
+            const activeMain = Object.keys(productCategories).find(key =>
+                key === currentCategory || productCategories[key].includes(currentCategory)
             );
 
             if (activeMain) {
@@ -120,6 +120,8 @@ export default function CatalogSidebar({ categories }: CatalogSidebarProps) {
                             expandedCategories={expandedCategories}
                             onCategoryChange={handleCategoryChange}
                             onToggleExpand={toggleExpand}
+                            productCategories={productCategories}
+                            loading={loading}
                         />
                     </motion.div>
                 )}
@@ -138,6 +140,8 @@ export default function CatalogSidebar({ categories }: CatalogSidebarProps) {
                         expandedCategories={expandedCategories}
                         onCategoryChange={handleCategoryChange}
                         onToggleExpand={toggleExpand}
+                        productCategories={productCategories}
+                        loading={loading}
                     />
 
                     <CustomOrderCard />
@@ -154,11 +158,15 @@ function SidebarContent({
     expandedCategories,
     onCategoryChange,
     onToggleExpand,
+    productCategories,
+    loading,
 }: {
     currentCategory: string;
     expandedCategories: string[];
     onCategoryChange: (cat: string) => void;
     onToggleExpand: (cat: string) => void;
+    productCategories: Record<string, string[]>;
+    loading: boolean;
 }) {
     return (
         <div className="flex flex-col space-y-0.5">
@@ -175,7 +183,11 @@ function SidebarContent({
 
             <div className="h-px bg-neutral-100 dark:bg-neutral-800 my-2" />
 
-            {Object.entries(PRODUCT_CATEGORIES).map(([mainCat, subCats]) => {
+            {loading ? (
+                <div className="flex items-center justify-center py-8">
+                    <Loader2 className="w-5 h-5 animate-spin text-neutral-400" />
+                </div>
+            ) : Object.entries(productCategories).map(([mainCat, subCats]) => {
                 const isExpanded = expandedCategories.includes(mainCat);
                 const isActiveMain = currentCategory === mainCat;
                 const hasActiveSub = subCats.includes(currentCategory);
