@@ -1,3 +1,4 @@
+import DOMPurify from 'isomorphic-dompurify';
 import { cache } from 'react';
 import { getProductById, getRelatedProducts } from "@/services/productService";
 import ProductView from "@/components/ProductView";
@@ -93,7 +94,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
             {/* JSON-LD para SEO */}
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(JSON.stringify(jsonLd)) }}
             />
 
             <ProductView

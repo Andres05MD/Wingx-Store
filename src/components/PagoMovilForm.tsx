@@ -5,10 +5,11 @@ import * as z from 'zod';
 import { PagoMovilData } from '@/types/order';
 import { useExchangeRate } from '@/context/ExchangeRateContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, Copy, CheckCircle2, Building2, Smartphone, User, Hash, Calendar, Wallet, ImagePlus, X, RefreshCw, Clock } from 'lucide-react';
+import { Loader2, Copy, CheckCircle2, Building2, Smartphone, User, Hash, Wallet, ImagePlus, X, RefreshCw, Clock } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from './ui/Input';
 import { Select } from './ui/Select';
+import { DatePicker } from './ui/DatePicker';
 import { cn } from '@/lib/utils';
 import { subirComprobante, validarImagen } from '@/services/imagekitService';
 
@@ -325,12 +326,17 @@ export default function PagoMovilForm({ onSubmit, onCancel, totalAmount, isLoadi
                     />
                 </div>
 
-                <Input
-                    label="Fecha de Pago"
-                    type="date"
-                    icon={Calendar}
-                    error={errors.fechaPago?.message}
-                    {...register('fechaPago')}
+                <Controller
+                    name="fechaPago"
+                    control={control}
+                    render={({ field }) => (
+                        <DatePicker
+                            label="Fecha de Pago"
+                            value={field.value}
+                            onChange={field.onChange}
+                            error={errors.fechaPago?.message}
+                        />
+                    )}
                 />
 
                 {/* Subida de Comprobante */}

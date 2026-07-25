@@ -151,7 +151,7 @@ export default function Header() {
                             <label htmlFor="busqueda-header" className="sr-only">Buscar productos</label>
                             <input
                                 id="busqueda-header"
-                                type="search"
+                                type="text"
                                 placeholder="Buscar por categoría o prenda..."
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}

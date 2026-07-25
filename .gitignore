@@ -41,11 +41,15 @@ yarn-error.log*
 next-env.d.ts
 credencialesImagekit.txt
 
-#skills
+#skills and AI rules
 .agents/
 .claude/
 .gemini/
+.agent/
+.cursor/
+skills/
+skills-lock.json
 
 #docs
-docs-obsidian/AGENTS.md
+docs-obsidian/
 AGENTS.md

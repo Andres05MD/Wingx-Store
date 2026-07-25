@@ -1,3 +1,4 @@
+import DOMPurify from 'isomorphic-dompurify';
 import { getFeaturedProducts } from "@/services/productService";
 import ProductCard from "@/components/ProductCard";
 import HomeBanner from "@/components/HomeBanner";
@@ -86,7 +87,7 @@ export default async function Home({
             {/* JSON-LD para SEO */}
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify([sitioWeb, organizacion]) }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(JSON.stringify([sitioWeb, organizacion])) }}
             />
             {/* Hero Section / Banner */}
             <HomeBanner

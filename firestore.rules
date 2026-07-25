@@ -1,0 +1,234 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --- Funciones de Ayuda (Helpers) ---
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function getUserRole() {
+      return isAuthenticated() && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role
+        : null;
+    }
+
+    function isAdmin() {
+      return getUserRole() == 'admin';
+    }
+
+    function isStoreManager() {
+      return getUserRole() == 'store';
+    }
+
+    function canManageStore() {
+      return isAdmin() || isStoreManager();
+    }
+
+    function isResourceOwner() {
+      return isAuthenticated() && resource.data.ownerId == request.auth.uid;
+    }
+
+    function willBeResourceOwner() {
+      return isAuthenticated() && request.resource.data.ownerId == request.auth.uid;
+    }
+
+    // --- Validación de Tipos y Campos ---
+
+    function isString(value) {
+      return value is string;
+    }
+
+    function isNumber(value) {
+      return value is number;
+    }
+
+    function isBoolean(value) {
+      return value is bool;
+    }
+
+    function stringSized(value, max) {
+      return isString(value) && value.size() <= max;
+    }
+
+    function isValidOrder() {
+      let data = request.resource.data;
+      let validStatuses = ['Sin Comenzar', 'Pendiente', 'En Proceso', 'Entregado', 'Finalizado', 'En Arreglo', 'pending_verification', 'paid', 'rejected'];
+      return data.keys().hasAll(['clientName', 'status', 'price']) &&
+             isNumber(data.price) && data.price >= 0 &&
+             stringSized(data.clientName, 300) &&
+             data.status in validStatuses &&
+             (!data.hasAny(['paidAmount']) || (isNumber(data.paidAmount) && data.paidAmount >= 0)) &&
+             (!data.hasAny(['ownerId']) || stringSized(data.ownerId, 128)) &&
+             (!data.hasAny(['garmentName']) || stringSized(data.garmentName, 300)) &&
+             (!data.hasAny(['size']) || stringSized(data.size, 50));
+    }
+
+    function isValidGarment() {
+      let data = request.resource.data;
+      return data.keys().hasAll(['name', 'price', 'ownerId']) &&
+             isNumber(data.price) && data.price >= 0 &&
+             stringSized(data.name, 300) &&
+             (!data.hasAny(['size']) || stringSized(data.size, 50)) &&
+             (!data.hasAny(['laborCost']) || (isNumber(data.laborCost) && data.laborCost >= 0)) &&
+             (!data.hasAny(['transportCost']) || (isNumber(data.transportCost) && data.transportCost >= 0));
+    }
+
+    function isValidClient() {
+      let data = request.resource.data;
+      return data.keys().hasAll(['name', 'ownerId']) &&
+             stringSized(data.name, 300) &&
+             (!data.hasAny(['phone']) || stringSized(data.phone, 50)) &&
+             (!data.hasAny(['notes']) || stringSized(data.notes, 2000));
+    }
+
+    function isValidBolso() {
+      let data = request.resource.data;
+      let validPeriodos = ['semanal', 'quincenal'];
+      let validEstados = ['reclutando', 'activo', 'finalizado'];
+      return data.keys().hasAll(['nombre', 'periodo', 'cantidadParticipantes', 'precioPrenda', 'ownerId']) &&
+             stringSized(data.nombre, 300) &&
+             data.periodo in validPeriodos &&
+             isNumber(data.cantidadParticipantes) && data.cantidadParticipantes >= 2 && data.cantidadParticipantes <= 100 &&
+             isNumber(data.precioPrenda) && data.precioPrenda >= 0 &&
+             (!data.hasAny(['estado']) || data.estado in validEstados) &&
+             (!data.hasAny(['cuotaPorCliente']) || (isNumber(data.cuotaPorCliente) && data.cuotaPorCliente >= 0));
+    }
+
+    function isValidStoreProduct() {
+      let data = request.resource.data;
+      return data.keys().hasAll(['name', 'price']) &&
+             stringSized(data.name, 300) &&
+             isNumber(data.price) && data.price >= 0 &&
+             (!data.hasAny(['description']) || stringSized(data.description, 5000)) &&
+             (!data.hasAny(['imageUrl']) || stringSized(data.imageUrl, 2000));
+    }
+
+    function isValidParticipante() {
+      let data = request.resource.data;
+      return data.keys().hasAny(['nombre', 'clienteId']) &&
+             stringSized(data.nombre, 300) &&
+             (!data.hasAny(['turnoEntrega']) || (isNumber(data.turnoEntrega) && data.turnoEntrega >= 1));
+    }
+
+    function isValidPago() {
+      let data = request.resource.data;
+      return data.keys().hasAll(['participanteId', 'numeroCuota', 'monto']) &&
+             isNumber(data.numeroCuota) && data.numeroCuota >= 1 &&
+             isNumber(data.monto) && data.monto >= 0 &&
+             (!data.hasAny(['comprobanteUrl']) || stringSized(data.comprobanteUrl, 2000));
+    }
+
+    function isValidMaterial() {
+      let data = request.resource.data;
+      return data.keys().hasAny(['name']) &&
+             stringSized(data.name, 300) &&
+             (!data.hasAny(['price']) || (isNumber(data.price) && data.price >= 0)) &&
+             (!data.hasAny(['notes']) || stringSized(data.notes, 2000));
+    }
+
+    function isValidStockItem() {
+      let data = request.resource.data;
+      return data.keys().hasAll(['garmentId', 'ownerId']) &&
+             stringSized(data.garmentId, 128) &&
+             (!data.hasAny(['quantity']) || (isNumber(data.quantity) && data.quantity >= 0)) &&
+             (!data.hasAny(['size']) || stringSized(data.size, 50));
+    }
+
+    function isValidCategoria() {
+      let data = request.resource.data;
+      return stringSized(data.name, 100) &&
+             data.name is string &&
+             data.subcategorias is list &&
+             data.subcategorias.size() <= 50 &&
+             (!data.keys().hasAny(['icon']) || stringSized(data.icon, 50));
+    }
+
+    // --- Reglas para la Colección de Usuarios ---
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+
+      allow create: if isOwner(userId) &&
+        (!('role' in request.resource.data) ||
+         request.resource.data.role == 'user' ||
+         isAdmin());
+
+      allow update: if isAdmin() || (
+        isOwner(userId) &&
+        (!('role' in request.resource.data) ||
+         request.resource.data.role == resource.data.role)
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    // --- Reglas para la Tienda: Productos ---
+    match /productos/{productoId} {
+      allow read: if true;
+      allow create: if canManageStore() && isValidStoreProduct();
+      allow update: if canManageStore() && isValidStoreProduct();
+      allow delete: if canManageStore();
+    }
+
+    // --- Reglas para Pedidos ---
+    match /orders/{orderId} {
+      allow create: if isValidOrder();
+      allow get: if true;
+      allow list: if canManageStore() || (isAuthenticated() && resource.data.customer.userId == request.auth.uid);
+      allow update: if canManageStore() && isValidOrder();
+      allow delete: if isAdmin();
+    }
+
+    // --- Reglas para Colecciones de Datos (con ownerId) ---
+    match /{collectionName}/{docId} {
+
+      function isKnownCollection() {
+        return collectionName in ['garments', 'clients', 'materials', 'stock', 'supplies', 'events', 'bolsos', 'categorias'];
+      }
+
+      function isValidForCollection() {
+        return (collectionName == 'garments' && isValidGarment()) ||
+               (collectionName == 'clients' && isValidClient()) ||
+               (collectionName == 'materials' && isValidMaterial()) ||
+               (collectionName == 'stock' && isValidStockItem()) ||
+               (collectionName == 'bolsos' && isValidBolso()) ||
+               (collectionName == 'categorias' && isValidCategoria()) ||
+               collectionName in ['supplies', 'events'];
+      }
+
+      allow read: if collectionName == 'categorias' ||
+        (isKnownCollection() && (isResourceOwner() || isAdmin()));
+
+      allow create: if (collectionName == 'categorias' && isAdmin() && isValidForCollection()) ||
+        (isKnownCollection() && willBeResourceOwner() && isValidForCollection());
+
+      allow update: if (collectionName == 'categorias' && isAdmin() && isValidForCollection()) ||
+        (isKnownCollection() &&
+          (isResourceOwner() || isAdmin()) &&
+          (willBeResourceOwner() || isAdmin()) &&
+          isValidForCollection());
+
+      allow delete: if (collectionName == 'categorias' && isAdmin()) ||
+        (isKnownCollection() && (isResourceOwner() || isAdmin()));
+    }
+
+    // --- Subcolecciones de Bolsos ---
+    match /bolsos/{bolsoId}/participantes/{participanteId} {
+      allow read, write: if isAuthenticated() && (
+        get(/databases/$(database)/documents/bolsos/$(bolsoId)).data.ownerId == request.auth.uid || isAdmin()
+      ) && isValidParticipante();
+    }
+
+    match /bolsos/{bolsoId}/pagos/{pagoId} {
+      allow read, write: if isAuthenticated() && (
+        get(/databases/$(database)/documents/bolsos/$(bolsoId)).data.ownerId == request.auth.uid || isAdmin()
+      ) && isValidPago();
+    }
+  }
+}

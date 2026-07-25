@@ -1,5 +1,8 @@
+import 'server-only';
+
 import { Groq } from 'groq-sdk';
 import { NextResponse } from 'next/server';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 const groq = new Groq({
     apiKey: process.env.GROQ_API_KEY,
@@ -7,6 +10,17 @@ const groq = new Groq({
 
 export async function POST(req: Request) {
     try {
+        const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+            || req.headers.get("x-real-ip")
+            || "unknown";
+
+        if (!checkRateLimit(`chat:${ip}`, 20, 60_000)) {
+            return NextResponse.json(
+                { error: "Demasiadas solicitudes. Intenta de nuevo en un minuto." },
+                { status: 429 }
+            );
+        }
+
         const { messages } = await req.json();
 
         // System prompt to set context for the store
