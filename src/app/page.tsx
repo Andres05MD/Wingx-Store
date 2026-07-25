@@ -1,10 +1,10 @@
-import DOMPurify from 'isomorphic-dompurify';
 import { getFeaturedProducts } from "@/services/productService";
 import ProductCard from "@/components/ProductCard";
 import HomeBanner from "@/components/HomeBanner";
 import PaginationControls from "@/components/ui/PaginationControls";
 import InfiniteMarquee from "@/components/ui/InfiniteMarquee";
 import InfoSections from "@/components/InfoSections";
+import { sanitizeJsonLd } from "@/lib/utils";
 
 import { Product } from "@/types";
 
@@ -87,7 +87,7 @@ export default async function Home({
             {/* JSON-LD para SEO */}
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(JSON.stringify([sitioWeb, organizacion])) }}
+                dangerouslySetInnerHTML={{ __html: sanitizeJsonLd([sitioWeb, organizacion]) }}
             />
             {/* Hero Section / Banner */}
             <HomeBanner
